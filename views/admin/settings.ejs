@@ -1,0 +1,230 @@
+<div class="admin-manage-page">
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h2>
+                Website Settings
+            </h2>
+
+            <p>
+                Manage global website information.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-form-card">
+
+        <div class="admin-form-grid">
+
+            <div class="admin-form-group admin-form-full">
+
+                <h3>
+                    General
+                </h3>
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label>
+                    Organization Name
+                </label>
+
+                <input
+                    type="text"
+                    v-model="siteSettings.organizationName"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    v-model="siteSettings.email"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label>
+                    Phone
+                </label>
+
+                <input
+                    type="text"
+                    v-model="siteSettings.phone"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label>
+                    Working Hours
+                </label>
+
+                <input
+                    type="text"
+                    v-model="siteSettings.workingHours"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group admin-form-full">
+
+                <label>
+                    Address
+                </label>
+
+                <input
+                    type="text"
+                    v-model="siteSettings.address"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group admin-form-full">
+
+                <h3>
+                    Social Media
+                </h3>
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label>
+                    Facebook
+                </label>
+
+                <input
+                    type="url"
+                    v-model="siteSettings.facebookUrl"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label>
+                    Instagram
+                </label>
+
+                <input
+                    type="url"
+                    v-model="siteSettings.instagramUrl"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label>
+                    YouTube
+                </label>
+
+                <input
+                    type="url"
+                    v-model="siteSettings.youtubeUrl"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group admin-form-full">
+
+                <h3>
+                    SEO
+                </h3>
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label>
+                    Default SEO Title
+                </label>
+
+                <input
+                    type="text"
+                    v-model="siteSettings.defaultSeoTitle"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group admin-form-full">
+
+                <label>
+                    Default SEO Description
+                </label>
+
+                <textarea
+                    rows="4"
+                    v-model="siteSettings.defaultSeoDescription"
+                ></textarea>
+
+            </div>
+
+
+            <div class="admin-form-group admin-form-full">
+
+                <h3>
+                    Footer
+                </h3>
+
+            </div>
+
+
+            <div class="admin-form-group admin-form-full">
+
+                <label>
+                    Footer Text
+                </label>
+
+                <textarea
+                    rows="4"
+                    v-model="siteSettings.footerText"
+                ></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-form-actions">
+
+            <button
+                class="admin-btn admin-btn-primary"
+                @click="saveSettings"
+                :disabled="saving"
+            >
+                Save Settings
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

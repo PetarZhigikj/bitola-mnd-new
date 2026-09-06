@@ -1,0 +1,296 @@
+<div class="admin-manage-page">
+
+    <div v-if="centerPageMode === 'list'">
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    Centers
+                </h2>
+
+                <p>
+                    Manage MND research and scientific centers.
+                </p>
+
+            </div>
+
+            <button
+                class="admin-btn admin-btn-primary"
+                @click="startCreateCenter"
+            >
+                <i class="bx bx-plus"></i>
+
+                Add Center
+            </button>
+
+        </div>
+
+
+        <div class="admin-filters">
+
+            <input
+                v-model="centerSearch"
+                type="text"
+                placeholder="Search centers..."
+            >
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Director</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="center in filteredCenters"
+                        :key="center.id"
+                    >
+
+                        <td>
+
+                            <img
+                                v-if="center.image"
+                                :src="center.image.url"
+                                class="admin-table-image"
+                            >
+
+                        </td>
+
+                        <td>
+                            {{ center.name }}
+                        </td>
+
+                        <td>
+                            {{ center.director || '—' }}
+                        </td>
+
+                        <td>
+                            {{ center.status }}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="admin-btn admin-btn-small"
+                                @click="editCenter(center)"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="admin-btn admin-btn-small admin-btn-danger"
+                                @click="deleteCenter(center)"
+                            >
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div v-if="centerPageMode === 'form'">
+
+        <div class="admin-form-header">
+
+            <button
+                class="admin-back-btn"
+                @click="cancelCenterEdit"
+            >
+                ← Back
+            </button>
+
+            <h2>
+                {{
+                    editingCenter.id
+                        ? 'Edit Center'
+                        : 'Add Center'
+                }}
+            </h2>
+
+        </div>
+
+
+        <div class="admin-form-card">
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingCenter.name"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Slug
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingCenter.slug"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Director
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingCenter.director"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Contact Email
+                    </label>
+
+                    <input
+                        type="email"
+                        v-model="editingCenter.email"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        rows="10"
+                        v-model="editingCenter.description"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Image
+                    </label>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        @change="uploadCenterImage"
+                    >
+
+                    <div
+                        v-if="editingCenter.imagePreview"
+                    >
+
+                        <img
+                            :src="editingCenter.imagePreview.url"
+                        >
+
+                        <button
+                            @click="removeCenterImage"
+                            type="button"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select
+                        v-model="editingCenter.status"
+                    >
+                        <option value="draft">
+                            Draft
+                        </option>
+
+                        <option value="published">
+                            Published
+                        </option>
+
+                        <option value="archived">
+                            Archived
+                        </option>
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    class="admin-btn"
+                    @click="cancelCenterEdit"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="admin-btn admin-btn-primary"
+                    @click="saveCenter"
+                >
+                    Save Center
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

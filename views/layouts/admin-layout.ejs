@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        <%= typeof pageTitle !== 'undefined'
+            ? pageTitle + ' | MND Admin'
+            : 'MND Admin'
+        %>
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/styles/main.css"
+    >
+
+    <link
+        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+<body
+    data-admin-page="<%= adminPage || '' %>"
+>
+
+    <div
+        id="adminApp"
+        class="admin-layout"
+    >
+
+        <!-- =============================================
+             SIDEBAR
+        ============================================== -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-logo">
+
+                <a href="/admin">
+
+                    <!-- <img
+                        src="/images/logo.png"
+                        alt="MND Bitola"
+                    > -->
+
+                </a>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="/admin"
+                    class="<%= adminPage === 'dashboard' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-grid-alt"></i>
+
+                    Dashboard
+                </a>
+
+
+                <a
+                    href="/admin/posts"
+                    class="<%= adminPage === 'posts' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-news"></i>
+
+                    News & Events
+                </a>
+
+
+                <a
+                    href="/admin/members"
+                    class="<%= adminPage === 'members' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-user"></i>
+
+                    Members
+                </a>
+
+
+                <a
+                    href="/admin/departments"
+                    class="<%= adminPage === 'departments' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-buildings"></i>
+
+                    Departments
+                </a>
+
+
+                <a
+                    href="/admin/centers"
+                    class="<%= adminPage === 'centers' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-building-house"></i>
+
+                    Centers
+                </a>
+
+
+                <a
+                    href="/admin/publications"
+                    class="<%= adminPage === 'publications' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-book"></i>
+
+                    Publications
+                </a>
+
+
+                <a
+                    href="/admin/journal"
+                    class="<%= adminPage === 'journal' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-book-open"></i>
+
+                    Современи дијалози
+                </a>
+
+
+                <a
+                    href="/admin/pages"
+                    class="<%= adminPage === 'pages' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-file"></i>
+
+                    Pages
+                </a>
+
+
+                <a
+                    href="/admin/media"
+                    class="<%= adminPage === 'media' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-image"></i>
+
+                    Media
+                </a>
+
+
+                <a
+                    href="/admin/redirects"
+                    class="<%= adminPage === 'redirects' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-transfer"></i>
+
+                    Redirects
+                </a>
+
+
+                <a
+                    href="/admin/settings"
+                    class="<%= adminPage === 'settings' ? 'active' : '' %>"
+                >
+                    <i class="bx bx-cog"></i>
+
+                    Settings
+                </a>
+
+            </nav>
+
+
+            <button
+                type="button"
+                class="admin-sidebar-logout"
+                @click="adminLogout"
+            >
+                <i class="bx bx-log-out"></i>
+
+                Logout
+            </button>
+
+        </aside>
+
+
+        <!-- =============================================
+             MAIN CONTENT
+        ============================================== -->
+        <main class="admin-main">
+
+            <header class="admin-topbar">
+
+                <h1>
+                    <%= pageTitle || 'Admin' %>
+                </h1>
+
+
+                <a
+                    href="/"
+                    target="_blank"
+                    class="admin-view-site"
+                >
+                    <i class="bx bx-link-external"></i>
+
+                    View Website
+                </a>
+
+            </header>
+
+
+            <!-- GLOBAL MESSAGE -->
+            <div
+                v-if="adminMessage"
+                class="admin-message"
+                :class="'admin-message-' + adminMessageType"
+            >
+                {{ adminMessage }}
+            </div>
+
+
+            <section class="admin-content">
+
+                <%- body %>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="/dependencies/vue/dist/vue.global.js"></script>
+
+    <script src="/dependencies/axios/dist/axios.min.js"></script>
+
+    <script src="/js/adminScript.js"></script>
+
+</body>
+
+</html>

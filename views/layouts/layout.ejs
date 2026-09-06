@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="mk">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="<%= typeof metaDescription !== 'undefined' && metaDescription ? metaDescription : 'Македонско научно друштво - Битола' %>"
+    >
+
+    <title>
+        <%= typeof pageTitle !== 'undefined' && pageTitle
+            ? pageTitle + ' | МНД Битола'
+            : 'Македонско научно друштво - Битола'
+        %>
+    </title>
+
+
+    <!-- Main CSS -->
+    <link
+        rel="stylesheet"
+        href="/styles/main.css"
+    >
+
+
+    <!-- Boxicons -->
+    <link
+        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body
+    data-page="<%= typeof currentPage !== 'undefined' ? currentPage : '' %>"
+>
+
+    <div id="mainApp">
+
+        <%- body %>
+
+    </div>
+    <%- include('../partials/footer') %>
+
+
+    <!-- Vue -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+    <!-- Main website JS -->
+    <script src="/js/mainScript.js"></script>
+
+</body>
+
+</html>

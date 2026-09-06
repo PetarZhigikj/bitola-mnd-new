@@ -1,0 +1,246 @@
+<div class="admin-manage-page">
+
+    <div v-if="staticPageMode === 'list'">
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    Pages
+                </h2>
+
+                <p>
+                    Manage static website pages.
+                </p>
+
+            </div>
+
+
+            <button
+                class="admin-btn admin-btn-primary"
+                @click="startCreatePage"
+            >
+                <i class="bx bx-plus"></i>
+
+                Add Page
+            </button>
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th>Status</th>
+                        <th>Updated</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="page in pages"
+                        :key="page.id"
+                    >
+
+                        <td>
+                            {{ page.title }}
+                        </td>
+
+                        <td>
+                            /{{ page.slug }}
+                        </td>
+
+                        <td>
+                            {{ page.status }}
+                        </td>
+
+                        <td>
+                            {{ page.updatedAt }}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="admin-btn admin-btn-small"
+                                @click="editPage(page)"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="admin-btn admin-btn-small admin-btn-danger"
+                                @click="deletePage(page)"
+                            >
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div v-if="staticPageMode === 'form'">
+
+        <div class="admin-form-header">
+
+            <button
+                class="admin-back-btn"
+                @click="cancelPageEdit"
+            >
+                ← Back
+            </button>
+
+            <h2>
+                {{
+                    editingPage.id
+                        ? 'Edit Page'
+                        : 'Add Page'
+                }}
+            </h2>
+
+        </div>
+
+
+        <div class="admin-form-card">
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Title *
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPage.title"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Slug
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPage.slug"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Content
+                    </label>
+
+                    <textarea
+                        rows="18"
+                        v-model="editingPage.content"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select
+                        v-model="editingPage.status"
+                    >
+                        <option value="draft">
+                            Draft
+                        </option>
+
+                        <option value="published">
+                            Published
+                        </option>
+
+                        <option value="archived">
+                            Archived
+                        </option>
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        SEO Title
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPage.seoTitle"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        SEO Description
+                    </label>
+
+                    <textarea
+                        rows="4"
+                        v-model="editingPage.seoDescription"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    class="admin-btn"
+                    @click="cancelPageEdit"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="admin-btn admin-btn-primary"
+                    @click="savePage"
+                >
+                    Save Page
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

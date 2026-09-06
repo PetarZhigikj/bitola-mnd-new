@@ -1,0 +1,134 @@
+<div class="admin-manage-page">
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h2>
+                Media Library
+            </h2>
+
+            <p>
+                Manage images, PDFs and documents.
+            </p>
+
+        </div>
+
+
+        <label class="admin-btn admin-btn-primary">
+
+            <i class="bx bx-upload"></i>
+
+            Upload File
+
+            <input
+                type="file"
+                hidden
+                @change="uploadMediaFromInput"
+            >
+
+        </label>
+
+    </div>
+
+
+    <div class="admin-filters">
+
+        <input
+            type="text"
+            v-model="mediaSearch"
+            placeholder="Search media..."
+        >
+
+
+        <select
+            v-model="mediaTypeFilter"
+        >
+            <option value="">
+                All Types
+            </option>
+
+            <option value="image">
+                Images
+            </option>
+
+            <option value="pdf">
+                PDFs
+            </option>
+
+            <option value="document">
+                Documents
+            </option>
+        </select>
+
+    </div>
+
+
+    <div class="admin-media-grid">
+
+        <div
+            v-for="media in filteredMedia"
+            :key="media.id"
+            class="admin-media-card"
+        >
+
+            <div class="admin-media-preview">
+
+                <img
+                    v-if="media.type === 'image'"
+                    :src="media.url"
+                >
+
+
+                <i
+                    v-else-if="media.type === 'pdf'"
+                    class="bx bxs-file-pdf"
+                ></i>
+
+
+                <i
+                    v-else
+                    class="bx bxs-file"
+                ></i>
+
+            </div>
+
+
+            <div class="admin-media-info">
+
+                <strong>
+                    {{ media.originalName }}
+                </strong>
+
+                <span>
+                    {{ media.type }}
+                </span>
+
+            </div>
+
+
+            <div class="admin-media-actions">
+
+                <a
+                    :href="media.url"
+                    target="_blank"
+                    class="admin-btn admin-btn-small"
+                >
+                    View
+                </a>
+
+
+                <button
+                    class="admin-btn admin-btn-small admin-btn-danger"
+                    @click="deleteMedia(media)"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

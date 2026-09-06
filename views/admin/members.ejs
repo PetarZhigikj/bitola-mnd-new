@@ -1,0 +1,508 @@
+<div class="admin-manage-page">
+
+    <!-- LIST -->
+    <div v-if="memberPageMode === 'list'">
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    Members
+                </h2>
+
+                <p>
+                    Manage current and archived members.
+                </p>
+
+            </div>
+
+
+            <button
+                class="admin-btn admin-btn-primary"
+                @click="startCreateMember"
+            >
+                <i class="bx bx-plus"></i>
+
+                Add Member
+            </button>
+
+        </div>
+
+
+        <div class="admin-filters">
+
+            <input
+                type="text"
+                v-model="memberSearch"
+                placeholder="Search members..."
+            >
+
+
+            <select
+                v-model="memberDepartmentFilter"
+            >
+
+                <option value="">
+                    All Departments
+                </option>
+
+                <option
+                    v-for="department in departments"
+                    :key="department.id"
+                    :value="department.id"
+                >
+                    {{ department.name }}
+                </option>
+
+            </select>
+
+
+            <select
+                v-model="memberStatusFilter"
+            >
+
+                <option value="">
+                    All Statuses
+                </option>
+
+                <option value="draft">
+                    Draft
+                </option>
+
+                <option value="published">
+                    Published
+                </option>
+
+                <option value="archived">
+                    Archived
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Photo
+                        </th>
+
+                        <th>
+                            Member
+                        </th>
+
+                        <th>
+                            Department
+                        </th>
+
+                        <th>
+                            Current
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="member in filteredMembers"
+                        :key="member.id"
+                    >
+
+                        <td>
+
+                            <img
+                                v-if="member.photo"
+                                :src="member.photo.url"
+                                class="admin-table-image admin-table-avatar"
+                            >
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                {{ member.fullName }}
+                            </strong>
+
+                            <small>
+                                {{ member.academicTitle }}
+                            </small>
+
+                        </td>
+
+
+                        <td>
+                            {{ member.department?.name || '—' }}
+                        </td>
+
+
+                        <td>
+                            {{
+                                member.isCurrentMember
+                                    ? 'Yes'
+                                    : 'No'
+                            }}
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="admin-status"
+                                :class="'admin-status-' + member.status"
+                            >
+                                {{ member.status }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="admin-table-actions">
+
+                                <button
+                                    class="admin-btn admin-btn-small"
+                                    @click="editMember(member)"
+                                >
+                                    Edit
+                                </button>
+
+
+                                <button
+                                    class="admin-btn admin-btn-small admin-btn-danger"
+                                    @click="deleteMember(member)"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- FORM -->
+    <div v-if="memberPageMode === 'form'">
+
+        <div class="admin-form-header">
+
+            <button
+                class="admin-back-btn"
+                @click="cancelMemberEdit"
+            >
+                ← Back
+            </button>
+
+
+            <h2>
+                {{
+                    editingMember.id
+                        ? 'Edit Member'
+                        : 'Add Member'
+                }}
+            </h2>
+
+        </div>
+
+
+        <div class="admin-form-card">
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Full Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingMember.fullName"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Academic Title
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingMember.academicTitle"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Department
+                    </label>
+
+                    <select
+                        v-model="editingMember.department"
+                    >
+
+                        <option :value="null">
+                            No Department
+                        </option>
+
+                        <option
+                            v-for="department in departments"
+                            :key="department.id"
+                            :value="department.id"
+                        >
+                            {{ department.name }}
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Current Member
+                    </label>
+
+                    <select
+                        v-model="editingMember.isCurrentMember"
+                    >
+                        <option :value="true">
+                            Yes
+                        </option>
+
+                        <option :value="false">
+                            No
+                        </option>
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        v-model="editingMember.email"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Website
+                    </label>
+
+                    <input
+                        type="url"
+                        v-model="editingMember.website"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Short Biography
+                    </label>
+
+                    <textarea
+                        rows="4"
+                        v-model="editingMember.shortBiography"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Biography
+                    </label>
+
+                    <textarea
+                        rows="12"
+                        v-model="editingMember.biography"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select
+                        v-model="editingMember.status"
+                    >
+                        <option value="draft">
+                            Draft
+                        </option>
+
+                        <option value="published">
+                            Published
+                        </option>
+
+                        <option value="archived">
+                            Archived
+                        </option>
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Legacy URL
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingMember.legacyUrl"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Member Photo
+                    </label>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        @change="uploadMemberPhoto"
+                    >
+
+
+                    <div
+                        v-if="editingMember.photoPreview"
+                        class="admin-upload-preview"
+                    >
+
+                        <img
+                            :src="editingMember.photoPreview.url"
+                        >
+
+                        <button
+                            type="button"
+                            @click="removeMemberPhoto"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        CV PDF
+                    </label>
+
+                    <input
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        @change="uploadMemberCv"
+                    >
+
+
+                    <div
+                        v-if="editingMember.cvPdfPreview"
+                    >
+
+                        <a
+                            :href="editingMember.cvPdfPreview.url"
+                            target="_blank"
+                        >
+                            {{ editingMember.cvPdfPreview.originalName }}
+                        </a>
+
+                        <button
+                            type="button"
+                            @click="removeMemberCv"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    class="admin-btn"
+                    @click="cancelMemberEdit"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="admin-btn admin-btn-primary"
+                    @click="saveMember"
+                    :disabled="saving"
+                >
+                    Save Member
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

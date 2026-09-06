@@ -1,0 +1,395 @@
+<div class="admin-manage-page">
+
+    <div v-if="journalPageMode === 'list'">
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    Современи дијалози
+                </h2>
+
+                <p>
+                    Manage journal issues and PDFs.
+                </p>
+
+            </div>
+
+
+            <button
+                class="admin-btn admin-btn-primary"
+                @click="startCreateJournalIssue"
+            >
+                <i class="bx bx-plus"></i>
+
+                Add Issue
+            </button>
+
+        </div>
+
+
+        <div class="admin-filters">
+
+            <input
+                type="text"
+                v-model="journalSearch"
+                placeholder="Search issues..."
+            >
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Cover</th>
+                        <th>Issue</th>
+                        <th>Year</th>
+                        <th>ISSN</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="issue in filteredJournalIssues"
+                        :key="issue.id"
+                    >
+
+                        <td>
+
+                            <img
+                                v-if="issue.coverImage"
+                                :src="issue.coverImage.url"
+                                class="admin-table-image"
+                            >
+
+                        </td>
+
+                        <td>
+                            Број {{ issue.issueNumber }}
+                        </td>
+
+                        <td>
+                            {{ issue.year }}
+                        </td>
+
+                        <td>
+                            {{ issue.issn || '—' }}
+                        </td>
+
+                        <td>
+                            {{ issue.status }}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="admin-btn admin-btn-small"
+                                @click="editJournalIssue(issue)"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="admin-btn admin-btn-small admin-btn-danger"
+                                @click="deleteJournalIssue(issue)"
+                            >
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div v-if="journalPageMode === 'form'">
+
+        <div class="admin-form-header">
+
+            <button
+                class="admin-back-btn"
+                @click="cancelJournalEdit"
+            >
+                ← Back
+            </button>
+
+            <h2>
+                {{
+                    editingJournalIssue.id
+                        ? 'Edit Issue'
+                        : 'Add Issue'
+                }}
+            </h2>
+
+        </div>
+
+
+        <div class="admin-form-card">
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Issue Number *
+                    </label>
+
+                    <input
+                        type="number"
+                        v-model.number="editingJournalIssue.issueNumber"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Year *
+                    </label>
+
+                    <input
+                        type="number"
+                        v-model.number="editingJournalIssue.year"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Title
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingJournalIssue.title"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        ISSN
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingJournalIssue.issn"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Editor in Chief
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingJournalIssue.editorInChief"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Editorial Board
+                    </label>
+
+                    <textarea
+                        rows="5"
+                        v-model="editingJournalIssue.editorialBoardText"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        rows="8"
+                        v-model="editingJournalIssue.description"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Cover
+                    </label>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        @change="uploadJournalCover"
+                    >
+
+                    <img
+                        v-if="editingJournalIssue.coverPreview"
+                        :src="editingJournalIssue.coverPreview.url"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Full Issue PDF
+                    </label>
+
+                    <input
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        @change="uploadJournalPdf"
+                    >
+
+                    <a
+                        v-if="editingJournalIssue.pdfPreview"
+                        :href="editingJournalIssue.pdfPreview.url"
+                        target="_blank"
+                    >
+                        {{ editingJournalIssue.pdfPreview.originalName }}
+                    </a>
+
+                </div>
+
+
+                <!-- ARTICLES -->
+                <div class="admin-form-group admin-form-full">
+
+                    <div class="admin-subsection-header">
+
+                        <h3>
+                            Articles / Contents
+                        </h3>
+
+                        <button
+                            type="button"
+                            class="admin-btn"
+                            @click="addJournalArticle"
+                        >
+                            + Add Article
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        v-for="(article, index) in editingJournalIssue.articles"
+                        :key="index"
+                        class="admin-repeat-card"
+                    >
+
+                        <input
+                            type="text"
+                            v-model="article.title"
+                            placeholder="Article title"
+                        >
+
+                        <input
+                            type="text"
+                            v-model="article.author"
+                            placeholder="Author"
+                        >
+
+                        <input
+                            type="text"
+                            v-model="article.pages"
+                            placeholder="Pages"
+                        >
+
+                        <button
+                            type="button"
+                            @click="removeJournalArticle(index)"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select
+                        v-model="editingJournalIssue.status"
+                    >
+                        <option value="draft">
+                            Draft
+                        </option>
+
+                        <option value="published">
+                            Published
+                        </option>
+
+                        <option value="archived">
+                            Archived
+                        </option>
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    class="admin-btn"
+                    @click="cancelJournalEdit"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="admin-btn admin-btn-primary"
+                    @click="saveJournalIssue"
+                >
+                    Save Issue
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

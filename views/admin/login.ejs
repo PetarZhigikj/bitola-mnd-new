@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Admin Login | MND Bitola
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/styles/main.css"
+    >
+
+</head>
+
+
+<body data-admin-page="login">
+
+    <div
+        id="adminApp"
+        class="admin-login-page"
+    >
+
+        <div class="admin-login-card">
+
+            <h1>
+                Admin Login
+            </h1>
+
+
+            <form
+                @submit.prevent="adminLogin"
+            >
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        v-model="loginForm.email"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        v-model="loginForm.password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <p
+                    v-if="loginError"
+                    class="admin-form-error"
+                >
+                    {{ loginError }}
+                </p>
+
+
+                <button
+                    type="submit"
+                    class="admin-btn admin-btn-primary"
+                    :disabled="loggingIn"
+                >
+                    {{
+                        loggingIn
+                            ? 'Logging in...'
+                            : 'Log In'
+                    }}
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="/js/adminScript.js"></script>
+
+</body>
+
+</html>

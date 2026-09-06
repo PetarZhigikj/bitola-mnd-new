@@ -1,0 +1,405 @@
+<div class="admin-manage-page">
+
+    <div v-if="publicationPageMode === 'list'">
+
+        <div class="admin-page-header">
+
+            <div>
+                <h2>Publications</h2>
+
+                <p>
+                    Manage monographs, proceedings,
+                    bibliographies and other publications.
+                </p>
+            </div>
+
+
+            <button
+                class="admin-btn admin-btn-primary"
+                @click="startCreatePublication"
+            >
+                <i class="bx bx-plus"></i>
+
+                Add Publication
+            </button>
+
+        </div>
+
+
+        <div class="admin-filters">
+
+            <input
+                type="text"
+                v-model="publicationSearch"
+                placeholder="Search publications..."
+            >
+
+
+            <select
+                v-model="publicationTypeFilter"
+            >
+                <option value="">
+                    All Types
+                </option>
+
+                <option value="monograph">
+                    Monograph
+                </option>
+
+                <option value="proceedings">
+                    Proceedings
+                </option>
+
+                <option value="bibliography">
+                    Bibliography
+                </option>
+
+                <option value="book">
+                    Book
+                </option>
+
+                <option value="other">
+                    Other
+                </option>
+            </select>
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Cover</th>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Year</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="publication in filteredPublications"
+                        :key="publication.id"
+                    >
+
+                        <td>
+
+                            <img
+                                v-if="publication.coverImage"
+                                :src="publication.coverImage.url"
+                                class="admin-table-image"
+                            >
+
+                        </td>
+
+                        <td>
+                            {{ publication.title }}
+                        </td>
+
+                        <td>
+                            {{ publication.publicationType }}
+                        </td>
+
+                        <td>
+                            {{ publication.year }}
+                        </td>
+
+                        <td>
+                            {{ publication.status }}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="admin-btn admin-btn-small"
+                                @click="editPublication(publication)"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="admin-btn admin-btn-small admin-btn-danger"
+                                @click="deletePublication(publication)"
+                            >
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div v-if="publicationPageMode === 'form'">
+
+        <div class="admin-form-header">
+
+            <button
+                class="admin-back-btn"
+                @click="cancelPublicationEdit"
+            >
+                ← Back
+            </button>
+
+            <h2>
+                {{
+                    editingPublication.id
+                        ? 'Edit Publication'
+                        : 'Add Publication'
+                }}
+            </h2>
+
+        </div>
+
+
+        <div class="admin-form-card">
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Title *
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPublication.title"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Type
+                    </label>
+
+                    <select
+                        v-model="editingPublication.publicationType"
+                    >
+                        <option value="monograph">
+                            Monograph
+                        </option>
+
+                        <option value="proceedings">
+                            Proceedings
+                        </option>
+
+                        <option value="bibliography">
+                            Bibliography
+                        </option>
+
+                        <option value="book">
+                            Book
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Year
+                    </label>
+
+                    <input
+                        type="number"
+                        v-model.number="editingPublication.year"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Authors
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPublication.authorsText"
+                        placeholder="Author 1, Author 2..."
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Editors
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPublication.editorsText"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        ISBN
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPublication.isbn"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Slug
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPublication.slug"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        rows="10"
+                        v-model="editingPublication.description"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Cover Image
+                    </label>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        @change="uploadPublicationCover"
+                    >
+
+                    <img
+                        v-if="editingPublication.coverPreview"
+                        :src="editingPublication.coverPreview.url"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Publication PDF
+                    </label>
+
+                    <input
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        @change="uploadPublicationPdf"
+                    >
+
+                    <a
+                        v-if="editingPublication.pdfPreview"
+                        :href="editingPublication.pdfPreview.url"
+                        target="_blank"
+                    >
+                        {{ editingPublication.pdfPreview.originalName }}
+                    </a>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select
+                        v-model="editingPublication.status"
+                    >
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="archived">Archived</option>
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Legacy URL
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingPublication.legacyUrl"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    class="admin-btn"
+                    @click="cancelPublicationEdit"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="admin-btn admin-btn-primary"
+                    @click="savePublication"
+                >
+                    Save Publication
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

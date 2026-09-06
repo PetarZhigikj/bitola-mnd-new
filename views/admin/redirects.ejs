@@ -1,0 +1,224 @@
+<div class="admin-manage-page">
+
+    <div v-if="redirectPageMode === 'list'">
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    Redirects
+                </h2>
+
+                <p>
+                    Map old website URLs to new URLs.
+                </p>
+
+            </div>
+
+
+            <button
+                class="admin-btn admin-btn-primary"
+                @click="startCreateRedirect"
+            >
+                <i class="bx bx-plus"></i>
+
+                Add Redirect
+            </button>
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Old URL
+                        </th>
+
+                        <th>
+                            New URL
+                        </th>
+
+                        <th>
+                            Code
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="redirect in redirects"
+                        :key="redirect.id"
+                    >
+
+                        <td>
+                            {{ redirect.oldPath }}
+                        </td>
+
+                        <td>
+                            {{ redirect.newPath }}
+                        </td>
+
+                        <td>
+                            {{ redirect.statusCode }}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="admin-btn admin-btn-small"
+                                @click="editRedirect(redirect)"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="admin-btn admin-btn-small admin-btn-danger"
+                                @click="deleteRedirect(redirect)"
+                            >
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div v-if="redirectPageMode === 'form'">
+
+        <div class="admin-form-header">
+
+            <button
+                class="admin-back-btn"
+                @click="cancelRedirectEdit"
+            >
+                ← Back
+            </button>
+
+            <h2>
+                {{
+                    editingRedirect.id
+                        ? 'Edit Redirect'
+                        : 'Add Redirect'
+                }}
+            </h2>
+
+        </div>
+
+
+        <div class="admin-form-card">
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Old Path *
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingRedirect.oldPath"
+                        placeholder="/old-page/"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        New Path *
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingRedirect.newPath"
+                        placeholder="/new-page"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Redirect Code
+                    </label>
+
+                    <select
+                        v-model.number="editingRedirect.statusCode"
+                    >
+                        <option :value="301">
+                            301 Permanent
+                        </option>
+
+                        <option :value="302">
+                            302 Temporary
+                        </option>
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Note
+                    </label>
+
+                    <textarea
+                        rows="4"
+                        v-model="editingRedirect.note"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    class="admin-btn"
+                    @click="cancelRedirectEdit"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="admin-btn admin-btn-primary"
+                    @click="saveRedirect"
+                >
+                    Save Redirect
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

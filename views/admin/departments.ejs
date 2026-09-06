@@ -1,0 +1,345 @@
+<div class="admin-manage-page">
+
+    <!-- =============================================
+         LIST
+    ============================================== -->
+    <div v-if="departmentPageMode === 'list'">
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    Departments
+                </h2>
+
+                <p>
+                    Manage scientific departments.
+                </p>
+
+            </div>
+
+
+            <button
+                class="admin-btn admin-btn-primary"
+                @click="startCreateDepartment"
+            >
+                <i class="bx bx-plus"></i>
+
+                Add Department
+            </button>
+
+        </div>
+
+
+        <div class="admin-filters">
+
+            <input
+                type="text"
+                v-model="departmentSearch"
+                placeholder="Search departments..."
+            >
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Image
+                        </th>
+
+                        <th>
+                            Name
+                        </th>
+
+                        <th>
+                            Order
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="department in filteredDepartments"
+                        :key="department.id"
+                    >
+
+                        <td>
+
+                            <img
+                                v-if="department.image"
+                                :src="department.image.url"
+                                class="admin-table-image"
+                            >
+
+                            <span v-else>
+                                —
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                {{ department.name }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+                            {{ department.sortOrder }}
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="admin-status"
+                                :class="department.isActive
+                                    ? 'admin-status-published'
+                                    : 'admin-status-archived'"
+                            >
+                                {{
+                                    department.isActive
+                                        ? 'Active'
+                                        : 'Inactive'
+                                }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="admin-table-actions">
+
+                                <button
+                                    class="admin-btn admin-btn-small"
+                                    @click="editDepartment(department)"
+                                >
+                                    Edit
+                                </button>
+
+
+                                <button
+                                    class="admin-btn admin-btn-small admin-btn-danger"
+                                    @click="deleteDepartment(department)"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =============================================
+         CREATE / EDIT
+    ============================================== -->
+    <div v-if="departmentPageMode === 'form'">
+
+        <div class="admin-form-header">
+
+            <button
+                type="button"
+                class="admin-back-btn"
+                @click="cancelDepartmentEdit"
+            >
+                <i class="bx bx-left-arrow-alt"></i>
+
+                Back
+            </button>
+
+
+            <h2>
+                {{
+                    editingDepartment.id
+                        ? 'Edit Department'
+                        : 'Add Department'
+                }}
+            </h2>
+
+        </div>
+
+
+        <div class="admin-form-card">
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingDepartment.name"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Slug
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="editingDepartment.slug"
+                        placeholder="Generated automatically"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        v-model="editingDepartment.description"
+                        rows="6"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Sort Order
+                    </label>
+
+                    <input
+                        type="number"
+                        min="0"
+                        v-model.number="editingDepartment.sortOrder"
+                    >
+
+                </div>
+
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Active
+                    </label>
+
+                    <select
+                        v-model="editingDepartment.isActive"
+                    >
+                        <option :value="true">
+                            Yes
+                        </option>
+
+                        <option :value="false">
+                            No
+                        </option>
+                    </select>
+
+                </div>
+
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Department Image
+                    </label>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        @change="uploadDepartmentImage"
+                    >
+
+
+                    <div
+                        v-if="editingDepartment.imagePreview"
+                        class="admin-upload-preview"
+                    >
+
+                        <img
+                            :src="editingDepartment.imagePreview.url"
+                        >
+
+                        <button
+                            type="button"
+                            @click="removeDepartmentImage"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    type="button"
+                    class="admin-btn"
+                    @click="cancelDepartmentEdit"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="button"
+                    class="admin-btn admin-btn-primary"
+                    @click="saveDepartment"
+                    :disabled="saving"
+                >
+                    {{
+                        saving
+                            ? 'Saving...'
+                            : 'Save Department'
+                    }}
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
