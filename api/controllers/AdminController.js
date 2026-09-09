@@ -34,8 +34,8 @@ const fs =
     
     
     
-    function sanitizeMemberContent(content) {
-    
+    function sanitizeRichTextContent(content) {
+
         return sanitizeHtml(
             String(content || ''),
             {
@@ -43,31 +43,30 @@ const fs =
                 allowedTags: [
     
                     'p',
-    
                     'br',
+                    'span',
     
                     'strong',
-    
                     'b',
     
                     'em',
-    
                     'i',
     
                     'u',
-    
                     's',
     
-                    'h2',
+                    'sub',
+                    'sup',
     
+                    'h1',
+                    'h2',
                     'h3',
+                    'h4',
     
                     'blockquote',
     
                     'ol',
-    
                     'ul',
-    
                     'li',
     
                     'a'
@@ -77,30 +76,70 @@ const fs =
     
                 allowedAttributes: {
     
+                    '*': [
+                        'class',
+                        'style'
+                    ],
+    
+    
                     a: [
                         'href',
                         'target',
-                        'rel'
+                        'rel',
+                        'class',
+                        'style'
                     ],
     
+    
                     li: [
-                        'data-list'
+                        'data-list',
+                        'class',
+                        'style'
                     ]
     
                 },
     
     
+                allowedStyles: {
+    
+                    '*': {
+    
+                        color: [
+    
+                            /^#[0-9a-f]{3,8}$/i,
+    
+                            /^rgba?\([\d\s.,%]+\)$/i
+    
+                        ],
+    
+    
+                        'background-color': [
+    
+                            /^#[0-9a-f]{3,8}$/i,
+    
+                            /^rgba?\([\d\s.,%]+\)$/i
+    
+                        ]
+    
+                    }
+    
+                },
+    
+    
                 allowedSchemes: [
+    
                     'http',
+    
                     'https',
+    
                     'mailto'
+    
                 ]
     
             }
         );
     
     }
-    
     
     
     async function uploadMemberImage(req) {
@@ -209,6 +248,150 @@ const fs =
     
                 sails.log.warn(
                     'Unable to delete member image:',
+                    error
+                );
+    
+            }
+    
+        }
+    
+    }
+
+    const ABOUT_PAGES = [
+
+        {
+            slug:
+                'osnovni-informacii',
+    
+            title:
+                'Основни информации'
+        },
+    
+    
+        {
+            slug:
+                'istorijat',
+    
+            title:
+                'Историјат'
+        },
+    
+    
+        {
+            slug:
+                'lica-za-kontakt',
+    
+            title:
+                'Лица за контакт'
+        },
+    
+    
+        {
+            slug:
+                'rakovodna-struktura',
+    
+            title:
+                'Раководна структура'
+        }
+    
+    ];
+
+    async function uploadAboutImage(req) {
+
+        const uploadDirectory =
+            path.resolve(
+                sails.config.appPath,
+                'assets/uploads/about'
+            );
+    
+    
+        await fs.promises.mkdir(
+            uploadDirectory,
+            {
+                recursive: true
+            }
+        );
+    
+    
+        return new Promise(
+            (resolve, reject) => {
+    
+                req.file('image').upload(
+                    {
+    
+                        dirname:
+                            uploadDirectory,
+    
+                        maxBytes:
+                            5 * 1024 * 1024
+    
+                    },
+    
+                    (error, uploadedFiles) => {
+    
+                        if (error) {
+                            return reject(error);
+                        }
+    
+    
+                        if (
+                            !uploadedFiles ||
+                            !uploadedFiles.length
+                        ) {
+                            return resolve(null);
+                        }
+    
+    
+                        const fileName =
+                            path.basename(
+                                uploadedFiles[0].fd
+                            );
+    
+    
+                        return resolve(
+                            '/uploads/about/' +
+                            fileName
+                        );
+    
+                    }
+                );
+    
+            }
+        );
+    
+    }
+    
+    
+    
+    async function deleteAboutImage(imageUrl) {
+    
+        if (!imageUrl) {
+            return;
+        }
+    
+    
+        const filePath =
+            path.resolve(
+                sails.config.appPath,
+                'assets/uploads/about',
+                path.basename(imageUrl)
+            );
+    
+    
+        try {
+    
+            await fs.promises.unlink(
+                filePath
+            );
+    
+        } catch (error) {
+    
+            if (
+                error.code !== 'ENOENT'
+            ) {
+    
+                sails.log.warn(
+                    'Unable to delete about image:',
                     error
                 );
     
@@ -561,7 +744,7 @@ module.exports = {
 
 
             const content =
-                sanitizeMemberContent(
+                    sanitizeRichTextContent(
                     req.body.content
                 );
 
@@ -736,7 +919,7 @@ async updateMember(req, res) {
 
 
         const content =
-            sanitizeMemberContent(
+            sanitizeRichTextContent(
                 req.body.content
             );
 
@@ -870,77 +1053,357 @@ async updateMember(req, res) {
    DELETE MEMBER
 ========================================================= */
 
-async deleteMember(req, res) {
+    async deleteMember(req, res) {
 
-    try {
+        try {
 
-        const id =
-            req.params.id;
+            const id =
+                req.params.id;
 
 
-        const member =
-            await Member.findOne({
+            const member =
+                await Member.findOne({
+                    id
+                });
+
+
+            if (!member) {
+
+                return res.status(404).json({
+
+                    success: false,
+
+                    message:
+                        'Членот не е пронајден.'
+
+                });
+
+            }
+
+
+            await Member.destroyOne({
                 id
             });
 
 
-        if (!member) {
+            if (member.image) {
 
-            return res.status(404).json({
+                await deleteMemberImage(
+                    member.image
+                );
+
+            }
+
+
+            return res.json({
+
+                success: true,
+
+                message:
+                    'Членот е избришан.'
+
+            });
+
+
+        } catch (error) {
+
+            sails.log.error(
+                'Delete member error:',
+                error
+            );
+
+
+            return res.status(500).json({
 
                 success: false,
 
                 message:
-                    'Членот не е пронајден.'
+                    'Не може да се избрише членот.'
 
             });
 
         }
 
+    },
 
-        await Member.destroyOne({
-            id
-        });
+    /* =========================================================
+   ЗА МНД PAGE
+========================================================= */
 
+    async aboutPagesPage(req, res) {
 
-        if (member.image) {
+        return res.view(
+            'admin/za-mnd',
+            {
 
-            await deleteMemberImage(
-                member.image
-            );
+                layout:
+                    'layouts/admin-layout',
 
-        }
+                pageTitle:
+                    'За МНД',
 
+                adminPage:
+                    'za-mnd'
 
-        return res.json({
-
-            success: true,
-
-            message:
-                'Членот е избришан.'
-
-        });
-
-
-    } catch (error) {
-
-        sails.log.error(
-            'Delete member error:',
-            error
+            }
         );
 
+    },
 
-        return res.status(500).json({
+    async getAboutPages(req, res) {
 
-            success: false,
+        try {
+    
+            const existingPages =
+                await AboutPage.find();
+    
+    
+            const pages = [];
+    
+    
+            for (
+                const pageDefinition
+                of ABOUT_PAGES
+            ) {
+    
+                let page =
+                    existingPages.find(
+                        item =>
+                            item.slug ===
+                            pageDefinition.slug
+                    );
+    
+    
+                if (!page) {
+    
+                    page =
+                        await AboutPage.create({
+    
+                            slug:
+                                pageDefinition.slug,
+    
+                            content:
+                                ''
+    
+                        })
+                        .fetch();
+    
+                }
+    
+    
+                pages.push({
+    
+                    ...page,
+    
+                    title:
+                        pageDefinition.title
+    
+                });
+    
+            }
+    
+    
+            return res.json({
+    
+                success: true,
+    
+                pages
+    
+            });
+    
+    
+        } catch (error) {
+    
+            sails.log.error(
+                'Get About pages error:',
+                error
+            );
+    
+    
+            return res.status(500).json({
+    
+                success: false,
+    
+                message:
+                    'Не може да се вчита содржината.'
+    
+            });
+    
+        }
+    
+    },
 
-            message:
-                'Не може да се избрише членот.'
+    async updateAboutPage(req, res) {
 
-        });
+        let uploadedImage =
+            null;
+    
+    
+        try {
+    
+            const slug =
+                String(
+                    req.params.slug || ''
+                ).trim();
+    
+    
+            const pageDefinition =
+                ABOUT_PAGES.find(
+                    page =>
+                        page.slug === slug
+                );
+    
+    
+            if (!pageDefinition) {
+    
+                return res.status(400).json({
+    
+                    success: false,
+    
+                    message:
+                        'Невалидна страница.'
+    
+                });
+    
+            }
+    
+    
+            let page =
+                await AboutPage.findOne({
+                    slug
+                });
+    
+    
+            if (!page) {
+    
+                page =
+                    await AboutPage.create({
+    
+                        slug,
+    
+                        content: ''
+    
+                    })
+                    .fetch();
+    
+            }
+    
+    
+            const content =
+                sanitizeRichTextContent(
+                    req.body.content
+                );
+    
+    
+            const removeImage =
+                String(
+                    req.body.removeImage
+                ) === 'true';
+    
+    
+            uploadedImage =
+                await uploadAboutImage(
+                    req
+                );
+    
+    
+            let image =
+                page.image;
+    
+    
+            if (uploadedImage) {
+    
+                image =
+                    uploadedImage;
+    
+            } else if (removeImage) {
+    
+                image =
+                    null;
+    
+            }
+    
+    
+            const updatedPage =
+                await AboutPage.updateOne({
+                    id: page.id
+                })
+                .set({
+    
+                    content,
+    
+                    image,
+    
+                    updatedBy:
+                        req.session.adminUserId
+    
+                });
+    
+    
+            if (
+                page.image &&
+                (
+                    uploadedImage ||
+                    removeImage
+                )
+            ) {
+    
+                await deleteAboutImage(
+                    page.image
+                );
+    
+            }
+    
+    
+            return res.json({
+    
+                success: true,
+    
+                page: {
+    
+                    ...updatedPage,
+    
+                    title:
+                        pageDefinition.title
+    
+                },
+    
+                message:
+                    'Содржината е успешно зачувана.'
+    
+            });
+    
+    
+        } catch (error) {
+    
+            sails.log.error(
+                'Update About page error:',
+                error
+            );
+    
+    
+            if (uploadedImage) {
+    
+                await deleteAboutImage(
+                    uploadedImage
+                );
+    
+            }
+    
+    
+            return res.status(500).json({
+    
+                success: false,
+    
+                message:
+                    'Не може да се зачува содржината.'
+    
+            });
+    
+        }
+    
+    },
 
-    }
 
-},
 
 };

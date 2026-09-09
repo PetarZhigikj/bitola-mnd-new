@@ -1,0 +1,231 @@
+<div class="admin-manage-page">
+
+
+    <!-- =====================================================
+         LIST
+    ====================================================== -->
+
+    <template
+        v-if="aboutPageMode === 'list'"
+    >
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    За МНД
+                </h2>
+
+                <p>
+                    Управување со содржината
+                    на страниците За МНД.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Страница
+                        </th>
+
+                        <th>
+                            Акции
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="page in aboutPages"
+                        :key="page.slug"
+                    >
+
+                        <td>
+
+                            <strong>
+                                {{ page.title }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                type="button"
+                                class="admin-btn admin-btn-small"
+                                @click="openEditAboutPage(page)"
+                            >
+
+                                <i class="bx bx-edit"></i>
+
+                                Измени
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </template>
+
+
+
+    <!-- =====================================================
+         EDIT
+    ====================================================== -->
+
+    <template v-else>
+
+        <div class="admin-form-header">
+
+            <button
+                type="button"
+                class="admin-back-btn"
+                @click="closeAboutForm"
+            >
+
+                <i class="bx bx-arrow-back"></i>
+
+                Назад
+
+            </button>
+
+
+            <h2>
+                {{ editingAboutTitle }}
+            </h2>
+
+        </div>
+
+
+
+        <form
+            class="admin-form-card"
+            @submit.prevent="saveAboutPage"
+        >
+
+
+            <!-- IMAGE -->
+
+            <div class="admin-form-group">
+
+                <label>
+                    Фотографија
+                </label>
+
+
+                <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    @change="handleAboutImageChange"
+                >
+
+
+                <div
+                    v-if="aboutImagePreview"
+                    class="admin-about-image-preview"
+                >
+
+                    <img
+                        :src="aboutImagePreview"
+                        alt="Преглед"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="admin-btn admin-btn-danger admin-btn-small"
+                        @click="removeCurrentAboutImage"
+                    >
+                        Отстрани фотографија
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CONTENT -->
+
+            <div class="admin-form-group">
+
+                <label>
+                    Содржина
+                </label>
+
+
+                <div
+                    id="aboutRichTextEditor"
+                    class="admin-rich-text-editor"
+                ></div>
+
+            </div>
+
+
+
+            <p
+                v-if="aboutFormError"
+                class="admin-form-error"
+            >
+                {{ aboutFormError }}
+            </p>
+
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    type="button"
+                    class="admin-btn"
+                    @click="closeAboutForm"
+                >
+                    Откажи
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="admin-btn admin-btn-primary"
+                    :disabled="savingAboutPage"
+                >
+
+                    <i class="bx bx-save"></i>
+
+                    {{
+                        savingAboutPage
+                            ? 'Се зачувува...'
+                            : 'Зачувај'
+                    }}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </template>
+
+</div>

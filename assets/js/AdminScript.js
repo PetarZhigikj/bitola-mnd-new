@@ -1,4 +1,225 @@
 let memberRichTextEditor = null;
+let aboutRichTextEditor = null;
+
+let adminQuillFontsRegistered = false;
+
+
+function registerAdminQuillFonts() {
+
+    if (
+        adminQuillFontsRegistered ||
+        typeof Quill === 'undefined'
+    ) {
+        return;
+    }
+
+
+    const Font =
+        Quill.import(
+            'formats/font'
+        );
+
+
+    Font.whitelist = [
+
+        'arial',
+
+        'times-new-roman',
+
+        'georgia',
+
+        'verdana',
+
+        'monospace'
+
+    ];
+
+
+    Quill.register(
+        Font,
+        true
+    );
+
+
+    adminQuillFontsRegistered =
+        true;
+
+}
+
+
+
+function createAdminRichTextEditor(
+    elementId,
+    content = ''
+) {
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (
+        !element ||
+        typeof Quill === 'undefined'
+    ) {
+        return null;
+    }
+
+
+    registerAdminQuillFonts();
+
+
+    element.innerHTML = '';
+
+
+    const editor =
+        new Quill(
+            element,
+            {
+
+                theme: 'snow',
+
+                placeholder:
+                    'Внесете содржина...',
+
+
+                modules: {
+
+                    toolbar: [
+
+                        [
+                            {
+                                font: [
+                                    false,
+                                    'arial',
+                                    'times-new-roman',
+                                    'georgia',
+                                    'verdana',
+                                    'monospace'
+                                ]
+                            }
+                        ],
+
+
+                        [
+                            {
+                                size: [
+                                    'small',
+                                    false,
+                                    'large',
+                                    'huge'
+                                ]
+                            }
+                        ],
+
+
+                        [
+                            {
+                                header: [
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    false
+                                ]
+                            }
+                        ],
+
+
+                        [
+                            'bold',
+                            'italic',
+                            'underline',
+                            'strike'
+                        ],
+
+
+                        [
+                            {
+                                color: []
+                            },
+
+                            {
+                                background: []
+                            }
+                        ],
+
+
+                        [
+                            {
+                                script: 'sub'
+                            },
+
+                            {
+                                script: 'super'
+                            }
+                        ],
+
+
+                        [
+                            {
+                                list: 'ordered'
+                            },
+
+                            {
+                                list: 'bullet'
+                            }
+                        ],
+
+
+                        [
+                            {
+                                indent: '-1'
+                            },
+
+                            {
+                                indent: '+1'
+                            }
+                        ],
+
+
+                        [
+                            {
+                                align: []
+                            }
+                        ],
+
+
+                        [
+                            'blockquote',
+                            'link'
+                        ],
+
+
+                        [
+                            'clean'
+                        ]
+
+                    ]
+
+                }
+
+            }
+        );
+
+
+    if (content) {
+
+        editor
+            .clipboard
+            .dangerouslyPasteHTML(
+                content
+            );
+
+    }
+
+
+    return editor;
+
+}
+
+
 const adminApp = Vue.createApp({
 
     data() {
@@ -35,126 +256,157 @@ const adminApp = Vue.createApp({
    ЧЛЕНОВИ
 ================================================= */
 
-members: [],
+            members: [],
 
-loadingMembers: false,
+            loadingMembers: false,
 
-savingMember: false,
-
-
-memberPageMode:
-    'list',
+            savingMember: false,
 
 
-editingMemberId:
-    null,
+            memberPageMode:
+                'list',
 
 
-memberSearch:
-    '',
+            editingMemberId:
+                null,
 
 
-memberDepartmentFilter:
-    '',
+            memberSearch:
+                '',
 
 
-memberImageFile:
-    null,
+            memberDepartmentFilter:
+                '',
 
 
-memberImagePreview:
-    '',
+            memberImageFile:
+                null,
 
 
-memberFormError:
-    '',
+            memberImagePreview:
+                '',
 
 
-memberForm: {
-
-    name: '',
-
-    department: '',
-
-    isActive: true
-
-},
+            memberFormError:
+                '',
 
 
-memberDepartments: [
+            memberForm: {
 
-    {
-        value:
-            'opstestveni-nauki',
+                name: '',
 
-        name:
-            'Одделение за општествени науки'
-    },
+                department: '',
 
+                isActive: true
 
-    {
-        value:
-            'pravni-nauki',
-
-        name:
-            'Одделение за правни науки'
-    },
+            },
 
 
-    {
-        value:
-            'prirodni-nauki',
+            memberDepartments: [
 
-        name:
-            'Одделение за природни науки'
-    },
+                {
+                    value:
+                        'opstestveni-nauki',
 
-
-    {
-        value:
-            'primeneti-nauki-i-medicina',
-
-        name:
-            'Одделение за применети науки и медицина'
-    },
+                    name:
+                        'Одделение за општествени науки'
+                },
 
 
-    {
-        value:
-            'tehnicki-nauki',
+                {
+                    value:
+                        'pravni-nauki',
 
-        name:
-            'Одделение за технички науки'
-    },
-
-
-    {
-        value:
-            'umetnost',
-
-        name:
-            'Одделение за уметност'
-    },
+                    name:
+                        'Одделение за правни науки'
+                },
 
 
-    {
-        value:
-            'lingvistika-i-literatura',
+                {
+                    value:
+                        'prirodni-nauki',
 
-        name:
-            'Одделение за лингвистика и литература'
-    },
+                    name:
+                        'Одделение за природни науки'
+                },
 
 
-    {
-        value:
-            'istorisko-geografski-nauki',
+                {
+                    value:
+                        'primeneti-nauki-i-medicina',
 
-        name:
-            'Одделение за историско-географски науки'
-    }
+                    name:
+                        'Одделение за применети науки и медицина'
+                },
 
-]
+
+                {
+                    value:
+                        'tehnicki-nauki',
+
+                    name:
+                        'Одделение за технички науки'
+                },
+
+
+                {
+                    value:
+                        'umetnost',
+
+                    name:
+                        'Одделение за уметност'
+                },
+
+
+                {
+                    value:
+                        'lingvistika-i-literatura',
+
+                    name:
+                        'Одделение за лингвистика и литература'
+                },
+
+
+                {
+                    value:
+                        'istorisko-geografski-nauki',
+
+                    name:
+                        'Одделение за историско-географски науки'
+                }
+
+            ],
+            /* =================================================
+                ЗА МНД
+                ================================================= */
+
+                aboutPages: [],
+
+                loadingAboutPages: false,
+
+                aboutPageMode:
+                    'list',
+
+                editingAboutSlug:
+                    null,
+
+                editingAboutTitle:
+                    '',
+
+                aboutImageFile:
+                    null,
+
+                aboutImagePreview:
+                    '',
+
+                removeAboutImage:
+                    false,
+
+                savingAboutPage:
+                    false,
+
+                aboutFormError:
+                    '',
 
         };
 
@@ -204,9 +456,6 @@ memberDepartments: [
 
     methods: {
 
-        /* =========================================================
-   LOAD MEMBERS
-========================================================= */
 
         async loadMembers() {
 
@@ -270,91 +519,12 @@ memberDepartments: [
 
         initializeMemberEditor(content = '') {
 
-            const element =
-                document.getElementById(
-                    'memberRichTextEditor'
-                );
-
-
-            if (!element) {
-                return;
-            }
-
-
-            element.innerHTML = '';
-
-
             memberRichTextEditor =
-                new Quill(
-                    element,
-                    {
-
-                        theme: 'snow',
-
-                        placeholder:
-                            'Внесете информации за членот...',
-
-
-                        modules: {
-
-                            toolbar: [
-
-                                [
-                                    {
-                                        header: [
-                                            2,
-                                            3,
-                                            false
-                                        ]
-                                    }
-                                ],
-
-                                [
-                                    'bold',
-                                    'italic',
-                                    'underline',
-                                    'strike'
-                                ],
-
-                                [
-                                    {
-                                        list:
-                                            'ordered'
-                                    },
-
-                                    {
-                                        list:
-                                            'bullet'
-                                    }
-                                ],
-
-                                [
-                                    'blockquote',
-                                    'link'
-                                ],
-
-                                [
-                                    'clean'
-                                ]
-
-                            ]
-
-                        }
-
-                    }
+                createAdminRichTextEditor(
+                    'memberRichTextEditor',
+                    content
                 );
-
-
-            if (content) {
-
-                memberRichTextEditor
-                    .clipboard
-                    .dangerouslyPasteHTML(
-                        content
-                    );
-
-            }
-
+        
         },
 
 
@@ -898,7 +1068,312 @@ memberDepartments: [
 
             }
 
+        },
+
+        /* =========================================================
+   LOAD ABOUT PAGES
+========================================================= */
+
+async loadAboutPages() {
+
+    try {
+
+        this.loadingAboutPages =
+            true;
+
+
+        const response =
+            await axios.get(
+                '/admin/api/za-mnd'
+            );
+
+
+        this.aboutPages =
+            response.data?.pages || [];
+
+
+    } catch (error) {
+
+        console.error(
+            'Load About pages error:',
+            error
+        );
+
+
+    } finally {
+
+        this.loadingAboutPages =
+            false;
+
+    }
+
+},
+
+
+
+/* =========================================================
+   OPEN EDIT
+========================================================= */
+
+openEditAboutPage(page) {
+
+    this.editingAboutSlug =
+        page.slug;
+
+
+    this.editingAboutTitle =
+        page.title;
+
+
+    this.aboutImageFile =
+        null;
+
+
+    this.aboutImagePreview =
+        page.image || '';
+
+
+    this.removeAboutImage =
+        false;
+
+
+    this.aboutFormError =
+        '';
+
+
+    this.aboutPageMode =
+        'form';
+
+
+    this.$nextTick(
+        () => {
+
+            aboutRichTextEditor =
+                createAdminRichTextEditor(
+                    'aboutRichTextEditor',
+                    page.content || ''
+                );
+
         }
+    );
+
+},
+
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+handleAboutImageChange(event) {
+
+    const file =
+        event.target.files?.[0];
+
+
+    if (!file) {
+        return;
+    }
+
+
+    const allowedTypes = [
+
+        'image/jpeg',
+
+        'image/png',
+
+        'image/webp'
+
+    ];
+
+
+    if (
+        !allowedTypes.includes(
+            file.type
+        )
+    ) {
+
+        this.aboutFormError =
+            'Дозволени се JPG, PNG и WEBP фотографии.';
+
+        return;
+
+    }
+
+
+    if (
+        file.size >
+        5 * 1024 * 1024
+    ) {
+
+        this.aboutFormError =
+            'Фотографијата не смее да биде поголема од 5 MB.';
+
+        return;
+
+    }
+
+
+    this.aboutImageFile =
+        file;
+
+
+    this.removeAboutImage =
+        false;
+
+
+    this.aboutImagePreview =
+        URL.createObjectURL(
+            file
+        );
+
+},
+
+
+
+removeCurrentAboutImage() {
+
+    this.aboutImageFile =
+        null;
+
+
+    this.aboutImagePreview =
+        '';
+
+
+    this.removeAboutImage =
+        true;
+
+},
+
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+async saveAboutPage() {
+
+    if (
+        this.savingAboutPage ||
+        !this.editingAboutSlug
+    ) {
+        return;
+    }
+
+
+    try {
+
+        this.savingAboutPage =
+            true;
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            'content',
+            aboutRichTextEditor
+                ? aboutRichTextEditor.root.innerHTML
+                : ''
+        );
+
+
+        formData.append(
+            'removeImage',
+            String(
+                this.removeAboutImage
+            )
+        );
+
+
+        if (
+            this.aboutImageFile
+        ) {
+
+            formData.append(
+                'image',
+                this.aboutImageFile
+            );
+
+        }
+
+
+        await axios.put(
+
+            '/admin/api/za-mnd/' +
+            this.editingAboutSlug,
+
+            formData
+
+        );
+
+
+        await this.loadAboutPages();
+
+
+        this.closeAboutForm();
+
+
+    } catch (error) {
+
+        console.error(
+            'Save About page error:',
+            error
+        );
+
+
+        this.aboutFormError =
+            error.response?.data?.message ||
+            'Не може да се зачува содржината.';
+
+
+    } finally {
+
+        this.savingAboutPage =
+            false;
+
+    }
+
+},
+
+
+
+closeAboutForm() {
+
+    this.aboutPageMode =
+        'list';
+
+
+    this.editingAboutSlug =
+        null;
+
+
+    this.editingAboutTitle =
+        '';
+
+
+    this.aboutImageFile =
+        null;
+
+
+    this.aboutImagePreview =
+        '';
+
+
+    this.removeAboutImage =
+        false;
+
+
+    this.aboutFormError =
+        '';
+
+
+    aboutRichTextEditor =
+        null;
+
+},
 
     },
 
@@ -910,6 +1385,16 @@ memberDepartments: [
         ) {
     
             this.loadMembers();
+    
+        }
+    
+    
+        if (
+            this.currentAdminPage ===
+            'za-mnd'
+        ) {
+    
+            this.loadAboutPages();
     
         }
     

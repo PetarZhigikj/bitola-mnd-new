@@ -97,35 +97,26 @@
                 </span>
              </a>
 
+             <a
+                href="/admin/za-mnd"
+                :class="{
+                    active:
+                        currentAdminPage === 'za-mnd'
+                }"
+            >
 
-                <a
-                    href="/admin/departments"
-                    class="<%= adminPage === 'departments' ? 'active' : '' %>"
-                >
-                    <i class="bx bx-buildings"></i>
+                <i class="bx bx-info-circle"></i>
 
-                    Departments
-                </a>
+                <span>
+                    За МНД
+                </span>
 
-
-                <a
-                    href="/admin/centers"
-                    class="<%= adminPage === 'centers' ? 'active' : '' %>"
-                >
-                    <i class="bx bx-building-house"></i>
-
-                    Centers
-                </a>
+            </a>
 
 
-                <a
-                    href="/admin/publications"
-                    class="<%= adminPage === 'publications' ? 'active' : '' %>"
-                >
-                    <i class="bx bx-book"></i>
 
-                    Publications
-                </a>
+
+
 
 
                 <a

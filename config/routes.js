@@ -83,4 +83,31 @@ DEPARTMENTS
 'GET /oddelnija/:slug':
 'MainController.departmentMembersPage',
 
+/* =========================================================
+   ADMIN - ЗА МНД
+========================================================= */
+
+'GET /admin/za-mnd':
+    'AdminController.aboutPagesPage',
+
+
+'GET /admin/api/za-mnd':
+    'AdminController.getAboutPages',
+
+
+'PUT /admin/api/za-mnd/:slug':
+    'AdminController.updateAboutPage',
+
+    /* =========================================================
+   ЗА МНД
+========================================================= */
+
+'GET /za-mnd':
+'MainController.aboutRoot',
+
+
+'GET /za-mnd/:slug':
+'MainController.aboutPage',
+
 };
+

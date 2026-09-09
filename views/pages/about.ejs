@@ -1,0 +1,60 @@
+<div class="mnd-about-page">
+
+    <section class="mnd-about-section">
+
+        <div class="mnd-about-container">
+
+
+            <!-- TITLE -->
+
+            <div class="mnd-about-heading">
+
+                <h1>
+                    <%= aboutTitle %>
+                </h1>
+
+            </div>
+
+
+
+            <!-- OPTIONAL IMAGE -->
+
+            <% if (
+                aboutPage &&
+                aboutPage.image
+            ) { %>
+
+                <div class="mnd-about-image">
+
+                    <img
+                        src="<%= aboutPage.image %>"
+                        alt="<%= aboutTitle %>"
+                    >
+
+                </div>
+
+            <% } %>
+
+
+
+            <!-- CONTENT -->
+
+            <% if (
+                aboutPage &&
+                aboutPage.content
+            ) { %>
+
+                <article class="mnd-rich-content">
+
+                    <%- aboutPage.content %>
+
+                </article>
+
+            <% } %>
+
+
+        </div>
+
+    </section>
+
+</div>

@@ -26,6 +26,22 @@ const MEMBER_DEPARTMENTS = {
 
 };
 
+const ABOUT_PAGES = {
+
+    'osnovni-informacii':
+        'Основни информации',
+
+    'istorijat':
+        'Историјат',
+
+    'lica-za-kontakt':
+        'Лица за контакт',
+
+    'rakovodna-struktura':
+        'Раководна структура'
+
+};
+
 module.exports = {
 
 
@@ -289,6 +305,102 @@ async memberPage(req, res) {
         );
 
     }
+
+},
+
+/* =========================================================
+   ЗА МНД
+========================================================= */
+
+async aboutPage(req, res) {
+
+    try {
+
+        const slug =
+            String(
+                req.params.slug || ''
+            ).trim();
+
+
+        const title =
+            ABOUT_PAGES[
+                slug
+            ];
+
+
+        if (!title) {
+
+            return res.notFound(
+                'Страницата не е пронајдена.'
+            );
+
+        }
+
+
+        const aboutPage =
+            await AboutPage.findOne({
+                slug
+            });
+
+
+        return res.view(
+            'pages/about',
+            {
+
+                layout:
+                    'layouts/layout',
+
+                pageTitle:
+                    title,
+
+                metaDescription:
+                    title +
+                    ' - Македонско научно друштво Битола',
+
+                currentPage:
+                    'about',
+
+                aboutPage:
+                    aboutPage || {
+
+                        slug,
+
+                        image:
+                            null,
+
+                        content:
+                            ''
+
+                    },
+
+                aboutTitle:
+                    title
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'About page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+
+
+async aboutRoot(req, res) {
+
+    return res.redirect(
+        '/za-mnd/osnovni-informacii'
+    );
 
 },
 
