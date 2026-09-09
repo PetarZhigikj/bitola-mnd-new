@@ -1,0 +1,361 @@
+<div
+    id="adminContentPage"
+    class="admin-manage-page"
+    data-content-type="<%= contentType %>"
+    data-content-title="<%= contentPageTitle %>"
+>
+    <!-- =====================================================
+         LIST
+    ====================================================== -->
+
+    <template
+        v-if="contentPageMode === 'list'"
+    >
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    <%= contentPageTitle %>
+                </h2>
+
+                <p>
+                    Управување со
+                    <%= contentPageTitle.toLowerCase() %>.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="admin-btn admin-btn-primary"
+                @click="openCreateContentItem"
+            >
+                <i class="bx bx-plus"></i>
+
+                Додај
+            </button>
+
+        </div>
+
+
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Наслов
+                        </th>
+
+                        <th>
+                            Документ
+                        </th>
+
+                        <th>
+                            Акции
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="item in contentItems"
+                        :key="item.id"
+                    >
+
+                        <td>
+                            <strong>
+                                {{ item.title }}
+                            </strong>
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                v-if="item.attachmentName"
+                            >
+                                {{ item.attachmentName }}
+                            </span>
+
+
+                            <span v-else>
+                                —
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="admin-table-actions">
+
+                                <button
+                                    type="button"
+                                    class="admin-btn admin-btn-small"
+                                    @click="openEditContentItem(item)"
+                                >
+                                    <i class="bx bx-edit"></i>
+
+                                    Измени
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="admin-btn admin-btn-small admin-btn-danger"
+                                    @click="deleteContentItem(item)"
+                                >
+                                    <i class="bx bx-trash"></i>
+
+                                    Избриши
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr
+                        v-if="
+                            !loadingContentItems &&
+                            !contentItems.length
+                        "
+                    >
+
+                        <td
+                            colspan="3"
+                            class="admin-empty-state"
+                        >
+                            Нема содржина.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </template>
+
+        <!-- =====================================================
+         FORM
+    ====================================================== -->
+
+    <template v-else>
+
+        <div class="admin-form-header">
+
+            <button
+                type="button"
+                class="admin-back-btn"
+                @click="closeContentForm"
+            >
+                <i class="bx bx-arrow-back"></i>
+
+                Назад
+            </button>
+
+
+            <h2>
+
+                {{
+                    editingContentItemId
+                        ? 'Измени'
+                        : 'Додај'
+                }}
+
+                <%= contentPageTitle %>
+
+            </h2>
+
+        </div>
+
+
+
+        <form
+            class="admin-form-card"
+            @submit.prevent="saveContentItem"
+        >
+
+
+            <!-- TITLE -->
+
+            <div class="admin-form-group">
+
+                <label>
+                    Наслов *
+                </label>
+
+
+                <input
+                    type="text"
+                    v-model="contentForm.title"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- IMAGE -->
+
+            <div class="admin-form-group">
+
+                <label>
+                    Фотографија
+                </label>
+
+
+                <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    @change="handleContentImageChange"
+                >
+
+
+                <div
+                    v-if="contentImagePreview"
+                    class="admin-content-image-preview"
+                >
+
+                    <img
+                        :src="contentImagePreview"
+                        alt="Преглед"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="admin-btn admin-btn-small admin-btn-danger"
+                        @click="removeContentImage"
+                    >
+                        Отстрани фотографија
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RICH TEXT -->
+
+            <div class="admin-form-group">
+
+                <label>
+                    Содржина
+                </label>
+
+
+                <div
+                    id="contentRichTextEditor"
+                    class="admin-rich-text-editor"
+                ></div>
+
+            </div>
+
+
+
+            <!-- ATTACHMENT -->
+
+            <div class="admin-form-group">
+
+                <label>
+                    Прикачен документ
+                </label>
+
+
+                <input
+                    type="file"
+                    @change="handleContentAttachmentChange"
+                >
+
+
+                <div
+                    v-if="contentAttachmentName"
+                    class="admin-content-attachment-preview"
+                >
+
+                    <i class="bx bx-file"></i>
+
+
+                    <span>
+                        {{ contentAttachmentName }}
+                    </span>
+
+
+                    <button
+                        type="button"
+                        class="admin-btn admin-btn-small admin-btn-danger"
+                        @click="removeContentAttachment"
+                    >
+                        Отстрани
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <p
+                v-if="contentFormError"
+                class="admin-form-error"
+            >
+                {{ contentFormError }}
+            </p>
+
+
+
+            <div class="admin-form-actions">
+
+                <button
+                    type="button"
+                    class="admin-btn"
+                    @click="closeContentForm"
+                >
+                    Откажи
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="admin-btn admin-btn-primary"
+                    :disabled="savingContentItem"
+                >
+
+                    <i class="bx bx-save"></i>
+
+                    {{
+                        savingContentItem
+                            ? 'Се зачувува...'
+                            : 'Зачувај'
+                    }}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </template>
+
+</div>
+
+

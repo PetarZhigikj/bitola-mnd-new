@@ -109,5 +109,80 @@ DEPARTMENTS
 'GET /za-mnd/:slug':
 'MainController.aboutPage',
 
+/* =========================================================
+   ADMIN - ПУБЛИКАЦИИ
+========================================================= */
+
+'GET /admin/publikacii':
+    'AdminController.publicationsPage',
+
+
+
+/* =========================================================
+   ADMIN - ОГЛАСИ
+========================================================= */
+
+'GET /admin/oglasi':
+    'AdminController.announcementsPage',
+
+
+
+/* =========================================================
+   ADMIN - SHARED CONTENT API
+========================================================= */
+
+'GET /admin/api/content/:type':
+    'AdminController.getContentItems',
+
+
+'POST /admin/api/content/:type':
+    'AdminController.createContentItem',
+
+
+'PUT /admin/api/content/:type/:id':
+    'AdminController.updateContentItem',
+
+
+'DELETE /admin/api/content/:type/:id':
+    'AdminController.deleteContentItem',
+
+    /* =========================================================
+   ПУБЛИКАЦИИ
+========================================================= */
+
+'GET /publikacii':
+'MainController.publicationsPage',
+
+
+'GET /publikacii/:id':
+'MainController.publicationDetailPage',
+
+
+
+/* =========================================================
+СОВРЕМЕНИ ДИЈАЛОЗИ
+SAME PUBLICATION DATA
+========================================================= */
+
+'GET /sovremeni-dijalozi':
+'MainController.contemporaryDialoguesPage',
+
+
+'GET /sovremeni-dijalozi/:id':
+'MainController.contemporaryDialoguesDetailPage',
+
+
+
+/* =========================================================
+ОГЛАСИ
+========================================================= */
+
+'GET /oglasi':
+'MainController.announcementsPage',
+
+
+'GET /oglasi/:id':
+'MainController.announcementDetailPage',
+
 };
 

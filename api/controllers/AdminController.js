@@ -401,6 +401,237 @@ const fs =
     
     }
 
+    function getContentDirectory(type) {
+
+        if (type === 'publikacija') {
+            return 'publikacii';
+        }
+    
+    
+        return 'oglasi';
+    
+    }
+
+    async function uploadContentImage(
+        req,
+        type
+    ) {
+    
+        const directory =
+            getContentDirectory(type);
+    
+    
+            const uploadDirectory =
+            path.resolve(
+                sails.config.appPath,
+                `.tmp/public/uploads/${directory}/images`
+            );
+    
+    
+        await fs.promises.mkdir(
+            uploadDirectory,
+            {
+                recursive: true
+            }
+        );
+    
+    
+        return new Promise(
+            (resolve, reject) => {
+    
+                req.file('image').upload(
+                    {
+    
+                        dirname:
+                            uploadDirectory,
+    
+                        maxBytes:
+                            5 * 1024 * 1024
+    
+                    },
+    
+                    (error, uploadedFiles) => {
+    
+                        if (error) {
+                            return reject(error);
+                        }
+    
+    
+                        if (
+                            !uploadedFiles ||
+                            !uploadedFiles.length
+                        ) {
+    
+                            return resolve(null);
+    
+                        }
+    
+    
+                        const uploadedFile =
+                            uploadedFiles[0];
+    
+    
+                        const fileName =
+                            path.basename(
+                                uploadedFile.fd
+                            );
+    
+    
+                        return resolve({
+                            url:
+                                `/uploads/${directory}/images/${fileName}`
+                        });
+    
+                    }
+                );
+    
+            }
+        );
+    
+    }
+
+    async function uploadContentAttachment(
+        req,
+        type
+    ) {
+    
+        const directory =
+            getContentDirectory(type);
+    
+    
+            const uploadDirectory =
+            path.resolve(
+                sails.config.appPath,
+                `.tmp/public/uploads/${directory}/files`
+            );
+    
+    
+        await fs.promises.mkdir(
+            uploadDirectory,
+            {
+                recursive: true
+            }
+        );
+    
+    
+        return new Promise(
+            (resolve, reject) => {
+    
+                req.file('attachment').upload(
+                    {
+    
+                        dirname:
+                            uploadDirectory,
+    
+                        maxBytes:
+                            25 * 1024 * 1024
+    
+                    },
+    
+                    (error, uploadedFiles) => {
+    
+                        if (error) {
+                            return reject(error);
+                        }
+    
+    
+                        if (
+                            !uploadedFiles ||
+                            !uploadedFiles.length
+                        ) {
+    
+                            return resolve(null);
+    
+                        }
+    
+    
+                        const uploadedFile =
+                            uploadedFiles[0];
+    
+    
+                        const fileName =
+                            path.basename(
+                                uploadedFile.fd
+                            );
+    
+    
+                        return resolve({
+    
+                            url:
+                                `/uploads/${directory}/files/${fileName}`,
+    
+                            name:
+                                uploadedFile.filename ||
+                                fileName,
+    
+                            mimeType:
+                                uploadedFile.type ||
+                                ''
+    
+                        });
+    
+                    }
+                );
+    
+            }
+        );
+    
+    }
+
+    async function deleteUploadedContentFile(
+        fileUrl
+    ) {
+    
+        if (!fileUrl) {
+            return;
+        }
+    
+    
+        const cleanPath =
+            String(fileUrl)
+                .replace(/^\/+/, '');
+    
+    
+        const filePath =
+            path.resolve(
+                sails.config.appPath,
+                '.tmp/public',
+                cleanPath
+            );
+    
+    
+        try {
+    
+            await fs.promises.unlink(
+                filePath
+            );
+    
+        } catch (error) {
+    
+            if (
+                error.code !== 'ENOENT'
+            ) {
+    
+                sails.log.warn(
+                    'Unable to delete uploaded content file:',
+                    error
+                );
+    
+            }
+    
+        }
+    
+    }
+
+    function isValidContentType(type) {
+
+        return [
+            'publikacija',
+            'oglas'
+        ].includes(type);
+    
+    }
+
 module.exports = {
 
 
@@ -1403,6 +1634,650 @@ async updateMember(req, res) {
         }
     
     },
+
+    /* =========================================================
+   ПУБЛИКАЦИИ
+========================================================= */
+
+async publicationsPage(req, res) {
+
+    return res.view(
+        'admin/content-items',
+        {
+
+            layout:
+                'layouts/admin-layout',
+
+            pageTitle:
+                'Публикации',
+
+            adminPage:
+                'publikacii',
+
+            contentType:
+                'publikacija',
+
+            contentPageTitle:
+                'Публикации'
+
+        }
+    );
+
+},
+
+
+
+/* =========================================================
+   ОГЛАСИ
+========================================================= */
+
+async announcementsPage(req, res) {
+
+    return res.view(
+        'admin/content-items',
+        {
+
+            layout:
+                'layouts/admin-layout',
+
+            pageTitle:
+                'Огласи',
+
+            adminPage:
+                'oglasi',
+
+            contentType:
+                'oglas',
+
+            contentPageTitle:
+                'Огласи'
+
+        }
+    );
+
+},
+
+async getContentItems(req, res) {
+
+    try {
+
+        const type =
+            String(
+                req.params.type || ''
+            );
+
+
+        if (
+            !isValidContentType(type)
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Невалиден тип на содржина.'
+
+            });
+
+        }
+
+
+        const items =
+            await ContentItem.find({
+                type
+            })
+            .sort(
+                'createdAt DESC'
+            );
+
+
+        return res.json({
+
+            success: true,
+
+            items
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Get content items error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се вчита содржината.'
+
+        });
+
+    }
+
+},
+
+async createContentItem(req, res) {
+
+    let uploadedImage = null;
+    let uploadedAttachment = null;
+
+
+    try {
+
+        const type =
+            String(
+                req.params.type || ''
+            );
+
+
+        if (
+            !isValidContentType(type)
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Невалиден тип на содржина.'
+
+            });
+
+        }
+
+
+        const title =
+            String(
+                req.body.title || ''
+            ).trim();
+
+
+        const content =
+            sanitizeRichTextContent(
+                req.body.content
+            );
+
+
+        if (!title) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Насловот е задолжителен.'
+
+            });
+
+        }
+
+
+
+        /* IMAGE */
+
+        /* =================================================
+   UPLOAD IMAGE + ATTACHMENT AT THE SAME TIME
+================================================= */
+
+            [
+                uploadedImage,
+                uploadedAttachment
+            ] = await Promise.all([
+
+                uploadContentImage(
+                    req,
+                    type
+                ),
+
+                uploadContentAttachment(
+                    req,
+                    type
+                )
+
+            ]);
+
+
+
+        const item =
+            await ContentItem.create({
+
+                type,
+
+                title,
+
+                content,
+
+                image:
+                    uploadedImage?.url ||
+                    null,
+
+                attachmentUrl:
+                    uploadedAttachment?.url ||
+                    null,
+
+                attachmentName:
+                    uploadedAttachment?.name ||
+                    null,
+
+                attachmentMimeType:
+                    uploadedAttachment?.mimeType ||
+                    null,
+
+                createdBy:
+                    req.session.adminUserId,
+
+                updatedBy:
+                    req.session.adminUserId
+
+            })
+            .fetch();
+
+
+        return res.json({
+
+            success: true,
+
+            item,
+
+            message:
+                'Содржината е успешно додадена.'
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Create content item error:',
+            error
+        );
+
+
+        if (
+            uploadedImage?.url
+        ) {
+
+            await deleteUploadedContentFile(
+                uploadedImage.url
+            );
+
+        }
+
+
+        if (
+            uploadedAttachment?.url
+        ) {
+
+            await deleteUploadedContentFile(
+                uploadedAttachment.url
+            );
+
+        }
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се додаде содржината.'
+
+        });
+
+    }
+
+},
+
+async updateContentItem(req, res) {
+
+    let uploadedImage = null;
+    let uploadedAttachment = null;
+
+
+    try {
+
+        const id =
+            req.params.id;
+
+
+        const existingItem =
+            await ContentItem.findOne({
+                id
+            });
+
+
+        if (!existingItem) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    'Содржината не е пронајдена.'
+
+            });
+
+        }
+
+
+        const title =
+            String(
+                req.body.title || ''
+            ).trim();
+
+
+        const content =
+            sanitizeRichTextContent(
+                req.body.content
+            );
+
+
+        const removeImage =
+            String(
+                req.body.removeImage
+            ) === 'true';
+
+
+        const removeAttachment =
+            String(
+                req.body.removeAttachment
+            ) === 'true';
+
+
+        if (!title) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Насловот е задолжителен.'
+
+            });
+
+        }
+
+
+
+        [
+            uploadedImage,
+            uploadedAttachment
+        ] = await Promise.all([
+        
+            uploadContentImage(
+                req,
+                existingItem.type
+            ),
+        
+            uploadContentAttachment(
+                req,
+                existingItem.type
+            )
+        
+        ]);
+
+
+
+        let image =
+            existingItem.image;
+
+
+        if (uploadedImage) {
+
+            image =
+                uploadedImage.url;
+
+        } else if (removeImage) {
+
+            image =
+                null;
+
+        }
+
+
+
+        let attachmentUrl =
+            existingItem.attachmentUrl;
+
+
+        let attachmentName =
+            existingItem.attachmentName;
+
+
+        let attachmentMimeType =
+            existingItem.attachmentMimeType;
+
+
+        if (uploadedAttachment) {
+
+            attachmentUrl =
+                uploadedAttachment.url;
+
+            attachmentName =
+                uploadedAttachment.name;
+
+            attachmentMimeType =
+                uploadedAttachment.mimeType;
+
+        } else if (removeAttachment) {
+
+            attachmentUrl =
+                null;
+
+            attachmentName =
+                null;
+
+            attachmentMimeType =
+                null;
+
+        }
+
+
+
+        const updatedItem =
+            await ContentItem.updateOne({
+                id
+            })
+            .set({
+
+                title,
+
+                content,
+
+                image,
+
+                attachmentUrl,
+
+                attachmentName,
+
+                attachmentMimeType,
+
+                updatedBy:
+                    req.session.adminUserId
+
+            });
+
+
+
+        /* DELETE OLD IMAGE */
+
+        if (
+            existingItem.image &&
+            (
+                uploadedImage ||
+                removeImage
+            )
+        ) {
+
+            await deleteUploadedContentFile(
+                existingItem.image
+            );
+
+        }
+
+
+
+        /* DELETE OLD ATTACHMENT */
+
+        if (
+            existingItem.attachmentUrl &&
+            (
+                uploadedAttachment ||
+                removeAttachment
+            )
+        ) {
+
+            await deleteUploadedContentFile(
+                existingItem.attachmentUrl
+            );
+
+        }
+
+
+
+        return res.json({
+
+            success: true,
+
+            item:
+                updatedItem,
+
+            message:
+                'Содржината е успешно изменета.'
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Update content item error:',
+            error
+        );
+
+
+        if (
+            uploadedImage?.url
+        ) {
+
+            await deleteUploadedContentFile(
+                uploadedImage.url
+            );
+
+        }
+
+
+        if (
+            uploadedAttachment?.url
+        ) {
+
+            await deleteUploadedContentFile(
+                uploadedAttachment.url
+            );
+
+        }
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се измени содржината.'
+
+        });
+
+    }
+
+},
+
+async deleteContentItem(req, res) {
+
+    try {
+
+        const id =
+            req.params.id;
+
+
+        const item =
+            await ContentItem.findOne({
+                id
+            });
+
+
+        if (!item) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    'Содржината не е пронајдена.'
+
+            });
+
+        }
+
+
+        await ContentItem.destroyOne({
+            id
+        });
+
+
+        if (item.image) {
+
+            await deleteUploadedContentFile(
+                item.image
+            );
+
+        }
+
+
+        if (item.attachmentUrl) {
+
+            await deleteUploadedContentFile(
+                item.attachmentUrl
+            );
+
+        }
+
+
+        return res.json({
+
+            success: true,
+
+            message:
+                'Содржината е избришана.'
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Delete content item error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се избрише содржината.'
+
+        });
+
+    }
+
+},
 
 
 

@@ -42,6 +42,111 @@ const ABOUT_PAGES = {
 
 };
 
+async function renderContentListing(
+    req,
+    res,
+    options
+) {
+
+    const items =
+        await ContentItem.find({
+            type:
+                options.type
+        })
+        .sort(
+            'createdAt DESC'
+        );
+
+
+    return res.view(
+        'pages/content-list',
+        {
+
+            layout:
+                'layouts/layout',
+
+            pageTitle:
+                options.title,
+
+            metaDescription:
+                options.title +
+                ' - Македонско научно друштво Битола',
+
+            currentPage:
+                options.currentPage,
+
+            pageHeading:
+                options.title,
+
+            basePath:
+                options.basePath,
+
+            items
+
+        }
+    );
+
+}
+
+async function renderContentDetail(
+    req,
+    res,
+    options
+) {
+
+    const item =
+        await ContentItem.findOne({
+
+            id:
+                req.params.id,
+
+            type:
+                options.type
+
+        });
+
+
+    if (!item) {
+
+        return res.notFound(
+            'Содржината не е пронајдена.'
+        );
+
+    }
+
+
+    return res.view(
+        'pages/content-detail',
+        {
+
+            layout:
+                'layouts/layout',
+
+            pageTitle:
+                item.title,
+
+            metaDescription:
+                item.title +
+                ' - Македонско научно друштво Битола',
+
+            currentPage:
+                options.currentPage,
+
+            item,
+
+            basePath:
+                options.basePath,
+
+            listingTitle:
+                options.listingTitle
+
+        }
+    );
+
+}
+
+
+
 module.exports = {
 
 
@@ -403,5 +508,247 @@ async aboutRoot(req, res) {
     );
 
 },
+
+async publicationsPage(req, res) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'publikacija',
+
+                title:
+                    'Публикации',
+
+                currentPage:
+                    'publikacii',
+
+                basePath:
+                    '/publikacii'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Publications page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+
+
+async contemporaryDialoguesPage(
+    req,
+    res
+) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'publikacija',
+
+                title:
+                    'Современи дијалози',
+
+                currentPage:
+                    'sovremeni-dijalozi',
+
+                basePath:
+                    '/sovremeni-dijalozi'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Contemporary Dialogues page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async announcementsPage(req, res) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'oglas',
+
+                title:
+                    'Огласи',
+
+                currentPage:
+                    'oglasi',
+
+                basePath:
+                    '/oglasi'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Announcements page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async publicationDetailPage(
+    req,
+    res
+) {
+
+    try {
+
+        return await renderContentDetail(
+            req,
+            res,
+            {
+
+                type:
+                    'publikacija',
+
+                currentPage:
+                    'publikacii',
+
+                basePath:
+                    '/publikacii',
+
+                listingTitle:
+                    'Публикации'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Publication detail error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+
+
+async contemporaryDialoguesDetailPage(
+    req,
+    res
+) {
+
+    try {
+
+        return await renderContentDetail(
+            req,
+            res,
+            {
+
+                type:
+                    'publikacija',
+
+                currentPage:
+                    'sovremeni-dijalozi',
+
+                basePath:
+                    '/sovremeni-dijalozi',
+
+                listingTitle:
+                    'Современи дијалози'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        return res.serverError();
+
+    }
+
+},
+
+
+
+async announcementDetailPage(
+    req,
+    res
+) {
+
+    try {
+
+        return await renderContentDetail(
+            req,
+            res,
+            {
+
+                type:
+                    'oglas',
+
+                currentPage:
+                    'oglasi',
+
+                basePath:
+                    '/oglasi',
+
+                listingTitle:
+                    'Огласи'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        return res.serverError();
+
+    }
+
+},
+
+
 
 };

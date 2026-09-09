@@ -80,7 +80,7 @@
                 >
                     <i class="bx bx-news"></i>
 
-                    News & Events
+                    Новости
                 </a>
 
                 <a
@@ -119,54 +119,46 @@
 
 
 
-                <a
+                <!-- <a
                     href="/admin/journal"
                     class="<%= adminPage === 'journal' ? 'active' : '' %>"
                 >
                     <i class="bx bx-book-open"></i>
 
                     Современи дијалози
+                </a> -->
+
+                <a
+                    href="/admin/publikacii"
+                    :class="{
+                        active:
+                            currentAdminPage === 'publikacii'
+                    }"
+                >
+                    <i class="bx bx-book"></i>
+
+                    <span>
+                        Публикации
+                    </span>
                 </a>
 
 
                 <a
-                    href="/admin/pages"
-                    class="<%= adminPage === 'pages' ? 'active' : '' %>"
+                    href="/admin/oglasi"
+                    :class="{
+                        active:
+                            currentAdminPage === 'oglasi'
+                    }"
                 >
-                    <i class="bx bx-file"></i>
+                    <i class="bx bx-megaphone"></i>
 
-                    Pages
+                    <span>
+                        Огласи
+                    </span>
                 </a>
 
 
-                <a
-                    href="/admin/media"
-                    class="<%= adminPage === 'media' ? 'active' : '' %>"
-                >
-                    <i class="bx bx-image"></i>
-
-                    Media
-                </a>
-
-
-                <a
-                    href="/admin/redirects"
-                    class="<%= adminPage === 'redirects' ? 'active' : '' %>"
-                >
-                    <i class="bx bx-transfer"></i>
-
-                    Redirects
-                </a>
-
-
-                <a
-                    href="/admin/settings"
-                    class="<%= adminPage === 'settings' ? 'active' : '' %>"
-                >
-                    <i class="bx bx-cog"></i>
-
-                    Settings
-                </a>
+            
 
             </nav>
 

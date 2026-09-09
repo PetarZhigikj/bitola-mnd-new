@@ -1,5 +1,6 @@
 let memberRichTextEditor = null;
 let aboutRichTextEditor = null;
+let contentRichTextEditor = null;
 
 let adminQuillFontsRegistered = false;
 
@@ -407,6 +408,57 @@ const adminApp = Vue.createApp({
 
                 aboutFormError:
                     '',
+
+                    /* =================================================
+   ПУБЛИКАЦИИ / ОГЛАСИ
+================================================= */
+
+                    contentItems: [],
+
+                    contentType: '',
+
+                    contentPageMode:
+                        'list',
+
+                    loadingContentItems:
+                        false,
+
+                    savingContentItem:
+                        false,
+
+                    editingContentItemId:
+                        null,
+
+
+                    contentForm: {
+
+                        title: ''
+
+                    },
+
+
+                    contentImageFile:
+                        null,
+
+                    contentImagePreview:
+                        '',
+
+                    removeCurrentContentImage:
+                        false,
+
+
+                    contentAttachmentFile:
+                        null,
+
+                    contentAttachmentName:
+                        '',
+
+                    removeCurrentContentAttachment:
+                        false,
+
+
+                    contentFormError:
+    '',
 
         };
 
@@ -1375,6 +1427,483 @@ closeAboutForm() {
 
 },
 
+async loadContentItems() {
+
+    try {
+
+        this.loadingContentItems =
+            true;
+
+
+        const response =
+            await axios.get(
+                '/admin/api/content/' +
+                this.contentType
+            );
+
+
+        this.contentItems =
+            response.data?.items || [];
+
+
+    } catch (error) {
+
+        console.error(
+            'Load content items error:',
+            error
+        );
+
+
+    } finally {
+
+        this.loadingContentItems =
+            false;
+
+    }
+
+},
+
+openCreateContentItem() {
+
+    this.editingContentItemId =
+        null;
+
+
+    this.contentForm = {
+
+        title: ''
+
+    };
+
+
+    this.contentImageFile =
+        null;
+
+
+    this.contentImagePreview =
+        '';
+
+
+    this.removeCurrentContentImage =
+        false;
+
+
+    this.contentAttachmentFile =
+        null;
+
+
+    this.contentAttachmentName =
+        '';
+
+
+    this.removeCurrentContentAttachment =
+        false;
+
+
+    this.contentFormError =
+        '';
+
+
+    this.contentPageMode =
+        'form';
+
+
+    this.$nextTick(
+        () => {
+
+            contentRichTextEditor =
+                createAdminRichTextEditor(
+                    'contentRichTextEditor'
+                );
+
+        }
+    );
+
+},
+
+openEditContentItem(item) {
+
+    this.editingContentItemId =
+        item.id;
+
+
+    this.contentForm = {
+
+        title:
+            item.title || ''
+
+    };
+
+
+    this.contentImageFile =
+        null;
+
+
+    this.contentImagePreview =
+        item.image || '';
+
+
+    this.removeCurrentContentImage =
+        false;
+
+
+    this.contentAttachmentFile =
+        null;
+
+
+    this.contentAttachmentName =
+        item.attachmentName || '';
+
+
+    this.removeCurrentContentAttachment =
+        false;
+
+
+    this.contentFormError =
+        '';
+
+
+    this.contentPageMode =
+        'form';
+
+
+    this.$nextTick(
+        () => {
+
+            contentRichTextEditor =
+                createAdminRichTextEditor(
+
+                    'contentRichTextEditor',
+
+                    item.content || ''
+
+                );
+
+        }
+    );
+
+},
+
+handleContentImageChange(event) {
+
+    const file =
+        event.target.files?.[0];
+
+
+    if (!file) {
+        return;
+    }
+
+
+    this.contentImageFile =
+        file;
+
+
+    this.removeCurrentContentImage =
+        false;
+
+
+    this.contentImagePreview =
+        URL.createObjectURL(
+            file
+        );
+
+},
+
+
+
+removeContentImage() {
+
+    this.contentImageFile =
+        null;
+
+
+    this.contentImagePreview =
+        '';
+
+
+    this.removeCurrentContentImage =
+        true;
+
+},
+
+handleContentAttachmentChange(event) {
+
+    const file =
+        event.target.files?.[0];
+
+
+    if (!file) {
+        return;
+    }
+
+
+    if (
+        file.size >
+        25 * 1024 * 1024
+    ) {
+
+        this.contentFormError =
+            'Документот не смее да биде поголем од 25 MB.';
+
+        event.target.value =
+            '';
+
+        return;
+
+    }
+
+
+    this.contentAttachmentFile =
+        file;
+
+
+    this.contentAttachmentName =
+        file.name;
+
+
+    this.removeCurrentContentAttachment =
+        false;
+
+},
+
+
+
+removeContentAttachment() {
+
+    this.contentAttachmentFile =
+        null;
+
+
+    this.contentAttachmentName =
+        '';
+
+
+    this.removeCurrentContentAttachment =
+        true;
+
+},
+
+async saveContentItem() {
+
+    if (this.savingContentItem) {
+        return;
+    }
+
+
+    this.contentFormError =
+        '';
+
+
+    if (
+        !this.contentForm.title.trim()
+    ) {
+
+        this.contentFormError =
+            'Внесете наслов.';
+
+        return;
+
+    }
+
+
+    try {
+
+        this.savingContentItem =
+            true;
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            'title',
+            this.contentForm.title
+        );
+
+
+        formData.append(
+            'content',
+            contentRichTextEditor
+                ? contentRichTextEditor.root.innerHTML
+                : ''
+        );
+
+
+        formData.append(
+            'removeImage',
+            String(
+                this.removeCurrentContentImage
+            )
+        );
+
+
+        formData.append(
+            'removeAttachment',
+            String(
+                this.removeCurrentContentAttachment
+            )
+        );
+
+
+        if (
+            this.contentImageFile
+        ) {
+
+            formData.append(
+                'image',
+                this.contentImageFile
+            );
+
+        }
+
+
+        if (
+            this.contentAttachmentFile
+        ) {
+
+            formData.append(
+                'attachment',
+                this.contentAttachmentFile
+            );
+
+        }
+
+
+        if (
+            this.editingContentItemId
+        ) {
+
+            await axios.put(
+
+                '/admin/api/content/' +
+                this.contentType +
+                '/' +
+                this.editingContentItemId,
+
+                formData
+
+            );
+
+        } else {
+
+            await axios.post(
+
+                '/admin/api/content/' +
+                this.contentType,
+
+                formData
+
+            );
+
+        }
+
+
+        await this.loadContentItems();
+
+
+        this.closeContentForm();
+
+
+    } catch (error) {
+
+        console.error(
+            'Save content error:',
+            error
+        );
+
+
+        this.contentFormError =
+            error.response?.data?.message ||
+            'Не може да се зачува содржината.';
+
+
+    } finally {
+
+        this.savingContentItem =
+            false;
+
+    }
+
+},
+
+async deleteContentItem(item) {
+
+    const confirmed =
+        window.confirm(
+            'Дали сте сигурни дека сакате да избришете "' +
+            item.title +
+            '"?'
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        await axios.delete(
+
+            '/admin/api/content/' +
+            this.contentType +
+            '/' +
+            item.id
+
+        );
+
+
+        await this.loadContentItems();
+
+
+    } catch (error) {
+
+        console.error(
+            'Delete content error:',
+            error
+        );
+
+    }
+
+},
+
+closeContentForm() {
+
+    this.contentPageMode =
+        'list';
+
+
+    this.editingContentItemId =
+        null;
+
+
+    this.contentImageFile =
+        null;
+
+
+    this.contentImagePreview =
+        '';
+
+
+    this.contentAttachmentFile =
+        null;
+
+
+    this.contentAttachmentName =
+        '';
+
+
+    this.contentFormError =
+        '';
+
+
+    contentRichTextEditor =
+        null;
+
+},
+
     },
 
     mounted() {
@@ -1395,6 +1924,23 @@ closeAboutForm() {
         ) {
     
             this.loadAboutPages();
+    
+        }
+    
+    
+        const contentPage =
+            document.getElementById(
+                'adminContentPage'
+            );
+    
+    
+        if (contentPage) {
+    
+            this.contentType =
+                contentPage.dataset.contentType;
+    
+    
+            this.loadContentItems();
     
         }
     

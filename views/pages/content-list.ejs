@@ -1,0 +1,115 @@
+<div class="mnd-content-list-page">
+
+
+    <section class="mnd-content-list-heading">
+
+        <div class="mnd-page-container">
+
+            <h1>
+                <%= pageHeading %>
+            </h1>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="mnd-content-list-section">
+
+        <div class="mnd-page-container">
+
+
+            <% if (
+                items &&
+                items.length
+            ) { %>
+
+
+                <div class="mnd-content-grid">
+
+
+                    <% items.forEach(function(item) { %>
+
+
+                        <a
+                            href="<%= basePath %>/<%= item.id %>"
+                            class="mnd-content-card"
+                        >
+
+
+                            <div class="mnd-content-card-image">
+
+
+                                <% if (item.image) { %>
+
+                                    <img
+                                        src="<%= item.image %>"
+                                        alt="<%= item.title %>"
+                                        loading="lazy"
+                                    >
+
+                                <% } else { %>
+
+                                    <div class="mnd-content-card-placeholder">
+
+                                        <i class="bx bx-file"></i>
+
+                                    </div>
+
+                                <% } %>
+
+
+                            </div>
+
+
+                            <div class="mnd-content-card-body">
+
+                                <h2>
+                                    <%= item.title %>
+                                </h2>
+
+
+                                <span>
+
+                                    Прочитај повеќе
+
+                                    <i class="bx bx-right-arrow-alt"></i>
+
+                                </span>
+
+                            </div>
+
+
+                        </a>
+
+
+                    <% }); %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="mnd-content-empty">
+
+                    <i class="bx bx-file"></i>
+
+                    <h2>
+                        Нема содржина
+                    </h2>
+
+                </div>
+
+
+            <% } %>
+
+
+        </div>
+
+    </section>
+
+
+</div>
