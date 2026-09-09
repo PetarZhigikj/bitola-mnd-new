@@ -404,7 +404,7 @@ id="departments"
     v-for="department in visibleDepartments"
     :key="department.slug"
     class="mnd-department-card"
-    :href="department.url"
+    :href="'/oddelnija/' + department.slug"
 >
 
     <div class="mnd-department-icon">
