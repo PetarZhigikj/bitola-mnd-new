@@ -1,0 +1,114 @@
+/* =========================================================
+   ADMIN - ЧЛЕНОВИ
+========================================================= */
+
+.admin-member-avatar {
+    display: block;
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    background: #eeeeee;
+}
+
+
+.admin-member-avatar-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #999999;
+
+    font-size: 25px;
+}
+
+
+.admin-member-image-preview {
+    margin-top: 15px;
+}
+
+
+.admin-member-image-preview img {
+    width: 160px;
+    height: 160px;
+
+    border: 1px solid
+        var(--admin-border);
+
+    border-radius: 12px;
+
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   RICH TEXT EDITOR
+========================================================= */
+
+.admin-rich-text-editor {
+    background: #ffffff;
+}
+
+
+.admin-rich-text-editor
+.ql-editor {
+    min-height: 300px;
+
+    color: var(--admin-text);
+
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+
+.admin-rich-text-editor
+.ql-toolbar {
+    border-color:
+        var(--admin-border);
+
+    border-radius:
+        8px
+        8px
+        0
+        0;
+}
+
+
+.admin-rich-text-editor
+.ql-container {
+    border-color:
+        var(--admin-border);
+
+    border-radius:
+        0
+        0
+        8px
+        8px;
+}
+
+
+.admin-checkbox-label {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+
+    width: fit-content;
+
+    gap: 9px;
+
+    cursor: pointer;
+}
+
+
+.admin-checkbox-label input {
+    width: 17px;
+    height: 17px;
+
+    min-height: 0;
+
+    margin: 0;
+}

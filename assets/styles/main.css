@@ -4231,3 +4231,648 @@ a.mnd-footer-contact-item:hover {
     }
 
 }
+
+/* =========================================================
+   MEMBERS PAGE
+========================================================= */
+
+.mnd-members-page {
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   MEMBERS HEADING
+========================================================= */
+
+.mnd-members-heading {
+    padding: 70px 0 45px;
+
+    text-align: center;
+
+    background: #ffffff;
+}
+
+
+.mnd-members-heading h1 {
+    max-width: 950px;
+
+    margin: 0 auto;
+
+    color: var(--mnd-black);
+
+    font-size: clamp(
+        30px,
+        3vw,
+        46px
+    );
+
+    font-weight: 800;
+
+    line-height: 1.2;
+}
+
+
+.mnd-members-heading p {
+    max-width: 700px;
+
+    margin:
+        14px
+        auto
+        0;
+
+    color: #757575;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   MEMBERS SECTION
+========================================================= */
+
+.mnd-members-section {
+    padding:
+        25px
+        0
+        100px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   MEMBERS GRID
+========================================================= */
+
+.mnd-members-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        45px
+        28px;
+}
+
+
+/* =========================================================
+   MEMBER CARD
+========================================================= */
+
+.mnd-member-card {
+    display: block;
+
+    min-width: 0;
+
+    color: var(--mnd-black);
+
+    text-decoration: none;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+.mnd-member-card:hover {
+    transform:
+        translateY(-5px);
+}
+
+
+/* =========================================================
+   MEMBER IMAGE
+========================================================= */
+
+.mnd-member-card-image {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio:
+        1 / 1.08;
+
+    border-radius: 18px;
+
+    background: #eeeae4;
+
+    overflow: hidden;
+}
+
+
+.mnd-member-card-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.35s ease;
+}
+
+
+.mnd-member-card:hover
+.mnd-member-card-image img {
+    transform:
+        scale(1.035);
+}
+
+
+/* =========================================================
+   NO IMAGE
+========================================================= */
+
+.mnd-member-card-placeholder {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color:
+        rgba(
+            39,
+            39,
+            39,
+            0.25
+        );
+
+    font-size: 75px;
+}
+
+
+/* =========================================================
+   MEMBER NAME
+========================================================= */
+
+.mnd-member-card-content {
+    padding:
+        16px
+        4px
+        0;
+}
+
+
+.mnd-member-card-content h2 {
+    margin: 0;
+
+    color:
+        var(--mnd-black);
+
+    font-size: 16px;
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    transition:
+        color 0.2s ease;
+}
+
+
+.mnd-member-card:hover
+.mnd-member-card-content h2 {
+    color:
+        var(--mnd-gold-dark);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.mnd-members-empty {
+    padding:
+        60px
+        20px;
+
+    text-align: center;
+}
+
+
+.mnd-members-empty > i {
+    color:
+        var(--mnd-gold);
+
+    font-size: 58px;
+}
+
+
+.mnd-members-empty h2 {
+    margin:
+        15px
+        0
+        0;
+
+    color:
+        var(--mnd-black);
+
+    font-size: 23px;
+}
+
+
+.mnd-members-empty p {
+    margin:
+        9px
+        0
+        0;
+
+    color: #777777;
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   MEMBERS RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .mnd-members-grid {
+
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .mnd-members-heading {
+        padding:
+            50px
+            0
+            35px;
+    }
+
+
+    .mnd-members-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap:
+            32px
+            18px;
+
+    }
+
+
+    .mnd-members-section {
+        padding-bottom:
+            70px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .mnd-members-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+/* =========================================================
+   MEMBER PROFILE
+========================================================= */
+
+.mnd-member-page {
+    background:
+        #ffffff;
+}
+
+
+.mnd-member-profile {
+    padding:
+        65px
+        0
+        110px;
+}
+
+
+.mnd-member-profile-container {
+    width:
+        min(
+            calc(100% - 50px),
+            900px
+        );
+
+    margin:
+        0
+        auto;
+}
+
+
+/* =========================================================
+   BACK LINK
+========================================================= */
+
+.mnd-member-back {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap: 6px;
+
+    margin-bottom:
+        35px;
+
+    color:
+        var(--mnd-gold-dark);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        gap 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.mnd-member-back i {
+    font-size: 19px;
+}
+
+
+.mnd-member-back:hover {
+    gap: 10px;
+
+    color:
+        var(--mnd-black);
+}
+
+
+/* =========================================================
+   MEMBER IMAGE
+========================================================= */
+
+.mnd-member-profile-image {
+    width: 340px;
+    height: 340px;
+
+    margin:
+        0
+        auto;
+
+    border-radius:
+        22px;
+
+    background:
+        #eeeae4;
+
+    overflow:
+        hidden;
+}
+
+
+.mnd-member-profile-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.mnd-member-profile-placeholder {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color:
+        rgba(
+            39,
+            39,
+            39,
+            0.25
+        );
+
+    font-size: 100px;
+}
+
+
+/* =========================================================
+   MEMBER HEADING
+========================================================= */
+
+.mnd-member-profile-heading {
+    margin-top:
+        32px;
+
+    text-align:
+        center;
+}
+
+
+.mnd-member-profile-heading h1 {
+    max-width: 800px;
+
+    margin:
+        0
+        auto;
+
+    color:
+        var(--mnd-black);
+
+    font-size:
+        clamp(
+            30px,
+            3vw,
+            44px
+        );
+
+    font-weight: 800;
+
+    line-height: 1.2;
+}
+
+
+.mnd-member-profile-department {
+    display:
+        inline-block;
+
+    margin-top:
+        12px;
+
+    color:
+        var(--mnd-gold-dark);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+
+.mnd-member-profile-department:hover {
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   MEMBER CONTENT
+========================================================= */
+
+.mnd-member-profile-content {
+    margin-top:
+        50px;
+
+    color:
+        #404040;
+
+    font-size: 15px;
+
+    line-height: 1.75;
+}
+
+
+.mnd-member-profile-content p {
+    margin:
+        0
+        0
+        20px;
+}
+
+
+.mnd-member-profile-content h2 {
+    margin:
+        40px
+        0
+        16px;
+
+    color:
+        var(--mnd-black);
+
+    font-size: 25px;
+
+    line-height: 1.3;
+}
+
+
+.mnd-member-profile-content h3 {
+    margin:
+        30px
+        0
+        14px;
+
+    color:
+        var(--mnd-black);
+
+    font-size: 20px;
+
+    line-height: 1.35;
+}
+
+
+.mnd-member-profile-content strong {
+    color:
+        var(--mnd-black);
+}
+
+
+.mnd-member-profile-content ul,
+.mnd-member-profile-content ol {
+    margin:
+        18px
+        0;
+
+    padding-left:
+        28px;
+}
+
+
+.mnd-member-profile-content li {
+    margin-bottom:
+        7px;
+}
+
+
+.mnd-member-profile-content blockquote {
+    margin:
+        28px
+        0;
+
+    padding:
+        12px
+        0
+        12px
+        20px;
+
+    color:
+        #666666;
+
+    border-left:
+        3px solid
+        var(--mnd-gold);
+}
+
+
+.mnd-member-profile-content a {
+    color:
+        var(--mnd-gold-dark);
+
+    text-decoration:
+        underline;
+}
+
+@media (max-width: 600px) {
+
+    .mnd-member-profile {
+        padding:
+            45px
+            0
+            75px;
+    }
+
+
+    .mnd-member-profile-container {
+        width:
+            calc(100% - 32px);
+    }
+
+
+    .mnd-member-profile-image {
+        width: 260px;
+        height: 260px;
+    }
+
+
+    .mnd-member-profile-content {
+        margin-top:
+            38px;
+
+        font-size:
+            14px;
+    }
+
+}

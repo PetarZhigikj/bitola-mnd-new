@@ -1,105 +1,50 @@
-// api/models/Member.js
-
 module.exports = {
 
     attributes: {
 
-        fullName: {
+        name: {
             type: 'string',
             required: true
         },
 
-        slug: {
-            type: 'string',
-            required: true,
-            unique: true
-        },
 
-        academicTitle: {
+        image: {
             type: 'string',
             allowNull: true
         },
 
-        shortBiography: {
-            type: 'string',
-            allowNull: true
-        },
-
-        biography: {
-            type: 'string',
-            allowNull: true
-        },
 
         department: {
-            model: 'department'
-        },
-
-        photo: {
-            model: 'mediaasset'
-        },
-
-        cvPdf: {
-            model: 'mediaasset'
-        },
-
-        email: {
             type: 'string',
-            allowNull: true
+            required: true,
+
+            isIn: [
+                'opstestveni-nauki',
+                'pravni-nauki',
+                'prirodni-nauki',
+                'primeneti-nauki-i-medicina',
+                'tehnicki-nauki',
+                'umetnost',
+                'lingvistika-i-literatura',
+                'istorisko-geografski-nauki'
+            ]
         },
 
-        phone: {
+
+        content: {
             type: 'string',
-            allowNull: true
+            defaultsTo: ''
         },
 
-        website: {
-            type: 'string',
-            allowNull: true
-        },
 
-        researchAreas: {
-            type: 'json',
-            defaultsTo: []
-        },
-
-        publications: {
-            type: 'json',
-            defaultsTo: []
-        },
-
-        isCurrentMember: {
+        isActive: {
             type: 'boolean',
             defaultsTo: true
         },
 
-        sortOrder: {
-            type: 'number',
-            defaultsTo: 0
-        },
 
-        status: {
-            type: 'string',
-            isIn: [
-                'draft',
-                'published',
-                'archived'
-            ],
-            defaultsTo: 'draft'
-        },
-
-        seoTitle: {
-            type: 'string',
-            allowNull: true
-        },
-
-        seoDescription: {
-            type: 'string',
-            allowNull: true
-        },
-
-        legacyUrl: {
-            type: 'string',
-            allowNull: true
+        createdBy: {
+            model: 'adminuser'
         }
 
     }

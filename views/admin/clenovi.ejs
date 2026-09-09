@@ -1,0 +1,423 @@
+<div class="admin-manage-page">
+
+
+    <!-- =====================================================
+         LIST
+    ====================================================== -->
+
+    <template
+        v-if="memberPageMode === 'list'"
+    >
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h2>
+                    Членови
+                </h2>
+
+                <p>
+                    Управување со членовите на
+                    Македонското научно друштво.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="admin-btn admin-btn-primary"
+                @click="openCreateMember"
+            >
+                <i class="bx bx-plus"></i>
+
+                Додај член
+            </button>
+
+        </div>
+
+
+
+        <!-- FILTERS -->
+
+        <div class="admin-filters">
+
+            <input
+                type="text"
+                v-model="memberSearch"
+                placeholder="Пребарај член..."
+            >
+
+
+            <select
+                v-model="memberDepartmentFilter"
+            >
+
+                <option value="">
+                    Сите одделенија
+                </option>
+
+                <option
+                    v-for="department in memberDepartments"
+                    :key="department.value"
+                    :value="department.value"
+                >
+                    {{ department.name }}
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- TABLE -->
+
+        <div class="admin-table-wrapper">
+
+            <table class="admin-table">
+
+                <thead>
+
+                    <tr>
+
+
+                        <th>
+                            Име и презиме
+                        </th>
+
+                        <th>
+                            Одделение
+                        </th>
+
+                        <th>
+                            Статус
+                        </th>
+
+                        <th>
+                            Акции
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="member in filteredMembers"
+                        :key="member.id"
+                    >
+
+
+
+                        <td>
+
+                            <strong>
+                                {{ member.name }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {{
+                                getMemberDepartmentName(
+                                    member.department
+                                )
+                            }}
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="admin-status"
+                                :class="
+                                    member.isActive
+                                        ? 'admin-status-published'
+                                        : 'admin-status-draft'
+                                "
+                            >
+                                {{
+                                    member.isActive
+                                        ? 'Активен'
+                                        : 'Неактивен'
+                                }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="admin-table-actions">
+
+                                <button
+                                    type="button"
+                                    class="admin-btn admin-btn-small"
+                                    @click="openEditMember(member)"
+                                >
+                                    <i class="bx bx-edit"></i>
+
+                                    Измени
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="admin-btn admin-btn-small admin-btn-danger"
+                                    @click="deleteMember(member)"
+                                >
+                                    <i class="bx bx-trash"></i>
+
+                                    Избриши
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr
+                        v-if="
+                            !loadingMembers &&
+                            !filteredMembers.length
+                        "
+                    >
+
+                        <td
+                            colspan="5"
+                            class="admin-empty-state"
+                        >
+                            Нема пронајдени членови.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </template>
+
+
+
+    <!-- =====================================================
+         ADD / EDIT FORM
+    ====================================================== -->
+
+    <template v-else>
+
+        <div class="admin-form-header">
+
+            <button
+                type="button"
+                class="admin-back-btn"
+                @click="closeMemberForm"
+            >
+                <i class="bx bx-arrow-back"></i>
+
+                Назад
+            </button>
+
+
+            <h2>
+
+                {{
+                    editingMemberId
+                        ? 'Измени член'
+                        : 'Додај член'
+                }}
+
+            </h2>
+
+        </div>
+
+
+        <form
+            class="admin-form-card"
+            @submit.prevent="saveMember"
+        >
+
+            <div class="admin-form-grid">
+
+
+                <!-- NAME -->
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Име и презиме *
+                    </label>
+
+                    <input
+                        type="text"
+                        v-model="memberForm.name"
+                        placeholder="Име и презиме"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="admin-form-group">
+
+                    <label>
+                        Одделение *
+                    </label>
+
+                    <select
+                        v-model="memberForm.department"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            disabled
+                        >
+                            Избери одделение
+                        </option>
+
+
+                        <option
+                            v-for="department in memberDepartments"
+                            :key="department.value"
+                            :value="department.value"
+                        >
+                            {{ department.name }}
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- IMAGE -->
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Фотографија
+                    </label>
+
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        @change="handleMemberImageChange"
+                    >
+
+
+                    <div
+                        v-if="memberImagePreview"
+                        class="admin-member-image-preview"
+                    >
+
+                        <img
+                            :src="memberImagePreview"
+                            alt="Преглед на фотографија"
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RICH TEXT -->
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label>
+                        Информации за членот
+                    </label>
+
+                    <div
+                        id="memberRichTextEditor"
+                        class="admin-rich-text-editor"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- ACTIVE -->
+
+                <div class="admin-form-group admin-form-full">
+
+                    <label class="admin-checkbox-label">
+
+                        <input
+                            type="checkbox"
+                            v-model="memberForm.isActive"
+                        >
+
+                        Активен член
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ERROR -->
+
+            <p
+                v-if="memberFormError"
+                class="admin-form-error"
+            >
+                {{ memberFormError }}
+            </p>
+
+
+
+            <!-- ACTIONS -->
+
+            <div class="admin-form-actions">
+
+                <button
+                    type="button"
+                    class="admin-btn"
+                    @click="closeMemberForm"
+                >
+                    Откажи
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="admin-btn admin-btn-primary"
+                    :disabled="savingMember"
+                >
+
+                    <i class="bx bx-save"></i>
+
+                    {{
+                        savingMember
+                            ? 'Се зачувува...'
+                            : 'Зачувај'
+                    }}
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </template>
+
+</div>

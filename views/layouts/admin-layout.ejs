@@ -27,6 +27,10 @@
         href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
         rel="stylesheet"
     >
+    <link
+    href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css"
+    rel="stylesheet"
+>
 
 </head>
 
@@ -79,15 +83,19 @@
                     News & Events
                 </a>
 
-
                 <a
-                    href="/admin/members"
-                    class="<%= adminPage === 'members' ? 'active' : '' %>"
-                >
-                    <i class="bx bx-user"></i>
-
-                    Members
-                </a>
+                href="/admin/clenovi"
+                :class="{
+                    active:
+                        currentAdminPage === 'clenovi'
+                }"
+            >
+                <i class="bx bx-group"></i>
+            
+                <span>
+                    Членови
+                </span>
+             </a>
 
 
                 <a
@@ -231,10 +239,12 @@
     </div>
 
 
-    <script src="/dependencies/vue/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-    <script src="/dependencies/axios/dist/axios.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+    
     <script src="/js/adminScript.js"></script>
 
 </body>

@@ -1,0 +1,149 @@
+<div class="mnd-members-page">
+
+
+    <!-- =====================================================
+         PAGE HEADING
+    ====================================================== -->
+
+    <section class="mnd-members-heading">
+
+        <div class="mnd-page-container">
+
+            <h1>
+                <%= pageHeading %>
+            </h1>
+
+
+            <% if (departmentName) { %>
+
+                <p>
+                    Членови на
+                    <%= departmentName %>
+                </p>
+
+            <% } else { %>
+
+                <p>
+                    Членови на Македонското научно друштво – Битола
+                </p>
+
+            <% } %>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MEMBERS
+    ====================================================== -->
+
+    <section class="mnd-members-section">
+
+        <div class="mnd-page-container">
+
+
+            <% if (members && members.length) { %>
+
+
+                <div class="mnd-members-grid">
+
+
+                    <% members.forEach(function(member) { %>
+
+
+                        <a
+                            href="/clenovi/<%= member.id %>"
+                            class="mnd-member-card"
+                        >
+
+
+                            <!-- IMAGE -->
+
+                            <div class="mnd-member-card-image">
+
+
+                                <% if (member.image) { %>
+
+                                    <img
+                                        src="<%= member.image %>"
+                                        alt="<%= member.name %>"
+                                        loading="lazy"
+                                    >
+
+                                <% } else { %>
+
+                                    <div class="mnd-member-card-placeholder">
+
+                                        <i class="bx bx-user"></i>
+
+                                    </div>
+
+                                <% } %>
+
+
+                            </div>
+
+
+
+                            <!-- NAME -->
+
+                            <div class="mnd-member-card-content">
+
+                                <h2>
+                                    <%= member.name %>
+                                </h2>
+
+                            </div>
+
+
+                        </a>
+
+
+                    <% }); %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="mnd-members-empty">
+
+                    <i class="bx bx-group"></i>
+
+
+                    <h2>
+                        Нема членови
+                    </h2>
+
+
+                    <p>
+
+                        <% if (departmentName) { %>
+
+                            Во ова одделение моментално
+                            нема објавени членови.
+
+                        <% } else { %>
+
+                            Моментално нема објавени членови.
+
+                        <% } %>
+
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+
+        </div>
+
+    </section>
+
+
+</div>

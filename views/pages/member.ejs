@@ -1,0 +1,124 @@
+<div class="mnd-member-page">
+
+
+    <section class="mnd-member-profile">
+
+        <div class="mnd-member-profile-container">
+
+
+            <!-- =================================================
+                 BACK LINK
+            ================================================== -->
+
+            <% if (member.department) { %>
+
+                <a
+                    href="/oddelnija/<%= member.department %>"
+                    class="mnd-member-back"
+                >
+
+                    <i class="bx bx-left-arrow-alt"></i>
+
+                    <span>
+                        <%= departmentName %>
+                    </span>
+
+                </a>
+
+            <% } else { %>
+
+                <a
+                    href="/clenovi"
+                    class="mnd-member-back"
+                >
+
+                    <i class="bx bx-left-arrow-alt"></i>
+
+                    <span>
+                        Членови
+                    </span>
+
+                </a>
+
+            <% } %>
+
+
+
+            <!-- =================================================
+                 IMAGE
+            ================================================== -->
+
+            <div class="mnd-member-profile-image">
+
+
+                <% if (member.image) { %>
+
+                    <img
+                        src="<%= member.image %>"
+                        alt="<%= member.name %>"
+                    >
+
+                <% } else { %>
+
+                    <div class="mnd-member-profile-placeholder">
+
+                        <i class="bx bx-user"></i>
+
+                    </div>
+
+                <% } %>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 HEADING
+            ================================================== -->
+
+            <div class="mnd-member-profile-heading">
+
+
+                <h1>
+                    <%= member.name %>
+                </h1>
+
+
+                <% if (departmentName) { %>
+
+                    <a
+                        href="/oddelnija/<%= member.department %>"
+                        class="mnd-member-profile-department"
+                    >
+                        <%= departmentName %>
+                    </a>
+
+                <% } %>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RICH TEXT CONTENT
+            ================================================== -->
+
+            <% if (member.content) { %>
+
+                <article class="mnd-member-profile-content">
+
+                    <%- member.content %>
+
+                </article>
+
+            <% } %>
+
+
+        </div>
+
+    </section>
+
+
+</div>
