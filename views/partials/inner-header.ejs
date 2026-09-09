@@ -1,0 +1,249 @@
+<header class="mnd-inner-header">
+
+    <div class="mnd-inner-header-container">
+
+
+        <!-- =================================================
+             LOGO
+        ================================================== -->
+
+        <div class="mnd-inner-header-logo">
+
+            <a href="/">
+
+                <img
+                    src="https://mnd-bitola.mk/wp-content/uploads/2020/01/mnd-LOGO-200.gif"
+                    alt="Македонско научно друштво - Битола"
+                >
+
+            </a>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT SIDE
+        ================================================== -->
+
+        <div class="mnd-inner-header-navigation">
+
+
+            <!-- SEARCH -->
+
+            <div class="mnd-inner-header-search">
+
+                <i class="bx bx-search"></i>
+
+                <input
+                    type="text"
+                    v-model="searchQuery"
+                    placeholder="Пребарај"
+                    aria-label="Пребарај"
+                    @keyup.enter="submitSearch"
+                >
+
+            </div>
+
+
+
+            <!-- =================================================
+                 NAVIGATION
+            ================================================== -->
+
+            <nav class="mnd-inner-main-nav">
+
+
+                <!-- ЗА МНД -->
+
+                <div class="mnd-inner-nav-item mnd-inner-nav-dropdown">
+
+                    <a
+                        href="/za-mnd"
+                        class="mnd-inner-nav-link"
+                    >
+                        ЗА МНД
+
+                        <i class="bx bx-chevron-down"></i>
+                    </a>
+
+
+                    <div class="mnd-inner-dropdown">
+
+                        <a href="/za-mnd/osnovni-informacii">
+                            Основни информации
+                        </a>
+
+                        <a href="/za-mnd/istorijat">
+                            Историјат
+                        </a>
+
+                        <a href="/za-mnd/lica-za-kontakt">
+                            Лица за контакт
+                        </a>
+
+                        <a href="/za-mnd/rakovodna-struktura">
+                            Раководна структура
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ОДДЕЛЕНИЈА -->
+
+                <div class="mnd-inner-nav-item mnd-inner-nav-dropdown">
+
+                    <a
+                        href="/oddelnija"
+                        class="mnd-inner-nav-link"
+                    >
+                        ОДДЕЛЕНИЈА
+
+                        <i class="bx bx-chevron-down"></i>
+                    </a>
+
+
+                    <div class="mnd-inner-dropdown mnd-inner-dropdown-wide">
+
+                        <a href="/oddelnija/istorisko-geografski-nauki">
+                            Одделение за историско-географски науки
+                        </a>
+
+                        <a href="/oddelnija/lingvistika-i-literatura">
+                            Одделение за лингвистика и литература
+                        </a>
+
+                        <a href="/oddelnija/opstestveni-nauki">
+                            Одделение за општествени науки
+                        </a>
+
+                        <a href="/oddelnija/pravni-nauki">
+                            Одделение за правни науки
+                        </a>
+
+                        <a href="/oddelnija/primeneti-nauki-i-medicina">
+                            Одделение за применети науки и медицина
+                        </a>
+
+                        <a href="/oddelnija/prirodni-nauki">
+                            Одделение за природни науки
+                        </a>
+
+                        <a href="/oddelnija/tehnicki-nauki">
+                            Одделение за технички науки
+                        </a>
+
+                        <a href="/oddelnija/umetnost">
+                            Одделение за уметност
+                        </a>
+
+
+                        <div class="mnd-inner-dropdown-divider"></div>
+
+
+                        <a
+                            href="/clenovi"
+                            class="mnd-inner-dropdown-highlight"
+                        >
+                            Сите членови
+
+                            <i class="bx bx-right-arrow-alt"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ПУБЛИКАЦИИ -->
+
+                <div class="mnd-inner-nav-item mnd-inner-nav-dropdown">
+
+                    <a
+                        href="/publikacii"
+                        class="mnd-inner-nav-link"
+                    >
+                        ПУБЛИКАЦИИ
+
+                        <i class="bx bx-chevron-down"></i>
+                    </a>
+
+
+                    <div class="mnd-inner-dropdown">
+
+                        <a href="/publikacii">
+                            Публикации
+                        </a>
+
+                        <a href="/sovremeni-dijalozi">
+                            Современи дијалози
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- DIRECT LINKS -->
+
+                <div class="mnd-inner-nav-item">
+
+                    <a
+                        href="/oglasi"
+                        class="mnd-inner-nav-link"
+                    >
+                        ОГЛАСИ
+                    </a>
+
+                </div>
+
+
+                <div class="mnd-inner-nav-item">
+
+                    <a
+                        href="/centri"
+                        class="mnd-inner-nav-link"
+                    >
+                        ЦЕНТРИ
+                    </a>
+
+                </div>
+
+
+                <div class="mnd-inner-nav-item">
+
+                    <a
+                        href="/kontakt"
+                        class="mnd-inner-nav-link mnd-inner-contact-link"
+                    >
+                        КОНТАКТ
+                    </a>
+
+                </div>
+
+            </nav>
+
+
+
+            <!-- MOBILE BUTTON -->
+
+            <button
+                type="button"
+                class="mnd-inner-mobile-menu-btn"
+                aria-label="Отвори мени"
+                @click="toggleMobileMenu"
+            >
+                <i class="bx bx-menu"></i>
+            </button>
+
+
+        </div>
+
+    </div>
+
+</header>

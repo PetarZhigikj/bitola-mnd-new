@@ -46,6 +46,15 @@
 
     <div id="mainApp">
 
+        <% if (
+    typeof currentPage === 'undefined' ||
+    currentPage !== 'home'
+) { %>
+
+    <%- include('../partials/inner-header') %>
+
+<% } %>
+
         <%- body %>
 
     </div>
