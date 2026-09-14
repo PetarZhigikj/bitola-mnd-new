@@ -4653,3 +4653,13 @@ a.mnd-footer-contact-item:hover {
     }
 
 }
+
+
+/* =========================================================
+   RICH TEXT IMAGES
+========================================================= */
+
+.mnd-rich-content img {
+    max-width: 100%;
+    height: auto;
+}

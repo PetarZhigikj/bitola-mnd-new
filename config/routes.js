@@ -181,8 +181,20 @@ SAME PUBLICATION DATA
 'MainController.announcementsPage',
 
 
+
+
+
 'GET /oglasi/:id':
 'MainController.announcementDetailPage',
+
+/* Upload - ADMIN ONLY */
+
+'POST /admin/api/editor-image':
+    'AdminController.uploadEditorImage',
+
+
+/* Display - PUBLIC */
+
 
 };
 

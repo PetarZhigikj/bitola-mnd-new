@@ -5,7 +5,10 @@ module.exports.policies = {
       '*': 'isAdmin',
 
       loginPage: true,
-      login: true
+
+      login: true,
+
+      editorImage: true
 
   }
 

@@ -62,6 +62,8 @@ const fs =
                     'h2',
                     'h3',
                     'h4',
+
+                    'img',
     
                     'blockquote',
     
@@ -95,6 +97,13 @@ const fs =
                         'data-list',
                         'class',
                         'style'
+                    ],
+
+                    img: [
+                        'src',
+                        'alt',
+                        'title',
+                        'class'
                     ]
     
                 },
@@ -2278,6 +2287,165 @@ async deleteContentItem(req, res) {
     }
 
 },
+
+/* =========================================================
+   RICH TEXT EDITOR IMAGE UPLOAD
+========================================================= */
+
+async uploadEditorImage(req, res) {
+
+    try {
+
+        const uploadDirectory =
+            path.resolve(
+                sails.config.appPath,
+                'uploads/editor'
+            );
+
+
+        await fs.promises.mkdir(
+            uploadDirectory,
+            {
+                recursive: true
+            }
+        );
+
+
+        req.file('image').upload(
+            {
+
+                dirname:
+                    uploadDirectory,
+
+                maxBytes:
+                    8 * 1024 * 1024
+
+            },
+
+            async (error, uploadedFiles) => {
+
+                if (error) {
+
+                    sails.log.error(
+                        'Editor image upload error:',
+                        error
+                    );
+
+
+                    return res.status(500).json({
+
+                        success: false,
+
+                        message:
+                            'Не може да се прикачи фотографијата.'
+
+                    });
+
+                }
+
+
+                if (
+                    !uploadedFiles ||
+                    !uploadedFiles.length
+                ) {
+
+                    return res.status(400).json({
+
+                        success: false,
+
+                        message:
+                            'Не е избрана фотографија.'
+
+                    });
+
+                }
+
+
+                const uploadedFile =
+                    uploadedFiles[0];
+
+
+                const allowedTypes = [
+
+                    'image/jpeg',
+
+                    'image/png',
+
+                    'image/webp',
+
+                    'image/gif'
+
+                ];
+
+
+                if (
+                    !allowedTypes.includes(
+                        uploadedFile.type
+                    )
+                ) {
+
+                    try {
+
+                        await fs.promises.unlink(
+                            uploadedFile.fd
+                        );
+
+                    } catch (_) {}
+
+
+                    return res.status(400).json({
+
+                        success: false,
+
+                        message:
+                            'Дозволени се JPG, PNG, WEBP и GIF фотографии.'
+
+                    });
+
+                }
+
+
+                const fileName =
+                    path.basename(
+                        uploadedFile.fd
+                    );
+
+
+                return res.json({
+
+                    success: true,
+
+                    url:
+                        '/editor-images/' +
+                        fileName
+
+                });
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Editor image upload error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се прикачи фотографијата.'
+
+        });
+
+    }
+
+},
+
 
 
 

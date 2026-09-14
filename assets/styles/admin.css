@@ -1716,3 +1716,15 @@
 
     object-fit: contain;
 }
+
+
+
+.admin-rich-text-editor
+.ql-editor img:hover {
+    outline:
+        2px solid
+        rgba(89, 57, 16, 0.3);
+
+    outline-offset:
+        3px;
+}

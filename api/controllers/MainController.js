@@ -1,3 +1,9 @@
+const path =
+    require('path');
+
+const fs =
+    require('fs');
+
 const MEMBER_DEPARTMENTS = {
 
     'opstestveni-nauki':
@@ -742,6 +748,82 @@ async announcementDetailPage(
 
 
     } catch (error) {
+
+        return res.serverError();
+
+    }
+
+},
+
+/* =========================================================
+   RICH TEXT EDITOR IMAGE
+========================================================= */
+
+async editorImage(req, res) {
+
+    try {
+
+        const fileName =
+            path.basename(
+                String(
+                    req.params.filename || ''
+                )
+            );
+
+
+        if (!fileName) {
+            return res.notFound();
+        }
+
+
+        const filePath =
+            path.join(
+                sails.config.appPath,
+                'uploads',
+                'editor',
+                fileName
+            );
+
+
+        console.log(
+            'EDITOR IMAGE REQUEST:',
+            req.params.filename
+        );
+
+        console.log(
+            'EDITOR IMAGE PATH:',
+            filePath
+        );
+
+        console.log(
+            'EDITOR IMAGE EXISTS:',
+            fs.existsSync(filePath)
+        );
+
+
+        if (
+            !fs.existsSync(
+                filePath
+            )
+        ) {
+
+            return res.notFound();
+
+        }
+
+
+        return res.sendFile(
+            filePath
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Serve editor image error:',
+            error
+        );
+
 
         return res.serverError();
 

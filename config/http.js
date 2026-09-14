@@ -1,60 +1,146 @@
-/**
- * HTTP Server Settings
- * (sails.config.http)
- *
- * Configuration for the underlying HTTP server in Sails.
- * (for additional recommended settings, see `config/env/production.js`)
- *
- * For more information on configuration, check out:
- * https://sailsjs.com/config/http
- */
+const path =
+    require('path');
+
+const fs =
+    require('fs');
+
 
 module.exports.http = {
 
-  /****************************************************************************
-  *                                                                           *
-  * Sails/Express middleware to run for every HTTP request.                   *
-  * (Only applies to HTTP requests -- not virtual WebSocket requests.)        *
-  *                                                                           *
-  * https://sailsjs.com/documentation/concepts/middleware                     *
-  *                                                                           *
-  ****************************************************************************/
+    middleware: {
 
-  middleware: {
+        order: [
 
-    /***************************************************************************
-    *                                                                          *
-    * The order in which middleware should be run for HTTP requests.           *
-    * (This Sails app's routes are handled by the "router" middleware below.)  *
-    *                                                                          *
-    ***************************************************************************/
+            'cookieParser',
 
-    // order: [
-    //   'cookieParser',
-    //   'session',
-    //   'bodyParser',
-    //   'compress',
-    //   'poweredBy',
-    //   'router',
-    //   'www',
-    //   'favicon',
-    // ],
+            'session',
+
+            'bodyParser',
+
+            'compress',
+
+            'poweredBy',
 
 
-    /***************************************************************************
-    *                                                                          *
-    * The body parser that will handle incoming multipart HTTP requests.       *
-    *                                                                          *
-    * https://sailsjs.com/config/http#?customizing-the-body-parser             *
-    *                                                                          *
-    ***************************************************************************/
+            /* Editor images before router */
 
-    // bodyParser: (function _configureBodyParser(){
-    //   var skipper = require('skipper');
-    //   var middlewareFn = skipper({ strict: true });
-    //   return middlewareFn;
-    // })(),
+            'editorImages',
 
-  },
+
+            'router',
+
+            'www',
+
+            'favicon'
+
+        ],
+
+
+
+        /* =====================================================
+           PUBLIC RICH-TEXT EDITOR IMAGES
+        ===================================================== */
+
+        editorImages: function (
+            req,
+            res,
+            next
+        ) {
+
+            /*
+             * Ignore every request except:
+             *
+             * GET /editor-images/...
+             */
+
+            if (
+                req.method !== 'GET' ||
+                !req.path.startsWith(
+                    '/editor-images/'
+                )
+            ) {
+
+                return next();
+
+            }
+
+
+            let requestedFileName;
+
+
+            try {
+
+                requestedFileName =
+                    decodeURIComponent(
+                        req.path.substring(
+                            '/editor-images/'.length
+                        )
+                    );
+
+            } catch (error) {
+
+                return res.status(400).end();
+
+            }
+
+
+            /*
+             * Security:
+             * no folders / ../ traversal.
+             */
+
+            const fileName =
+                path.basename(
+                    requestedFileName
+                );
+
+
+            if (
+                !fileName ||
+                fileName !== requestedFileName
+            ) {
+
+                return res.status(404).end();
+
+            }
+
+
+            const filePath =
+                path.resolve(
+                    __dirname,
+                    '../uploads/editor',
+                    fileName
+                );
+
+
+            console.log(
+                'EDITOR IMAGE:',
+                filePath
+            );
+
+
+            if (
+                !fs.existsSync(
+                    filePath
+                )
+            ) {
+
+                console.log(
+                    'EDITOR IMAGE NOT FOUND'
+                );
+
+
+                return res.status(404).end();
+
+            }
+
+
+            return res.sendFile(
+                filePath
+            );
+
+        }
+
+    }
 
 };

@@ -47,7 +47,241 @@ function registerAdminQuillFonts() {
 
 }
 
+async function uploadAdminEditorImage(
+    quill
+) {
 
+    const input =
+        document.createElement(
+            'input'
+        );
+
+
+    input.setAttribute(
+        'type',
+        'file'
+    );
+
+
+    input.setAttribute(
+        'accept',
+        'image/jpeg,image/png,image/webp,image/gif'
+    );
+
+
+    input.click();
+
+
+    input.onchange =
+        async () => {
+
+            const file =
+                input.files?.[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            /* =============================================
+               CLIENT VALIDATION
+            ============================================= */
+
+            const allowedTypes = [
+
+                'image/jpeg',
+
+                'image/png',
+
+                'image/webp',
+
+                'image/gif'
+
+            ];
+
+
+            if (
+                !allowedTypes.includes(
+                    file.type
+                )
+            ) {
+
+                window.alert(
+                    'Дозволени се JPG, PNG, WEBP и GIF фотографии.'
+                );
+
+                return;
+
+            }
+
+
+            if (
+                file.size >
+                8 * 1024 * 1024
+            ) {
+
+                window.alert(
+                    'Фотографијата не смее да биде поголема од 8 MB.'
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    'image',
+                    file
+                );
+
+
+                const response =
+                    await axios.post(
+
+                        '/admin/api/editor-image',
+
+                        formData
+
+                    );
+
+
+                const imageUrl =
+                    response.data?.url;
+
+
+                if (!imageUrl) {
+
+                    throw new Error(
+                        'No image URL returned.'
+                    );
+
+                }
+
+
+                /* =============================================
+                   INSERT AT CURRENT CURSOR POSITION
+                ============================================= */
+
+                const selection =
+                    quill.getSelection(
+                        true
+                    );
+
+
+                let index =
+                    selection
+                        ? selection.index
+                        : quill.getLength() - 1;
+
+
+                /*
+                 * Put the image on its own line.
+                 */
+
+                if (
+                    index > 0 &&
+                    quill.getText(
+                        index - 1,
+                        1
+                    ) !== '\n'
+                ) {
+
+                    quill.insertText(
+                        index,
+                        '\n',
+                        'user'
+                    );
+
+
+                    index++;
+
+                }
+
+
+                quill.insertEmbed(
+
+                    index,
+
+                    'image',
+
+                    imageUrl,
+
+                    'user'
+
+                );
+
+
+                /*
+                 * Add a line after it so the user can
+                 * continue typing.
+                 */
+
+                quill.insertText(
+
+                    index + 1,
+
+                    '\n',
+
+                    'user'
+
+                );
+
+
+                /*
+                 * Default inserted images to centered.
+                 */
+
+                quill.formatLine(
+
+                    index,
+
+                    1,
+
+                    'align',
+
+                    'center',
+
+                    'user'
+
+                );
+
+
+                quill.setSelection(
+
+                    index + 2,
+
+                    0,
+
+                    'silent'
+
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    'Editor image upload error:',
+                    error
+                );
+
+
+                window.alert(
+                    error.response?.data?.message ||
+                    'Не може да се прикачи фотографијата.'
+                );
+
+            }
+
+        };
+
+}
 
 function createAdminRichTextEditor(
     elementId,
@@ -64,14 +298,121 @@ function createAdminRichTextEditor(
         !element ||
         typeof Quill === 'undefined'
     ) {
+
         return null;
+
     }
 
 
     registerAdminQuillFonts();
 
 
-    element.innerHTML = '';
+    element.innerHTML =
+        '';
+
+
+    const toolbarOptions = [
+
+        [
+            {
+                font: [
+                    false,
+                    'arial',
+                    'times-new-roman',
+                    'georgia',
+                    'verdana',
+                    'monospace'
+                ]
+            }
+        ],
+
+        [
+            {
+                size: [
+                    'small',
+                    false,
+                    'large',
+                    'huge'
+                ]
+            }
+        ],
+
+        [
+            {
+                header: [
+                    1,
+                    2,
+                    3,
+                    4,
+                    false
+                ]
+            }
+        ],
+
+        [
+            'bold',
+            'italic',
+            'underline',
+            'strike'
+        ],
+
+        [
+            {
+                color: []
+            },
+
+            {
+                background: []
+            }
+        ],
+
+        [
+            {
+                script: 'sub'
+            },
+
+            {
+                script: 'super'
+            }
+        ],
+
+        [
+            {
+                list: 'ordered'
+            },
+
+            {
+                list: 'bullet'
+            }
+        ],
+
+        [
+            {
+                indent: '-1'
+            },
+
+            {
+                indent: '+1'
+            }
+        ],
+
+        [
+            {
+                align: []
+            }
+        ],
+
+        [
+            'blockquote',
+            'link',
+            'image'
+        ],
+
+        [
+            'clean'
+        ]
+
+    ];
 
 
     const editor =
@@ -79,7 +420,9 @@ function createAdminRichTextEditor(
             element,
             {
 
-                theme: 'snow',
+                theme:
+                    'snow',
+
 
                 placeholder:
                     'Внесете содржина...',
@@ -87,123 +430,35 @@ function createAdminRichTextEditor(
 
                 modules: {
 
-                    toolbar: [
+                    toolbar: {
 
-                        [
-                            {
-                                font: [
-                                    false,
-                                    'arial',
-                                    'times-new-roman',
-                                    'georgia',
-                                    'verdana',
-                                    'monospace'
-                                ]
+                        container:
+                            toolbarOptions,
+
+
+                        handlers: {
+
+                            image: function () {
+
+                                uploadAdminEditorImage(
+                                    this.quill
+                                );
+
                             }
-                        ],
 
+                        }
 
-                        [
-                            {
-                                size: [
-                                    'small',
-                                    false,
-                                    'large',
-                                    'huge'
-                                ]
-                            }
-                        ],
-
-
-                        [
-                            {
-                                header: [
-                                    1,
-                                    2,
-                                    3,
-                                    4,
-                                    false
-                                ]
-                            }
-                        ],
-
-
-                        [
-                            'bold',
-                            'italic',
-                            'underline',
-                            'strike'
-                        ],
-
-
-                        [
-                            {
-                                color: []
-                            },
-
-                            {
-                                background: []
-                            }
-                        ],
-
-
-                        [
-                            {
-                                script: 'sub'
-                            },
-
-                            {
-                                script: 'super'
-                            }
-                        ],
-
-
-                        [
-                            {
-                                list: 'ordered'
-                            },
-
-                            {
-                                list: 'bullet'
-                            }
-                        ],
-
-
-                        [
-                            {
-                                indent: '-1'
-                            },
-
-                            {
-                                indent: '+1'
-                            }
-                        ],
-
-
-                        [
-                            {
-                                align: []
-                            }
-                        ],
-
-
-                        [
-                            'blockquote',
-                            'link'
-                        ],
-
-
-                        [
-                            'clean'
-                        ]
-
-                    ]
+                    }
 
                 }
 
             }
         );
 
+
+    /* =====================================================
+       LOAD EXISTING CONTENT
+    ===================================================== */
 
     if (content) {
 
@@ -214,6 +469,55 @@ function createAdminRichTextEditor(
             );
 
     }
+
+
+    /* =====================================================
+       IMAGE SELECTION
+    ===================================================== */
+
+    editor.root.addEventListener(
+        'click',
+        event => {
+
+            if (
+                event.target.tagName !==
+                'IMG'
+            ) {
+
+                return;
+
+            }
+
+
+            const imageBlot =
+                Quill.find(
+                    event.target
+                );
+
+
+            if (!imageBlot) {
+                return;
+            }
+
+
+            const imageIndex =
+                editor.getIndex(
+                    imageBlot
+                );
+
+
+            editor.setSelection(
+
+                imageIndex,
+
+                1,
+
+                'silent'
+
+            );
+
+        }
+    );
 
 
     return editor;
