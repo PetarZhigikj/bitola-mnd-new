@@ -412,12 +412,24 @@ const fs =
 
     function getContentDirectory(type) {
 
-        if (type === 'publikacija') {
-            return 'publikacii';
-        }
+        const directories = {
+    
+            'publikacija':
+                'publikacii',
+    
+            'sovremeni-dijalozi':
+                'sovremeni-dijalozi',
+    
+            'drugi-prilozi':
+                'drugi-prilozi',
+    
+            'oglas':
+                'oglasi'
+    
+        };
     
     
-        return 'oglasi';
+        return directories[type];
     
     }
 
@@ -635,9 +647,108 @@ const fs =
     function isValidContentType(type) {
 
         return [
+    
             'publikacija',
+    
+            'sovremeni-dijalozi',
+    
+            'drugi-prilozi',
+    
             'oglas'
+    
         ].includes(type);
+    
+    }
+
+    function uploadPublicationLandingImage(
+        req,
+        fieldName
+    ) {
+    
+        const uploadDirectory =
+            path.resolve(
+                sails.config.appPath,
+                'uploads',
+                'publication-landing'
+            );
+    
+    
+        return fs.promises
+            .mkdir(
+                uploadDirectory,
+                {
+                    recursive: true
+                }
+            )
+            .then(
+                () => {
+    
+                    return new Promise(
+                        (resolve, reject) => {
+    
+                            req.file(
+                                fieldName
+                            )
+                            .upload(
+                                {
+    
+                                    dirname:
+                                        uploadDirectory,
+    
+                                    maxBytes:
+                                        5 * 1024 * 1024
+    
+                                },
+    
+                                (
+                                    error,
+                                    uploadedFiles
+                                ) => {
+    
+                                    if (error) {
+    
+                                        return reject(
+                                            error
+                                        );
+    
+                                    }
+    
+    
+                                    if (
+                                        !uploadedFiles ||
+                                        !uploadedFiles.length
+                                    ) {
+    
+                                        return resolve(
+                                            null
+                                        );
+    
+                                    }
+    
+    
+                                    const file =
+                                        uploadedFiles[0];
+    
+    
+                                    const fileName =
+                                        path.basename(
+                                            file.fd
+                                        );
+    
+    
+                                    return resolve(
+                                        '/publication-images/' +
+                                        fileName
+                                    );
+    
+                                }
+                            );
+    
+                        }
+                    );
+    
+                }
+            );
     
     }
 
@@ -1673,6 +1784,235 @@ async publicationsPage(req, res) {
     );
 
 },
+
+async contemporaryDialoguesAdminPage(
+    req,
+    res
+) {
+
+    return res.view(
+        'admin/content-items',
+        {
+
+            layout:
+                'layouts/admin-layout',
+
+            pageTitle:
+                'Современи дијалози',
+
+            adminPage:
+                'sovremeni-dijalozi',
+
+            contentType:
+                'sovremeni-dijalozi',
+
+            contentPageTitle:
+                'Современи дијалози'
+
+        }
+    );
+
+},
+
+async otherContributionsAdminPage(
+    req,
+    res
+) {
+
+    return res.view(
+        'admin/content-items',
+        {
+
+            layout:
+                'layouts/admin-layout',
+
+            pageTitle:
+                'Други прилози',
+
+            adminPage:
+                'drugi-prilozi',
+
+            contentType:
+                'drugi-prilozi',
+
+            contentPageTitle:
+                'Други прилози'
+
+        }
+    );
+
+},
+
+async getPublicationLanding(
+    req,
+    res
+) {
+
+    try {
+
+        let landing =
+            await PublicationLanding.findOne({
+                key:
+                    'main'
+            });
+
+
+        if (!landing) {
+
+            landing =
+                await PublicationLanding.create({
+                    key:
+                        'main'
+                })
+                .fetch();
+
+        }
+
+
+        return res.json({
+
+            success: true,
+
+            landing
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Get publication landing error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се вчитаат фотографиите.'
+
+        });
+
+    }
+
+},
+
+async updatePublicationLanding(
+    req,
+    res
+) {
+
+    try {
+
+        let landing =
+            await PublicationLanding.findOne({
+                key:
+                    'main'
+            });
+
+
+        if (!landing) {
+
+            landing =
+                await PublicationLanding.create({
+                    key:
+                        'main'
+                })
+                .fetch();
+
+        }
+
+
+        const [
+
+            publicationsImage,
+
+            dialoguesImage,
+
+            otherContributionsImage
+
+        ] = await Promise.all([
+
+            uploadPublicationLandingImage(
+                req,
+                'publicationsImage'
+            ),
+
+            uploadPublicationLandingImage(
+                req,
+                'dialoguesImage'
+            ),
+
+            uploadPublicationLandingImage(
+                req,
+                'otherContributionsImage'
+            )
+
+        ]);
+
+
+        const updatedLanding =
+            await PublicationLanding.updateOne({
+                id:
+                    landing.id
+            })
+            .set({
+
+                publicationsImage:
+                    publicationsImage ||
+                    landing.publicationsImage,
+
+                dialoguesImage:
+                    dialoguesImage ||
+                    landing.dialoguesImage,
+
+                otherContributionsImage:
+                    otherContributionsImage ||
+                    landing.otherContributionsImage,
+
+                updatedBy:
+                    req.session.adminUserId
+
+            });
+
+
+        return res.json({
+
+            success: true,
+
+            landing:
+                updatedLanding,
+
+            message:
+                'Фотографиите се зачувани.'
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Update publication landing error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се зачуваат фотографиите.'
+
+        });
+
+    }
+
+},
+
+
 
 
 

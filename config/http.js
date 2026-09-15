@@ -21,11 +21,7 @@ module.exports.http = {
 
             'poweredBy',
 
-
-            /* Editor images before router */
-
-            'editorImages',
-
+            'uploadedFiles',
 
             'router',
 
@@ -36,29 +32,77 @@ module.exports.http = {
         ],
 
 
-
-        /* =====================================================
-           PUBLIC RICH-TEXT EDITOR IMAGES
-        ===================================================== */
-
-        editorImages: function (
+        uploadedFiles: function (
             req,
             res,
             next
         ) {
 
+            if (
+                req.method !== 'GET'
+            ) {
+
+                return next();
+
+            }
+
+
+            let baseDirectory =
+                null;
+
+            let urlPrefix =
+                null;
+
+
             /*
-             * Ignore every request except:
-             *
-             * GET /editor-images/...
+             * QUILL EDITOR IMAGES
              */
 
             if (
-                req.method !== 'GET' ||
-                !req.path.startsWith(
+                req.path.startsWith(
                     '/editor-images/'
                 )
             ) {
+
+                urlPrefix =
+                    '/editor-images/';
+
+                baseDirectory =
+                    path.resolve(
+                        __dirname,
+                        '../uploads/editor'
+                    );
+
+            }
+
+
+            /*
+             * PUBLICATION LANDING IMAGES
+             */
+
+            else if (
+                req.path.startsWith(
+                    '/publication-images/'
+                )
+            ) {
+
+                urlPrefix =
+                    '/publication-images/';
+
+                baseDirectory =
+                    path.resolve(
+                        __dirname,
+                        '../uploads/publication-landing'
+                    );
+
+            }
+
+
+            /*
+             * Not one of our uploaded files.
+             */
+
+            else {
 
                 return next();
 
@@ -73,7 +117,7 @@ module.exports.http = {
                 requestedFileName =
                     decodeURIComponent(
                         req.path.substring(
-                            '/editor-images/'.length
+                            urlPrefix.length
                         )
                     );
 
@@ -84,16 +128,15 @@ module.exports.http = {
             }
 
 
-            /*
-             * Security:
-             * no folders / ../ traversal.
-             */
-
             const fileName =
                 path.basename(
                     requestedFileName
                 );
 
+
+            /*
+             * Prevent ../ path traversal.
+             */
 
             if (
                 !fileName ||
@@ -106,16 +149,29 @@ module.exports.http = {
 
 
             const filePath =
-                path.resolve(
-                    __dirname,
-                    '../uploads/editor',
+                path.join(
+                    baseDirectory,
                     fileName
                 );
 
 
             console.log(
-                'EDITOR IMAGE:',
+                'UPLOAD REQUEST:',
+                req.path
+            );
+
+
+            console.log(
+                'UPLOAD FILE:',
                 filePath
+            );
+
+
+            console.log(
+                'UPLOAD EXISTS:',
+                fs.existsSync(
+                    filePath
+                )
             );
 
 
@@ -124,11 +180,6 @@ module.exports.http = {
                     filePath
                 )
             ) {
-
-                console.log(
-                    'EDITOR IMAGE NOT FOUND'
-                );
-
 
                 return res.status(404).end();
 

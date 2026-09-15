@@ -1,0 +1,152 @@
+<div class="mnd-publications-home">
+
+
+    <section class="mnd-publications-home-heading">
+
+        <div class="mnd-page-container">
+
+            <h1>
+                Публикации
+            </h1>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="mnd-publications-category-section">
+
+        <div class="mnd-page-container">
+
+
+            <div class="mnd-publications-category-grid">
+
+
+                <!-- ПУБЛИКАЦИИ -->
+
+                <a
+                    href="/publikacii/publikacii"
+                    class="mnd-publication-category-card"
+                >
+
+                    <div class="mnd-publication-category-image">
+
+                        <% if (
+                            landing &&
+                            landing.publicationsImage
+                        ) { %>
+
+                            <img
+                                src="<%= landing.publicationsImage %>"
+                                alt="Публикации"
+                            >
+
+                        <% } else { %>
+
+                            <div class="mnd-publication-category-placeholder">
+
+                                <i class="bx bx-book"></i>
+
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+
+                    <h2>
+                        Публикации
+                    </h2>
+
+                </a>
+
+
+
+                <!-- СОВРЕМЕНИ ДИЈАЛОЗИ -->
+
+                <a
+                    href="/publikacii/sovremeni-dijalozi"
+                    class="mnd-publication-category-card"
+                >
+
+                    <div class="mnd-publication-category-image">
+
+                        <% if (
+                            landing &&
+                            landing.dialoguesImage
+                        ) { %>
+
+                            <img
+                                src="<%= landing.dialoguesImage %>"
+                                alt="Современи дијалози"
+                            >
+
+                        <% } else { %>
+
+                            <div class="mnd-publication-category-placeholder">
+
+                                <i class="bx bx-book-open"></i>
+
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+
+                    <h2>
+                        Современи дијалози
+                    </h2>
+
+                </a>
+
+
+
+                <!-- ДРУГИ ПРИЛОЗИ -->
+
+                <a
+                    href="/publikacii/drugi-prilozi"
+                    class="mnd-publication-category-card"
+                >
+
+                    <div class="mnd-publication-category-image">
+
+                        <% if (
+                            landing &&
+                            landing.otherContributionsImage
+                        ) { %>
+
+                            <img
+                                src="<%= landing.otherContributionsImage %>"
+                                alt="Други прилози"
+                            >
+
+                        <% } else { %>
+
+                            <div class="mnd-publication-category-placeholder">
+
+                                <i class="bx bx-file"></i>
+
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+
+                    <h2>
+                        Други прилози
+                    </h2>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>

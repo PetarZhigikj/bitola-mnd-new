@@ -3,6 +3,161 @@
     class="admin-manage-page"
     data-content-type="<%= contentType %>"
     data-content-title="<%= contentPageTitle %>"
+
+    <% if (contentType === 'publikacija') { %>
+
+        <div class="admin-form-card admin-publication-landing-settings">
+    
+            <div class="admin-page-header">
+    
+                <div>
+    
+                    <h3>
+                        Фотографии за страницата Публикации
+                    </h3>
+    
+                    <p>
+                        Овие фотографии се прикажуваат
+                        на главната страница Публикации.
+                    </p>
+    
+                </div>
+    
+            </div>
+    
+    
+    
+            <div class="admin-form-grid">
+    
+    
+                <!-- PUBLICATIONS -->
+    
+                <div class="admin-form-group">
+    
+                    <label>
+                        Публикации
+                    </label>
+    
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        @change="
+                            handlePublicationLandingImage(
+                                $event,
+                                'publications'
+                            )
+                        "
+                    >
+    
+    
+                    <img
+                        v-if="
+                            publicationLandingPreviews.publications
+                        "
+                        :src="
+                            publicationLandingPreviews.publications
+                        "
+                        class="admin-publication-landing-preview"
+                    >
+    
+                </div>
+    
+    
+    
+                <!-- DIALOGUES -->
+    
+                <div class="admin-form-group">
+    
+                    <label>
+                        Современи дијалози
+                    </label>
+    
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        @change="
+                            handlePublicationLandingImage(
+                                $event,
+                                'dialogues'
+                            )
+                        "
+                    >
+    
+    
+                    <img
+                        v-if="
+                            publicationLandingPreviews.dialogues
+                        "
+                        :src="
+                            publicationLandingPreviews.dialogues
+                        "
+                        class="admin-publication-landing-preview"
+                    >
+    
+                </div>
+    
+    
+    
+                <!-- OTHER -->
+    
+                <div class="admin-form-group">
+    
+                    <label>
+                        Други прилози
+                    </label>
+    
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        @change="
+                            handlePublicationLandingImage(
+                                $event,
+                                'other'
+                            )
+                        "
+                    >
+    
+    
+                    <img
+                        v-if="
+                            publicationLandingPreviews.other
+                        "
+                        :src="
+                            publicationLandingPreviews.other
+                        "
+                        class="admin-publication-landing-preview"
+                    >
+    
+                </div>
+    
+            </div>
+    
+    
+    
+            <div class="admin-form-actions">
+    
+                <button
+                    type="button"
+                    class="admin-btn admin-btn-primary"
+                    :disabled="savingPublicationLanding"
+                    @click="savePublicationLanding"
+                >
+    
+                    <i class="bx bx-save"></i>
+    
+                    {{
+                        savingPublicationLanding
+                            ? 'Се зачувува...'
+                            : 'Зачувај фотографии'
+                    }}
+    
+                </button>
+    
+            </div>
+    
+        </div>
+    
+    <% } %>
 >
     <!-- =====================================================
          LIST

@@ -764,6 +764,42 @@ const adminApp = Vue.createApp({
                     contentFormError:
     '',
 
+    publicationLanding: {
+
+        publicationsImage: '',
+    
+        dialoguesImage: '',
+    
+        otherContributionsImage: ''
+    
+    },
+    
+    
+    publicationLandingFiles: {
+    
+        publications: null,
+    
+        dialogues: null,
+    
+        other: null
+    
+    },
+    
+    
+    publicationLandingPreviews: {
+    
+        publications: '',
+    
+        dialogues: '',
+    
+        other: ''
+    
+    },
+    
+    
+    savingPublicationLanding:
+        false,
+
         };
 
     },
@@ -2208,6 +2244,185 @@ closeContentForm() {
 
 },
 
+async loadPublicationLanding() {
+
+    try {
+
+        const response =
+            await axios.get(
+                '/admin/api/publication-landing'
+            );
+
+
+        const landing =
+            response.data?.landing || {};
+
+
+        this.publicationLanding =
+            landing;
+
+
+        this.publicationLandingPreviews = {
+
+            publications:
+                landing.publicationsImage || '',
+
+            dialogues:
+                landing.dialoguesImage || '',
+
+            other:
+                landing.otherContributionsImage || ''
+
+        };
+
+
+    } catch (error) {
+
+        console.error(
+            'Load publication landing error:',
+            error
+        );
+
+    }
+
+},
+
+handlePublicationLandingImage(
+    event,
+    type
+) {
+
+    const file =
+        event.target.files?.[0];
+
+
+    if (!file) {
+        return;
+    }
+
+
+    this.publicationLandingFiles[
+        type
+    ] = file;
+
+
+    this.publicationLandingPreviews[
+        type
+    ] = URL.createObjectURL(
+        file
+    );
+
+},
+
+async savePublicationLanding() {
+
+    if (
+        this.savingPublicationLanding
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        this.savingPublicationLanding =
+            true;
+
+
+        const formData =
+            new FormData();
+
+
+        if (
+            this.publicationLandingFiles
+                .publications
+        ) {
+
+            formData.append(
+                'publicationsImage',
+
+                this.publicationLandingFiles
+                    .publications
+            );
+
+        }
+
+
+        if (
+            this.publicationLandingFiles
+                .dialogues
+        ) {
+
+            formData.append(
+                'dialoguesImage',
+
+                this.publicationLandingFiles
+                    .dialogues
+            );
+
+        }
+
+
+        if (
+            this.publicationLandingFiles
+                .other
+        ) {
+
+            formData.append(
+                'otherContributionsImage',
+
+                this.publicationLandingFiles
+                    .other
+            );
+
+        }
+
+
+        await axios.put(
+
+            '/admin/api/publication-landing',
+
+            formData
+
+        );
+
+
+        await this.loadPublicationLanding();
+
+
+        this.publicationLandingFiles = {
+
+            publications:
+                null,
+
+            dialogues:
+                null,
+
+            other:
+                null
+
+        };
+
+
+    } catch (error) {
+
+        console.error(
+            'Save publication landing error:',
+            error
+        );
+
+
+    } finally {
+
+        this.savingPublicationLanding =
+            false;
+
+    }
+
+},
+
     },
 
     mounted() {
@@ -2229,6 +2444,15 @@ closeContentForm() {
     
             this.loadAboutPages();
     
+        }
+
+        if (
+            this.currentAdminPage ===
+            'publikacii'
+        ) {
+        
+            this.loadPublicationLanding();
+        
         }
     
     

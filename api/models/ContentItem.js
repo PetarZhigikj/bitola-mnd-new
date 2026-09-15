@@ -7,8 +7,15 @@ module.exports = {
             required: true,
 
             isIn: [
+
                 'publikacija',
+            
+                'sovremeni-dijalozi',
+            
+                'drugi-prilozi',
+            
                 'oglas'
+            
             ]
         },
 

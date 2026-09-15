@@ -515,7 +515,61 @@ async aboutRoot(req, res) {
 
 },
 
-async publicationsPage(req, res) {
+async publicationsPage(
+    req,
+    res
+) {
+
+    try {
+
+        const landing =
+            await PublicationLanding.findOne({
+                key:
+                    'main'
+            });
+
+
+        return res.view(
+            'pages/publications-home',
+            {
+
+                layout:
+                    'layouts/layout',
+
+                pageTitle:
+                    'Публикации',
+
+                metaDescription:
+                    'Публикации - Македонско научно друштво Битола',
+
+                currentPage:
+                    'publikacii',
+
+                landing:
+                    landing || {}
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Publications landing error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async publicationsListPage(
+    req,
+    res
+) {
 
     try {
 
@@ -534,7 +588,7 @@ async publicationsPage(req, res) {
                     'publikacii',
 
                 basePath:
-                    '/publikacii'
+                    '/publikacii/publikacii'
 
             }
         );
@@ -542,11 +596,77 @@ async publicationsPage(req, res) {
 
     } catch (error) {
 
-        sails.log.error(
-            'Publications page error:',
-            error
+        return res.serverError();
+
+    }
+
+},
+
+async contemporaryDialoguesPage(
+    req,
+    res
+) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'sovremeni-dijalozi',
+
+                title:
+                    'Современи дијалози',
+
+                currentPage:
+                    'sovremeni-dijalozi',
+
+                basePath:
+                    '/publikacii/sovremeni-dijalozi'
+
+            }
         );
 
+
+    } catch (error) {
+
+        return res.serverError();
+
+    }
+
+},
+
+async otherContributionsPage(
+    req,
+    res
+) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'drugi-prilozi',
+
+                title:
+                    'Други прилози',
+
+                currentPage:
+                    'drugi-prilozi',
+
+                basePath:
+                    '/publikacii/drugi-prilozi'
+
+            }
+        );
+
+
+    } catch (error) {
 
         return res.serverError();
 
@@ -656,7 +776,7 @@ async publicationDetailPage(
                     'publikacii',
 
                 basePath:
-                    '/publikacii',
+                    '/publikacii/publikacii',
 
                 listingTitle:
                     'Публикации'
@@ -666,12 +786,6 @@ async publicationDetailPage(
 
 
     } catch (error) {
-
-        sails.log.error(
-            'Publication detail error:',
-            error
-        );
-
 
         return res.serverError();
 
@@ -694,16 +808,52 @@ async contemporaryDialoguesDetailPage(
             {
 
                 type:
-                    'publikacija',
+                    'sovremeni-dijalozi',
 
                 currentPage:
                     'sovremeni-dijalozi',
 
                 basePath:
-                    '/sovremeni-dijalozi',
+                    '/publikacii/sovremeni-dijalozi',
 
                 listingTitle:
                     'Современи дијалози'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        return res.serverError();
+
+    }
+
+},
+
+async otherContributionDetailPage(
+    req,
+    res
+) {
+
+    try {
+
+        return await renderContentDetail(
+            req,
+            res,
+            {
+
+                type:
+                    'drugi-prilozi',
+
+                currentPage:
+                    'drugi-prilozi',
+
+                basePath:
+                    '/publikacii/drugi-prilozi',
+
+                listingTitle:
+                    'Други прилози'
 
             }
         );

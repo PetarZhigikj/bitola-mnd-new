@@ -4663,3 +4663,184 @@ a.mnd-footer-contact-item:hover {
     max-width: 100%;
     height: auto;
 }
+
+/* =========================================================
+   PUBLICATIONS LANDING
+========================================================= */
+
+.mnd-publications-home-heading {
+    padding:
+        70px
+        0
+        45px;
+
+    text-align:
+        center;
+}
+
+
+.mnd-publications-home-heading h1 {
+    margin: 0;
+
+    color:
+        var(--mnd-black);
+
+    font-size:
+        clamp(
+            32px,
+            3.5vw,
+            48px
+        );
+
+    font-weight:
+        800;
+}
+
+
+.mnd-publications-category-section {
+    padding:
+        20px
+        0
+        105px;
+}
+
+
+.mnd-publications-category-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        30px;
+}
+
+
+/* Cards */
+
+.mnd-publication-category-card {
+    display: block;
+
+    color:
+        var(--mnd-black);
+
+    text-align:
+        center;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+.mnd-publication-category-card:hover {
+    transform:
+        translateY(-6px);
+}
+
+
+.mnd-publication-category-image {
+    width: 100%;
+
+    aspect-ratio:
+        1 / 0.85;
+
+    border-radius:
+        22px;
+
+    background:
+        #eeeae4;
+
+    overflow:
+        hidden;
+}
+
+
+.mnd-publication-category-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit:
+        cover;
+
+    transition:
+        transform 0.35s ease;
+}
+
+
+.mnd-publication-category-card:hover
+.mnd-publication-category-image img {
+    transform:
+        scale(1.035);
+}
+
+
+.mnd-publication-category-placeholder {
+    display: flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width: 100%;
+    height: 100%;
+
+    color:
+        rgba(
+            89,
+            57,
+            16,
+            0.25
+        );
+
+    font-size:
+        75px;
+}
+
+
+.mnd-publication-category-card h2 {
+    margin:
+        18px
+        0
+        0;
+
+    color:
+        #593910;
+
+    font-size:
+        20px;
+
+    font-weight:
+        700;
+
+    transition:
+        color 0.2s ease;
+}
+
+
+.mnd-publication-category-card:hover h2 {
+    color:
+        var(--mnd-gold-dark);
+}
+
+
+@media (max-width: 800px) {
+
+    .mnd-publications-category-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .mnd-publication-category-image {
+        max-height:
+            380px;
+    }
+
+}

@@ -150,6 +150,36 @@
 
 
                 <a
+                    href="/admin/sovremeni-dijalozi"
+                    :class="{
+                        active:
+                            currentAdminPage === 'sovremeni-dijalozi'
+                    }"
+                >
+                    <i class="bx bx-book-open"></i>
+
+                    <span>
+                        Современи дијалози
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/drugi-prilozi"
+                    :class="{
+                        active:
+                            currentAdminPage === 'drugi-prilozi'
+                    }"
+                >
+                    <i class="bx bx-file"></i>
+
+                    <span>
+                        Други прилози
+                    </span>
+                </a>
+
+
+                <a
                     href="/admin/oglasi"
                     :class="{
                         active:

@@ -113,9 +113,51 @@ DEPARTMENTS
    ADMIN - ПУБЛИКАЦИИ
 ========================================================= */
 
-'GET /admin/publikacii':
-    'AdminController.publicationsPage',
+/* =========================================================
+   PUBLICATIONS LANDING
+========================================================= */
 
+'GET /publikacii':
+    'MainController.publicationsPage',
+
+
+
+/* =========================================================
+   ПУБЛИКАЦИИ
+========================================================= */
+
+'GET /publikacii/publikacii':
+    'MainController.publicationsListPage',
+
+
+'GET /publikacii/publikacii/:id':
+    'MainController.publicationDetailPage',
+
+
+
+/* =========================================================
+   СОВРЕМЕНИ ДИЈАЛОЗИ
+========================================================= */
+
+'GET /publikacii/sovremeni-dijalozi':
+    'MainController.contemporaryDialoguesPage',
+
+
+'GET /publikacii/sovremeni-dijalozi/:id':
+    'MainController.contemporaryDialoguesDetailPage',
+
+
+
+/* =========================================================
+   ДРУГИ ПРИЛОЗИ
+========================================================= */
+
+'GET /publikacii/drugi-prilozi':
+    'MainController.otherContributionsPage',
+
+
+'GET /publikacii/drugi-prilozi/:id':
+    'MainController.otherContributionDetailPage',
 
 
 /* =========================================================
@@ -146,32 +188,6 @@ DEPARTMENTS
 'DELETE /admin/api/content/:type/:id':
     'AdminController.deleteContentItem',
 
-    /* =========================================================
-   ПУБЛИКАЦИИ
-========================================================= */
-
-'GET /publikacii':
-'MainController.publicationsPage',
-
-
-'GET /publikacii/:id':
-'MainController.publicationDetailPage',
-
-
-
-/* =========================================================
-СОВРЕМЕНИ ДИЈАЛОЗИ
-SAME PUBLICATION DATA
-========================================================= */
-
-'GET /sovremeni-dijalozi':
-'MainController.contemporaryDialoguesPage',
-
-
-'GET /sovremeni-dijalozi/:id':
-'MainController.contemporaryDialoguesDetailPage',
-
-
 
 /* =========================================================
 ОГЛАСИ
@@ -193,8 +209,25 @@ SAME PUBLICATION DATA
     'AdminController.uploadEditorImage',
 
 
-/* Display - PUBLIC */
 
+
+'GET /admin/publikacii':
+    'AdminController.publicationsPage',
+
+
+'GET /admin/sovremeni-dijalozi':
+    'AdminController.contemporaryDialoguesAdminPage',
+
+
+'GET /admin/drugi-prilozi':
+    'AdminController.otherContributionsAdminPage',
+
+    'GET /admin/api/publication-landing':
+    'AdminController.getPublicationLanding',
+
+
+'PUT /admin/api/publication-landing':
+    'AdminController.updatePublicationLanding',
 
 };
 
