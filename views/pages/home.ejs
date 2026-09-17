@@ -343,123 +343,51 @@
 ========================================================= -->
 
 <section
-class="mnd-departments-section"
-id="departments"
+    class="mnd-departments-section"
+    id="departments"
 >
 
-<div class="mnd-decoration-ring mnd-decoration-ring-departments"></div>
+    <div class="mnd-decoration-ring mnd-decoration-ring-departments"></div>
 
 
-<div class="mnd-page-container">
+    <div class="mnd-page-container">
 
-    <div class="mnd-section-heading">
+        <div class="mnd-section-heading">
 
-        <h2>
-            Одделенија
-        </h2>
-
-        <!-- <p>
-            Научната дејност на Македонското научно друштво – Битола
-            се развива преку осум одделенија кои обединуваат
-            истражувачи и стручни лица од различни научни области.
-        </p> -->
-
-    </div>
-
-
-    <div class="mnd-department-slider">
-
-        <!-- Previous -->
-
-        <button
-            v-if="departmentSlideCount > 1"
-            type="button"
-            class="mnd-slider-arrow mnd-slider-arrow-left"
-            aria-label="Претходни одделенија"
-            @click="previousDepartmentSlide"
-        >
-            <i class="bx bx-chevron-left"></i>
-        </button>
-
-
-        <!-- Cards -->
-
-        <div class="mnd-department-cards">
-
-            <a
-    v-for="department in visibleDepartments"
-    :key="department.slug"
-    class="mnd-department-card"
-    :href="'/oddelnija/' + department.slug"
->
-
-    <div class="mnd-department-icon">
-
-        <i :class="department.icon"></i>
-
-    </div>
-
-
-    <h3>
-        {{ department.name }}
-    </h3>
-
-
-    <p>
-        {{ department.description }}
-    </p>
-
-
-    <div class="mnd-department-link">
-
-        Дознај повеќе
-
-        <i class="bx bx-right-arrow-alt"></i>
-
-    </div>
-
-</a>
+            <h2>
+                Одделенија
+            </h2>
 
         </div>
 
 
-        <!-- Next -->
+        <div class="mnd-department-cards">
 
-        <button
-            v-if="departmentSlideCount > 1"
-            type="button"
-            class="mnd-slider-arrow mnd-slider-arrow-right"
-            aria-label="Следни одделенија"
-            @click="nextDepartmentSlide"
-        >
-            <i class="bx bx-chevron-right"></i>
-        </button>
-
-    </div>
-
-
-    <!-- Slider dots -->
-
-    <div
-        v-if="departmentSlideCount > 1"
-        class="mnd-slider-dots"
-    >
-
-        <button
-            v-for="index in departmentSlideCount"
-            :key="index"
-            type="button"
-            :class="{
-                active:
-                    departmentSlide === index - 1
-            }"
-            :aria-label="'Страница ' + index"
-            @click="setDepartmentSlide(index - 1)"
-        ></button>
+            <a
+                v-for="department in departments"
+                :key="department.slug"
+                class="mnd-department-card"
+                :href="'/oddelnija/' + department.slug"
+            >
+        
+                <div class="mnd-department-icon">
+                    <i :class="department.icon"></i>
+                </div>
+        
+                <h3>
+                    {{ department.name }}
+                </h3>
+        
+                <div class="mnd-department-link">
+                    Дознај повеќе
+                    <i class="bx bx-right-arrow-alt"></i>
+                </div>
+        
+            </a>
+        
+        </div>
 
     </div>
-
-</div>
 
 </section>
 

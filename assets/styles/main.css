@@ -799,19 +799,24 @@ button {
     position: relative;
 
     padding:
-        105px
-        0
-        105px;
+        72px
+        0;
 
-    background: #ffffff;
+    background:
+        #ffffff;
 }
+
 
 .mnd-department-slider {
     position: relative;
 
-    display: flex;
-    align-items: center;
+    width: 100%;
 }
+
+
+/* =========================================================
+   GRID
+========================================================= */
 
 .mnd-department-cards {
     display: grid;
@@ -821,91 +826,231 @@ button {
     grid-template-columns:
         repeat(4, minmax(0, 1fr));
 
-    gap: 24px;
-
-    padding: 0 55px;
-}
-
-.mnd-department-card {
-    min-height: 345px;
+    gap:
+        20px;
 
     padding:
-        45px
-        38px
-        35px;
+        0 40px;
+}
 
-    border-radius: 28px;
 
-    background: #eeeae4;
+/* =========================================================
+   CARD
+========================================================= */
+
+.mnd-department-card {
+    position: relative;
+
+    display: flex;
+
+    flex-direction:
+        column;
+
+    min-width:
+        0;
+
+    min-height:
+        210px;
+
+    padding:
+        28px
+        25px
+        24px;
+
+    color:
+        var(--mnd-black);
+
+    border-radius:
+        22px;
+
+    background:
+        #eeeae4;
 
     box-shadow:
-        0 4px 0 rgba(53, 53, 53, 0.35);
+        0 4px 0
+        rgba(53, 53, 53, 0.28);
+
+    cursor:
+        pointer;
 
     transition:
         transform 0.25s ease,
-        background 0.25s ease,
+        background-color 0.25s ease,
         color 0.25s ease,
         box-shadow 0.25s ease;
 }
 
+
 .mnd-department-card:hover {
-    transform: translateY(-7px);
+    color:
+        #ffffff;
+
+    background-color:
+        var(--mnd-gold);
+
+    transform:
+        translateY(-6px);
 
     box-shadow:
         0 10px 20px
-        rgba(53, 53, 53, 0.16);
+        rgba(53, 53, 53, 0.14);
 }
 
-.mnd-department-card-active {
-    color: #ffffff;
 
-    background: var(--mnd-gold);
-}
+/* =========================================================
+   ICON
+========================================================= */
 
 .mnd-department-icon {
-    margin-bottom: 27px;
+    margin-bottom:
+        18px;
 
-    color: var(--mnd-gold);
+    color:
+        var(--mnd-gold);
 
-    font-size: 47px;
-    line-height: 1;
+    font-size:
+        40px;
+
+    line-height:
+        1;
+
+    transition:
+        color 0.25s ease;
 }
 
-.mnd-department-card-active
+
+.mnd-department-card:hover
 .mnd-department-icon {
-    color: #ffffff;
+    color:
+        #ffffff;
 }
+
+
+/* =========================================================
+   TITLE
+========================================================= */
 
 .mnd-department-card h3 {
-    margin: 0;
+    margin:
+        0;
 
-    color: var(--mnd-black);
+    color:
+        var(--mnd-black);
 
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.35;
+    font-size:
+        17px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.3;
+
+    transition:
+        color 0.25s ease;
 }
 
-.mnd-department-card-active h3 {
-    color: #ffffff;
+
+.mnd-department-card:hover h3 {
+    color:
+        #ffffff;
 }
 
-.mnd-department-card p {
-    margin: 24px 0 0;
 
-    color: #70747a;
+/* =========================================================
+   LEARN MORE
+========================================================= */
 
-    font-size: 13px;
-    line-height: 1.65;
+.mnd-department-link {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    width:
+        fit-content;
+
+    gap:
+        6px;
+
+    margin-top:
+        auto;
+
+    padding-top:
+        18px;
+
+    color:
+        var(--mnd-gold-dark);
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    transition:
+        gap 0.2s ease,
+        color 0.2s ease;
 }
 
-.mnd-department-card-active p {
-    color: rgba(
-        255,
-        255,
-        255,
-        0.8
-    );
+
+.mnd-department-link i {
+    font-size:
+        18px;
+}
+
+
+.mnd-department-card:hover
+.mnd-department-link {
+    gap:
+        10px;
+
+    color:
+        #ffffff;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .mnd-department-cards {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        padding:
+            0 20px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .mnd-department-cards {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            16px;
+
+        padding:
+            0 10px;
+    }
+
+
+    .mnd-department-card {
+        min-height:
+            170px;
+    }
+
 }
 
 
@@ -1537,33 +1682,12 @@ button {
             0;
     }
 
-    .mnd-department-cards {
-        display: flex;
 
-        gap: 18px;
-
-        padding:
-            0
-            12px;
-
-        overflow-x: auto;
-
-        scroll-snap-type: x mandatory;
-
-        scrollbar-width: none;
-    }
 
     .mnd-department-cards::-webkit-scrollbar {
         display: none;
     }
 
-    .mnd-department-card {
-        flex: 0 0 82%;
-
-        min-height: 320px;
-
-        scroll-snap-align: center;
-    }
 
     .mnd-slider-arrow {
         display: none;
