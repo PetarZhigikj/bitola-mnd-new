@@ -4968,3 +4968,511 @@ a.mnd-footer-contact-item:hover {
     }
 
 }
+
+/* =========================================================
+   CONTACT PAGE
+========================================================= */
+
+.mnd-contact-page {
+    padding:
+        80px
+        0
+        110px;
+
+    background:
+        #ffffff;
+}
+
+
+.mnd-contact-card {
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 0.95fr);
+
+    gap:
+        55px;
+
+    padding:
+        55px
+        60px;
+
+    border-radius:
+        22px;
+
+    background:
+        #ede9e1;
+
+    box-shadow:
+        0 16px 35px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.mnd-contact-heading {
+    margin-bottom:
+        38px;
+}
+
+
+.mnd-contact-heading h1 {
+    margin:
+        0;
+
+    color:
+        #252525;
+
+    font-size:
+        34px;
+
+    font-weight:
+        800;
+}
+
+
+.mnd-contact-heading p {
+    margin:
+        16px
+        0
+        0;
+
+    max-width:
+        550px;
+
+    color:
+        #505050;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.mnd-contact-form {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        20px;
+}
+
+
+.mnd-contact-field {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        8px;
+}
+
+
+.mnd-contact-field label {
+    color:
+        #252f40;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+
+.mnd-contact-field input,
+.mnd-contact-field textarea {
+    width:
+        100%;
+
+    padding:
+        13px
+        15px;
+
+    color:
+        #252525;
+
+    border:
+        1px solid #d2d6da;
+
+    border-radius:
+        8px;
+
+    outline:
+        none;
+
+    font-size:
+        14px;
+
+    background:
+        rgba(255, 255, 255, 0.8);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.mnd-contact-field textarea {
+    min-height:
+        155px;
+
+    resize:
+        vertical;
+}
+
+
+.mnd-contact-field input:focus,
+.mnd-contact-field textarea:focus {
+    border-color:
+        var(--mnd-gold);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(201, 161, 109, 0.14);
+}
+
+
+.mnd-contact-submit {
+    align-self:
+        flex-end;
+
+    min-width:
+        255px;
+
+    height:
+        48px;
+
+    margin-top:
+        5px;
+
+    padding:
+        0 30px;
+
+    color:
+        #ffffff;
+
+    border:
+        0;
+
+    border-radius:
+        8px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    background:
+        #b78764;
+
+    box-shadow:
+        0 5px 10px
+        rgba(87, 52, 30, 0.18);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.mnd-contact-submit:hover:not(:disabled) {
+    background:
+        #9f7151;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.mnd-contact-submit:disabled {
+    opacity:
+        0.65;
+
+    cursor:
+        not-allowed;
+}
+
+
+.mnd-contact-honeypot {
+    position:
+        absolute;
+
+    left:
+        -9999px;
+
+    opacity:
+        0;
+
+    pointer-events:
+        none;
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.mnd-contact-form-message {
+    margin:
+        0;
+
+    padding:
+        12px
+        14px;
+
+    border-radius:
+        7px;
+
+    font-size:
+        13px;
+}
+
+
+.mnd-contact-form-error {
+    color:
+        #8c2626;
+
+    background:
+        rgba(183, 51, 51, 0.1);
+}
+
+
+.mnd-contact-form-success {
+    color:
+        #25653d;
+
+    background:
+        rgba(53, 153, 92, 0.11);
+}
+
+
+/* =========================================================
+   MAP
+========================================================= */
+
+.mnd-contact-map-column {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    min-width:
+        0;
+}
+
+
+.mnd-contact-map {
+    flex:
+        1;
+
+    min-height:
+        470px;
+
+    border-radius:
+        18px;
+
+    overflow:
+        hidden;
+
+    background:
+        #d8d4cb;
+}
+
+
+.mnd-contact-map iframe {
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    min-height:
+        470px;
+
+    border:
+        0;
+}
+
+
+/* =========================================================
+   ADDRESS
+========================================================= */
+
+.mnd-contact-location {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        14px;
+
+    margin-top:
+        18px;
+
+    padding:
+        16px
+        18px;
+
+    border-radius:
+        12px;
+
+    background:
+        rgba(255, 255, 255, 0.65);
+}
+
+
+.mnd-contact-location-icon {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex:
+        0 0 44px;
+
+    width:
+        44px;
+
+    height:
+        44px;
+
+    color:
+        #ffffff;
+
+    border-radius:
+        50%;
+
+    font-size:
+        22px;
+
+    background:
+        var(--mnd-gold);
+}
+
+
+.mnd-contact-location h3 {
+    margin:
+        0;
+
+    color:
+        #252525;
+
+    font-size:
+        14px;
+}
+
+
+.mnd-contact-location p {
+    margin:
+        5px
+        0
+        0;
+
+    color:
+        #616161;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.45;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .mnd-contact-card {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            40px;
+
+        padding:
+            40px;
+    }
+
+
+    .mnd-contact-map,
+    .mnd-contact-map iframe {
+        min-height:
+            400px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .mnd-contact-page {
+        padding:
+            50px
+            0
+            70px;
+    }
+
+
+    .mnd-contact-card {
+        padding:
+            28px
+            20px;
+
+        border-radius:
+            16px;
+    }
+
+
+    .mnd-contact-heading h1 {
+        font-size:
+            28px;
+    }
+
+
+    .mnd-contact-submit {
+        width:
+            100%;
+
+        min-width:
+            0;
+    }
+
+
+    .mnd-contact-map,
+    .mnd-contact-map iframe {
+        min-height:
+            320px;
+    }
+
+}

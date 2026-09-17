@@ -200,6 +200,32 @@ const mainApp = Vue.createApp({
             
             departmentsPerSlide: 4,
 
+            contactForm: {
+
+                subject: '',
+            
+                name: '',
+            
+                contact: '',
+            
+                message: '',
+            
+                website: ''
+            
+            },
+            
+            
+            sendingContactForm:
+                false,
+            
+            
+            contactFormError:
+                '',
+            
+            
+            contactFormSuccess:
+                '',
+
         };
 
     },
@@ -500,7 +526,100 @@ const mainApp = Vue.createApp({
 
             window.location.href = url;
 
-        }
+        },
+        
+        async submitContactForm() {
+
+            if (
+                this.sendingContactForm
+            ) {
+        
+                return;
+        
+            }
+        
+        
+            this.contactFormError =
+                '';
+        
+            this.contactFormSuccess =
+                '';
+        
+        
+            if (
+                !this.contactForm.subject.trim() ||
+                !this.contactForm.name.trim() ||
+                !this.contactForm.contact.trim() ||
+                !this.contactForm.message.trim()
+            ) {
+        
+                this.contactFormError =
+                    'Ве молиме пополнете ги сите полиња.';
+        
+                return;
+        
+            }
+        
+        
+            try {
+        
+                this.sendingContactForm =
+                    true;
+        
+        
+                const response =
+                    await axios.post(
+                        '/api/contact',
+                        this.contactForm
+                    );
+        
+        
+                if (
+                    response.data?.success
+                ) {
+        
+                    this.contactFormSuccess =
+                        response.data.message ||
+                        'Пораката е успешно испратена.';
+        
+        
+                    this.contactForm = {
+        
+                        subject: '',
+        
+                        name: '',
+        
+                        contact: '',
+        
+                        message: '',
+        
+                        website: ''
+        
+                    };
+        
+                }
+        
+        
+            } catch (error) {
+        
+                console.error(
+                    'Contact form error:',
+                    error
+                );
+        
+        
+                this.contactFormError =
+                    error.response?.data?.message ||
+                    'Пораката не може да се испрати.';
+        
+            } finally {
+        
+                this.sendingContactForm =
+                    false;
+        
+            }
+        
+        },
 
     },
 

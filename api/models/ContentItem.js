@@ -14,7 +14,8 @@ module.exports = {
             
                 'drugi-prilozi',
             
-                'oglas'
+                'oglas',
+                'novost'
             
             ]
         },

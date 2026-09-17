@@ -4,6 +4,9 @@ const path =
 const fs =
     require('fs');
 
+    const nodemailer =
+    require('nodemailer');
+
 const MEMBER_DEPARTMENTS = {
 
     'opstestveni-nauki':
@@ -976,6 +979,252 @@ async editorImage(req, res) {
 
 
         return res.serverError();
+
+    }
+
+},
+
+async contactPage(req, res) {
+
+    return res.view(
+        'pages/contact',
+        {
+
+            layout:
+                'layouts/layout',
+
+            pageTitle:
+                'Контакт',
+
+            metaDescription:
+                'Контакт - Македонско научно друштво Битола',
+
+            currentPage:
+                'kontakt'
+
+        }
+    );
+
+},
+
+async sendContact(req, res) {
+
+    try {
+
+        const name =
+            String(
+                req.body.name || ''
+            )
+            .trim();
+
+
+        const subject =
+            String(
+                req.body.subject || ''
+            )
+            .trim();
+
+
+        const contact =
+            String(
+                req.body.contact || ''
+            )
+            .trim();
+
+
+        const message =
+            String(
+                req.body.message || ''
+            )
+            .trim();
+
+
+        /*
+         * Honeypot spam field.
+         * Real users never fill this.
+         */
+
+        const website =
+            String(
+                req.body.website || ''
+            )
+            .trim();
+
+
+        if (website) {
+
+            return res.json({
+                success: true
+            });
+
+        }
+
+
+        if (
+            !name ||
+            !subject ||
+            !contact ||
+            !message
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Ве молиме пополнете ги сите полиња.'
+
+            });
+
+        }
+
+
+        if (
+            name.length > 150 ||
+            subject.length > 200 ||
+            contact.length > 200 ||
+            message.length > 5000
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Внесените податоци се предолги.'
+
+            });
+
+        }
+
+
+        const escapeHtml =
+            value => {
+
+                return String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+
+            };
+
+
+        const transporter =
+            nodemailer.createTransport({
+
+                host:
+                    process.env.SMTP_HOST,
+
+                port:
+                    Number(
+                        process.env.SMTP_PORT ||
+                        587
+                    ),
+
+                secure:
+                    process.env.SMTP_SECURE ===
+                    'true',
+
+                auth: {
+
+                    user:
+                        process.env.SMTP_USER,
+
+                    pass:
+                        process.env.SMTP_PASS
+
+                }
+
+            });
+
+
+        await transporter.sendMail({
+
+            from:
+                process.env.SMTP_USER,
+
+            to:
+                process.env.CONTACT_TO_EMAIL,
+
+            replyTo:
+                contact.includes('@')
+                    ? contact
+                    : undefined,
+
+            subject:
+                'МНД Битола - ' +
+                subject,
+
+            text:
+                [
+                    'Наслов: ' + subject,
+                    '',
+                    'Име и презиме: ' + name,
+                    '',
+                    'Контакт: ' + contact,
+                    '',
+                    'Порака:',
+                    message
+                ]
+                .join('\n'),
+
+            html:
+                `
+                    <h2>Нова порака од веб-страницата</h2>
+
+                    <p>
+                        <strong>Наслов:</strong><br>
+                        ${escapeHtml(subject)}
+                    </p>
+
+                    <p>
+                        <strong>Име и презиме:</strong><br>
+                        ${escapeHtml(name)}
+                    </p>
+
+                    <p>
+                        <strong>Контакт:</strong><br>
+                        ${escapeHtml(contact)}
+                    </p>
+
+                    <p>
+                        <strong>Порака:</strong><br>
+                        ${escapeHtml(message)
+                            .replace(/\n/g, '<br>')}
+                    </p>
+                `
+
+        });
+
+
+        return res.json({
+
+            success: true,
+
+            message:
+                'Пораката е успешно испратена.'
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Contact email error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Пораката не може да се испрати. Обидете се повторно.'
+
+        });
 
     }
 

@@ -229,5 +229,16 @@ DEPARTMENTS
 'PUT /admin/api/publication-landing':
     'AdminController.updatePublicationLanding',
 
+    /* =========================================================
+   CONTACT
+========================================================= */
+
+'GET /kontakt':
+'MainController.contactPage',
+
+
+'POST /api/contact':
+'MainController.sendContact',
+
 };
 
