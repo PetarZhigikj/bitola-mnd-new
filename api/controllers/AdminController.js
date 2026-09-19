@@ -9,6 +9,7 @@ const path =
 
 const fs =
     require('fs');
+    
 
 
 
@@ -424,7 +425,10 @@ const fs =
                 'drugi-prilozi',
     
             'oglas':
-                'oglasi'
+                'oglasi',
+
+            'novost':
+                'novosti'
     
         };
     
@@ -442,10 +446,10 @@ const fs =
             getContentDirectory(type);
     
     
-            const uploadDirectory =
+        const uploadDirectory =
             path.resolve(
                 sails.config.appPath,
-                `.tmp/public/uploads/${directory}/images`
+                `assets/uploads/${directory}/images`
             );
     
     
@@ -471,7 +475,10 @@ const fs =
     
                     },
     
-                    (error, uploadedFiles) => {
+                    (
+                        error,
+                        uploadedFiles
+                    ) => {
     
                         if (error) {
                             return reject(error);
@@ -498,9 +505,25 @@ const fs =
                             );
     
     
+                        console.log(
+                            'CONTENT IMAGE SAVED:',
+                            uploadedFile.fd
+                        );
+    
+    
+                        console.log(
+                            'CONTENT IMAGE EXISTS:',
+                            fs.existsSync(
+                                uploadedFile.fd
+                            )
+                        );
+    
+    
                         return resolve({
+    
                             url:
                                 `/uploads/${directory}/images/${fileName}`
+    
                         });
     
                     }
@@ -520,10 +543,10 @@ const fs =
             getContentDirectory(type);
     
     
-            const uploadDirectory =
+        const uploadDirectory =
             path.resolve(
                 sails.config.appPath,
-                `.tmp/public/uploads/${directory}/files`
+                `assets/uploads/${directory}/files`
             );
     
     
@@ -549,7 +572,10 @@ const fs =
     
                     },
     
-                    (error, uploadedFiles) => {
+                    (
+                        error,
+                        uploadedFiles
+                    ) => {
     
                         if (error) {
                             return reject(error);
@@ -610,13 +636,16 @@ const fs =
     
         const cleanPath =
             String(fileUrl)
-                .replace(/^\/+/, '');
+                .replace(
+                    /^\/uploads\//,
+                    ''
+                );
     
     
         const filePath =
             path.resolve(
                 sails.config.appPath,
-                '.tmp/public',
+                'assets/uploads',
                 cleanPath
             );
     
@@ -626,6 +655,7 @@ const fs =
             await fs.promises.unlink(
                 filePath
             );
+    
     
         } catch (error) {
     
@@ -654,7 +684,8 @@ const fs =
     
             'drugi-prilozi',
     
-            'oglas'
+            'oglas',
+            'novost'
     
         ].includes(type);
     
@@ -2783,6 +2814,32 @@ async uploadEditorImage(req, res) {
         });
 
     }
+
+},
+
+async newsPage(req, res) {
+
+    return res.view(
+        'admin/content-items',
+        {
+
+            layout:
+                'layouts/admin-layout',
+
+            pageTitle:
+                'Новости',
+
+            adminPage:
+                'novosti',
+
+            contentType:
+                'novost',
+
+            contentPageTitle:
+                'Новости'
+
+        }
+    );
 
 },
 

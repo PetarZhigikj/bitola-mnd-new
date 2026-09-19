@@ -4,6 +4,9 @@ const mainApp = Vue.createApp({
 
         return {
 
+            homeNews: [],
+
+
             /* =============================================
                GENERAL
             ============================================= */
@@ -268,6 +271,37 @@ const mainApp = Vue.createApp({
 
 
     methods: {
+
+        formatNewsDate(value) {
+
+            if (!value) {
+                return '';
+            }
+        
+        
+            const date =
+                new Date(value);
+        
+        
+            return date.toLocaleDateString(
+                'mk-MK',
+                {
+        
+                    day:
+                        '2-digit',
+        
+                    month:
+                        '2-digit',
+        
+                    year:
+                        'numeric'
+        
+                }
+            );
+        
+        },
+
+        
 
         nextDepartmentSlide() {
 
@@ -621,6 +655,40 @@ const mainApp = Vue.createApp({
         
         },
 
+        async loadHomeNews() {
+
+            try {
+        
+                const response =
+                    await axios.get(
+                        '/api/home-news'
+                    );
+        
+        
+                if (
+                    response.data?.success
+                ) {
+        
+                    this.homeNews =
+                        response.data.news || [];
+        
+                }
+        
+        
+            } catch (error) {
+        
+                console.error(
+                    'Error loading home news:',
+                    error
+                );
+        
+                this.homeNews =
+                    [];
+        
+            }
+        
+        },
+
     },
 
 
@@ -638,6 +706,8 @@ const mainApp = Vue.createApp({
         ) {
     
             this.updateDepartmentsPerSlide();
+
+            this.loadHomeNews()
     
     
             window.addEventListener(

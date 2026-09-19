@@ -2,7 +2,7 @@
     id="adminContentPage"
     class="admin-manage-page"
     data-content-type="<%= contentType %>"
-    data-content-title="<%= contentPageTitle %>"
+    data-content-title="<%= contentPageTitle %>">
 
     <% if (contentType === 'publikacija') { %>
 
@@ -28,6 +28,45 @@
     
     
             <div class="admin-form-grid">
+
+                <% if (contentType !== 'novost') { %>
+
+                    <div class="admin-form-group">
+                
+                        <label>
+                            Прикачен документ
+                        </label>
+                
+                        <input
+                            type="file"
+                            @change="handleContentAttachmentChange"
+                        >
+                
+                
+                        <div
+                            v-if="contentAttachmentName"
+                            class="admin-content-attachment-preview"
+                        >
+                
+                            <i class="bx bx-file"></i>
+                
+                            <span>
+                                {{ contentAttachmentName }}
+                            </span>
+                
+                            <button
+                                type="button"
+                                class="admin-btn admin-btn-small admin-btn-danger"
+                                @click="removeContentAttachment"
+                            >
+                                Отстрани
+                            </button>
+                
+                        </div>
+                
+                    </div>
+                
+                <% } %>
     
     
                 <!-- PUBLICATIONS -->
@@ -158,7 +197,7 @@
         </div>
     
     <% } %>
->
+
     <!-- =====================================================
          LIST
     ====================================================== -->
@@ -208,11 +247,17 @@
                         <th>
                             Наслов
                         </th>
-
-                        <th>
-                            Документ
-                        </th>
-
+                        
+                        
+                        <% if (contentType !== 'novost') { %>
+                        
+                            <th>
+                                Документ
+                            </th>
+                        
+                        <% } %>
+                        
+                        
                         <th>
                             Акции
                         </th>
@@ -236,20 +281,21 @@
                         </td>
 
 
-                        <td>
+                        <% if (contentType !== 'novost') { %>
 
-                            <span
-                                v-if="item.attachmentName"
-                            >
-                                {{ item.attachmentName }}
-                            </span>
-
-
-                            <span v-else>
-                                —
-                            </span>
-
-                        </td>
+                            <td>
+                        
+                                <span v-if="item.attachmentName">
+                                    {{ item.attachmentName }}
+                                </span>
+                        
+                                <span v-else>
+                                    —
+                                </span>
+                        
+                            </td>
+                        
+                        <% } %>
 
 
                         <td>
@@ -429,43 +475,49 @@
 
             <!-- ATTACHMENT -->
 
-            <div class="admin-form-group">
+            <% if (contentType !== 'novost') { %>
 
-                <label>
-                    Прикачен документ
-                </label>
-
-
-                <input
-                    type="file"
-                    @change="handleContentAttachmentChange"
-                >
-
-
-                <div
-                    v-if="contentAttachmentName"
-                    class="admin-content-attachment-preview"
-                >
-
-                    <i class="bx bx-file"></i>
-
-
-                    <span>
-                        {{ contentAttachmentName }}
-                    </span>
-
-
-                    <button
-                        type="button"
-                        class="admin-btn admin-btn-small admin-btn-danger"
-                        @click="removeContentAttachment"
+                <!-- ATTACHMENT -->
+            
+                <div class="admin-form-group">
+            
+                    <label>
+                        Прикачен документ
+                    </label>
+            
+            
+                    <input
+                        type="file"
+                        @change="handleContentAttachmentChange"
                     >
-                        Отстрани
-                    </button>
-
+            
+            
+                    <div
+                        v-if="contentAttachmentName"
+                        class="admin-content-attachment-preview"
+                    >
+            
+                        <i class="bx bx-file"></i>
+            
+            
+                        <span>
+                            {{ contentAttachmentName }}
+                        </span>
+            
+            
+                        <button
+                            type="button"
+                            class="admin-btn admin-btn-small admin-btn-danger"
+                            @click="removeContentAttachment"
+                        >
+                            Отстрани
+                        </button>
+            
+                    </div>
+            
                 </div>
-
-            </div>
+            
+            <% } %>
 
 
 

@@ -240,5 +240,26 @@ DEPARTMENTS
 'POST /api/contact':
 'MainController.sendContact',
 
+/* =========================================================
+   ADMIN - НОВОСТИ
+========================================================= */
+
+'GET /admin/novosti':
+    'AdminController.newsPage',
+
+    /* =========================================================
+   НОВОСТИ
+========================================================= */
+
+'GET /novosti':
+'MainController.newsPage',
+
+
+'GET /novosti/:id':
+'MainController.newsDetailPage',
+
+'GET /api/home-news':
+    'MainController.getHomeNews',
+
 };
 

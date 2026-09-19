@@ -47,16 +47,9 @@ module.exports.http = {
             }
 
 
-            let baseDirectory =
-                null;
-
-            let urlPrefix =
-                null;
-
-
-            /*
-             * QUILL EDITOR IMAGES
-             */
+            /* =================================================
+               EDITOR IMAGES
+            ================================================= */
 
             if (
                 req.path.startsWith(
@@ -64,134 +57,238 @@ module.exports.http = {
                 )
             ) {
 
-                urlPrefix =
-                    '/editor-images/';
+                const requestedFileName =
+                    req.path.substring(
+                        '/editor-images/'.length
+                    );
 
-                baseDirectory =
+
+                return sendUploadedFile(
+
+                    res,
+
                     path.resolve(
                         __dirname,
                         '../uploads/editor'
-                    );
+                    ),
+
+                    requestedFileName
+
+                );
 
             }
 
 
-            /*
-             * PUBLICATION LANDING IMAGES
-             */
+            /* =================================================
+               PUBLICATION LANDING IMAGES
+            ================================================= */
 
-            else if (
+            if (
                 req.path.startsWith(
                     '/publication-images/'
                 )
             ) {
 
-                urlPrefix =
-                    '/publication-images/';
+                const requestedFileName =
+                    req.path.substring(
+                        '/publication-images/'.length
+                    );
 
-                baseDirectory =
+
+                return sendUploadedFile(
+
+                    res,
+
                     path.resolve(
                         __dirname,
                         '../uploads/publication-landing'
-                    );
+                    ),
 
-            }
-
-
-            /*
-             * Not one of our uploaded files.
-             */
-
-            else {
-
-                return next();
-
-            }
-
-
-            let requestedFileName;
-
-
-            try {
-
-                requestedFileName =
-                    decodeURIComponent(
-                        req.path.substring(
-                            urlPrefix.length
-                        )
-                    );
-
-            } catch (error) {
-
-                return res.status(400).end();
-
-            }
-
-
-            const fileName =
-                path.basename(
                     requestedFileName
+
                 );
-
-
-            /*
-             * Prevent ../ path traversal.
-             */
-
-            if (
-                !fileName ||
-                fileName !== requestedFileName
-            ) {
-
-                return res.status(404).end();
 
             }
 
 
-            const filePath =
-                path.join(
-                    baseDirectory,
-                    fileName
-                );
-
-
-            console.log(
-                'UPLOAD REQUEST:',
-                req.path
-            );
-
-
-            console.log(
-                'UPLOAD FILE:',
-                filePath
-            );
-
-
-            console.log(
-                'UPLOAD EXISTS:',
-                fs.existsSync(
-                    filePath
-                )
-            );
-
+            /* =================================================
+               GENERAL CONTENT UPLOADS
+               
+               /uploads/novosti/...
+               /uploads/publikacii/...
+               /uploads/oglasi/...
+               /uploads/sovremeni-dijalozi/...
+               /uploads/drugi-prilozi/...
+            ================================================= */
 
             if (
-                !fs.existsSync(
-                    filePath
+                req.path.startsWith(
+                    '/uploads/'
                 )
             ) {
 
-                return res.status(404).end();
+                let relativePath;
+
+
+                try {
+
+                    relativePath =
+                        decodeURIComponent(
+                            req.path.substring(
+                                '/uploads/'.length
+                            )
+                        );
+
+                } catch (error) {
+
+                    return res
+                        .status(400)
+                        .end();
+
+                }
+
+
+                const uploadsDirectory =
+                    path.resolve(
+                        __dirname,
+                        '../assets/uploads'
+                    );
+
+
+                const filePath =
+                    path.resolve(
+                        uploadsDirectory,
+                        relativePath
+                    );
+
+
+                /*
+                 * Prevent:
+                 *
+                 * /uploads/../../something
+                 */
+
+                if (
+                    !filePath.startsWith(
+                        uploadsDirectory +
+                        path.sep
+                    )
+                ) {
+
+                    return res
+                        .status(404)
+                        .end();
+
+                }
+
+
+                console.log(
+                    'PUBLIC UPLOAD:',
+                    filePath
+                );
+
+
+                console.log(
+                    'PUBLIC UPLOAD EXISTS:',
+                    fs.existsSync(filePath)
+                );
+
+
+                if (
+                    !fs.existsSync(
+                        filePath
+                    )
+                ) {
+
+                    return res
+                        .status(404)
+                        .end();
+
+                }
+
+
+                return res.sendFile(
+                    filePath
+                );
 
             }
 
 
-            return res.sendFile(
-                filePath
-            );
+            return next();
 
         }
 
     }
 
 };
+
+
+
+function sendUploadedFile(
+    res,
+    directory,
+    requestedFileName
+) {
+
+    let decodedFileName;
+
+
+    try {
+
+        decodedFileName =
+            decodeURIComponent(
+                requestedFileName
+            );
+
+    } catch (error) {
+
+        return res
+            .status(400)
+            .end();
+
+    }
+
+
+    const fileName =
+        path.basename(
+            decodedFileName
+        );
+
+
+    if (
+        !fileName ||
+        fileName !== decodedFileName
+    ) {
+
+        return res
+            .status(404)
+            .end();
+
+    }
+
+
+    const filePath =
+        path.join(
+            directory,
+            fileName
+        );
+
+
+    if (
+        !fs.existsSync(
+            filePath
+        )
+    ) {
+
+        return res
+            .status(404)
+            .end();
+
+    }
+
+
+    return res.sendFile(
+        filePath
+    );
+
+}

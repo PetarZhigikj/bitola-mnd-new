@@ -456,216 +456,180 @@
     <!-- =====================================================
          NEWS
     ====================================================== -->
-    <section class="mnd-news-section">
+    <!-- =====================================================
+     NEWS / LOCATION
+====================================================== -->
 
-        <div class="mnd-decoration-ring mnd-decoration-ring-news"></div>
+<section class="mnd-news-section">
 
-        <div class="mnd-page-container">
-
-            <div class="mnd-section-heading">
-
-                <h2>НОВОСТИ</h2>
-
-                <!-- <p>
-                    Class aptent taciti sociosqu ad litora torquent conubia nostramse
-                    <br>
-                    inceptos himenaeo. Phasellus metus nisl euismod eget lorem.
-                </p> -->
-
-            </div>
+    <div class="mnd-decoration-ring mnd-decoration-ring-news"></div>
 
 
-            <div class="mnd-news-layout">
+    <div class="mnd-page-container">
 
-                <!-- ===============================
-                     LARGE NEWS CARDS
-                ================================ -->
-                <div class="mnd-latest-news">
+        <div class="mnd-section-heading">
 
-                    <article class="mnd-news-card">
+            <h2>
+                НОВОСТИ
+            </h2>
+
+        </div>
+
+
+        <div class="mnd-home-news-layout">
+
+
+            <!-- =================================================
+                 NEWS - LEFT
+            ================================================== -->
+
+            <div class="mnd-home-news-list">
+
+
+                <article
+                    v-for="item in homeNews.slice(0, 4)"
+                    :key="item.id"
+                    class="mnd-home-news-item"
+                >
+
+
+                    <!-- IMAGE -->
+
+                    <a
+                        :href="'/novosti/' + item.id"
+                        class="mnd-home-news-image"
+                    >
 
                         <img
-                            src="https://placehold.co/760x620/d7cec0/555555?text=News+Image+1"
-                            alt="Новост"
+                            v-if="item.image"
+                            :src="item.image"
+                            :alt="item.title"
                         >
 
-                        <span class="mnd-news-category">
-                            Најнови
-                        </span>
 
-                        <div class="mnd-news-card-content">
+                        <div
+                            v-else
+                            class="mnd-home-news-image-placeholder"
+                        >
 
-                            <a href="/novosti/example-news-1">
-                                <h3>
-                                    Македонското научно друштво учествуваше
-                                    на тркалезната маса „Европската диплома
-                                    преку заеднички дипломи – почнува дома“
-                                </h3>
-                            </a>
-
-                            <div class="mnd-news-meta">
-                                <span>03/07/2026</span>
-                                <span>/</span>
-                                <span>0 Comments</span>
-                            </div>
+                            <i class="bx bx-news"></i>
 
                         </div>
 
-                    </article>
+                    </a>
 
 
-                    <article class="mnd-news-card">
 
-                        <img
-                            src="https://placehold.co/760x620/c8c0b5/555555?text=News+Image+2"
-                            alt="Новост"
+                    <!-- CONTENT -->
+
+                    <div class="mnd-home-news-content">
+
+                        <a
+                            :href="'/novosti/' + item.id"
+                            class="mnd-home-news-title"
                         >
 
-                        <span class="mnd-news-category">
-                            Најнови
-                        </span>
+                            {{ item.title }}
 
-                        <div class="mnd-news-card-content">
+                        </a>
 
-                            <a href="/novosti/example-news-2">
-                                <h3>
-                                    Македонското научно друштво учествуваше
-                                    на тркалезната маса „Европската диплома
-                                    преку заеднички дипломи – почнува дома“
-                                </h3>
-                            </a>
 
-                            <div class="mnd-news-meta">
-                                <span>03/07/2026</span>
-                                <span>/</span>
-                                <span>0 Comments</span>
-                            </div>
+                        <div class="mnd-home-news-meta">
+
+                            <span>
+                                {{ formatNewsDate(item.createdAt) }}
+                            </span>
 
                         </div>
-
-                    </article>
-
-                </div>
-
-
-                <!-- ===============================
-                     FEATURED NEWS
-                ================================ -->
-                <aside class="mnd-featured-news">
-
-                    <div class="mnd-featured-heading">
-
-                        <h3>Истакнати</h3>
-
-                        <span></span>
 
                     </div>
 
 
-                    <article class="mnd-featured-item">
-
-                        <a
-                            href="/novosti/featured-1"
-                            class="mnd-featured-image"
-                        >
-                            <img
-                                src="https://placehold.co/260x180/d7c6ad/555555?text=News"
-                                alt=""
-                            >
-                        </a>
-
-                        <div class="mnd-featured-content">
-
-                            <div class="mnd-featured-meta">
-                                03/07/2026
-                                <span>/</span>
-                                <a href="#">0 Comments</a>
-                            </div>
-
-                            <a href="/novosti/featured-1">
-                                Излезе од печат книгата „Учеството на
-                                воените старешини и војници од Битола
-                                и битолско во војната во 2001 година
-                                во Република Македонија“
-                            </a>
-
-                        </div>
-
-                    </article>
+                </article>
 
 
-                    <article class="mnd-featured-item">
 
-                        <a
-                            href="/novosti/featured-2"
-                            class="mnd-featured-image"
-                        >
-                            <img
-                                src="https://placehold.co/260x180/cfbea7/555555?text=News"
-                                alt=""
-                            >
-                        </a>
+                <a
+                    href="/novosti"
+                    class="mnd-home-news-all"
+                >
 
-                        <div class="mnd-featured-content">
+                    Сите новости
 
-                            <div class="mnd-featured-meta">
-                                03/07/2026
-                                <span>/</span>
-                                <a href="#">0 Comments</a>
-                            </div>
+                    <i class="bx bx-right-arrow-alt"></i>
 
-                            <a href="/novosti/featured-2">
-                                Излезе од печат книгата „Учеството на
-                                воените старешини и војници од Битола
-                                и битолско во војната во 2001 година
-                                во Република Македонија“
-                            </a>
+                </a>
 
-                        </div>
-
-                    </article>
-
-
-                    <article class="mnd-featured-item">
-
-                        <a
-                            href="/novosti/featured-3"
-                            class="mnd-featured-image"
-                        >
-                            <img
-                                src="https://placehold.co/260x180/d7c6ad/555555?text=News"
-                                alt=""
-                            >
-                        </a>
-
-                        <div class="mnd-featured-content">
-
-                            <div class="mnd-featured-meta">
-                                03/07/2026
-                                <span>/</span>
-                                <a href="#">0 Comments</a>
-                            </div>
-
-                            <a href="/novosti/featured-3">
-                                Излезе од печат книгата „Учеството на
-                                воените старешини и војници од Битола
-                                и битолско во војната во 2001 година
-                                во Република Македонија“
-                            </a>
-
-                        </div>
-
-                    </article>
-
-                </aside>
 
             </div>
 
 
-            <div class="mnd-news-bottom-line"></div>
+
+            <!-- =================================================
+                 LOCATION - RIGHT
+            ================================================== -->
+
+            <aside class="mnd-home-location">
+
+
+                <h3>
+                    Локација
+                </h3>
+
+
+                <div class="mnd-home-location-map">
+
+                    <iframe
+                        src="https://www.google.com/maps?q=%D0%9F%D0%B5%D1%86%D0%B5%20%D0%9C%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%2039%2C%20%D0%91%D0%B8%D1%82%D0%BE%D0%BB%D0%B0&output=embed"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Македонско научно друштво - Битола"
+                    ></iframe>
+
+                </div>
+
+
+                <div class="mnd-home-location-info">
+
+                    <div>
+
+                        <i class="bx bx-map"></i>
+
+                    </div>
+
+
+                    <p>
+                        ул. Пеце Матичевски 39,
+                        Битола 7000
+                    </p>
+
+                </div>
+
+
+                <div class="mnd-home-location-info">
+
+                    <div>
+
+                        <i class="bx bx-phone"></i>
+
+                    </div>
+
+
+                    <a href="tel:+38947222683">
+                        +389 47 222 683
+                    </a>
+
+                </div>
+
+
+            </aside>
+
 
         </div>
 
-    </section>
+    </div>
+
+</section>
+
 
 </div>

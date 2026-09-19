@@ -165,20 +165,53 @@ module.exports = {
 
     async home(req, res) {
 
-        return res.view('pages/home', {
+        try {
     
-            layout: 'layouts/layout',
+            const news =
+                await ContentItem.find({
+                    type:
+                        'novost'
+                })
+                .sort(
+                    'createdAt DESC'
+                )
+                .limit(4);
     
-            pageTitle:
-                'Македонско научно друштво - Битола',
     
-            metaDescription:
-                'Македонско научно друштво - Битола',
+            return res.view(
+                'pages/home',
+                {
     
-            currentPage:
-                'home'
+                    layout:
+                        'layouts/layout',
     
-        });
+                    pageTitle:
+                        'Македонско научно друштво - Битола',
+    
+                    metaDescription:
+                        'Македонско научно друштво - Битола',
+    
+                    currentPage:
+                        'home',
+    
+                    news:
+                        news
+    
+                }
+            );
+    
+    
+        } catch (error) {
+    
+            sails.log.error(
+                'Homepage error:',
+                error
+            );
+    
+    
+            return res.serverError();
+    
+        }
     
     },
 
@@ -1223,6 +1256,132 @@ async sendContact(req, res) {
 
             message:
                 'Пораката не може да се испрати. Обидете се повторно.'
+
+        });
+
+    }
+
+},
+
+async newsPage(req, res) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'novost',
+
+                title:
+                    'Новости',
+
+                currentPage:
+                    'novosti',
+
+                basePath:
+                    '/novosti'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'News page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async newsDetailPage(req, res) {
+
+    try {
+
+        return await renderContentDetail(
+            req,
+            res,
+            {
+
+                type:
+                    'novost',
+
+                currentPage:
+                    'novosti',
+
+                basePath:
+                    '/novosti',
+
+                listingTitle:
+                    'Новости'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'News detail page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async getHomeNews(req, res) {
+
+    try {
+
+        const news =
+            await ContentItem.find({
+                type:
+                    'novost'
+            })
+            .sort(
+                'createdAt DESC'
+            )
+            .limit(4);
+
+
+        return res.json({
+
+            success:
+                true,
+
+            news:
+                news
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Home news error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success:
+                false,
+
+            message:
+                'Не може да се вчитаат новостите.'
 
         });
 
