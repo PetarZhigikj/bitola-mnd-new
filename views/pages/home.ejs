@@ -12,7 +12,7 @@
         <!-- Placeholder hero image -->
         <div
             class="mnd-hero-background"
-            style="background-image: url('/images/Vector.png');"
+            style="background-image: url('/images/МНД 1.jpg');"
         ></div>
 
         <div class="mnd-hero-background-overlay"></div>
@@ -218,11 +218,11 @@
             <div class="mnd-hero-content">
 
                 <h1>
-                    Станете член на Македонско<br>
-                    Научно Друштво - Битола
+                     Македонско Научно<br>
+                     Друштво - Битола
                 </h1>
 
-                <p class="mnd-hero-description">
+                <!-- <p class="mnd-hero-description">
                     ПОТРЕБНИ ДОКУМЕНТИ ЗА ЧЛЕНСТВО ВО МАКЕДОНСКОТО
                     <br>
                     НАУЧНО ДРУШТВО - БИТОЛА
@@ -230,12 +230,6 @@
 
                 <div class="mnd-hero-actions">
 
-                    <!-- <a
-                        href="/clenstvo"
-                        class="mnd-btn mnd-btn-primary"
-                    >
-                        ЗАЧЛЕНИ СЕ
-                    </a> -->
 
                     <a
                         href="/za-mnd/clenstvo"
@@ -246,7 +240,7 @@
                         <i class="bx bx-right-arrow-alt"></i>
                     </a>
 
-                </div>
+                </div> -->
 
 
                 <!-- MEMBERS -->
@@ -452,6 +446,46 @@
     
     </section>
 
+    <!-- =====================================================
+     MEMBERSHIP CTA
+====================================================== -->
+
+<section class="mnd-membership-section">
+
+    <div class="mnd-page-container">
+
+        <div class="mnd-membership-content">
+
+            <div class="mnd-membership-text">
+
+                <h2>
+                    Станете член на Македонско
+                    Научно Друштво - Битола
+                </h2>
+
+                <p>
+                    ПОТРЕБНИ ДОКУМЕНТИ ЗА ЧЛЕНСТВО ВО
+                    МАКЕДОНСКОТО НАУЧНО ДРУШТВО - БИТОЛА
+                </p>
+
+            </div>
+
+
+            <a
+                href="/za-mnd/clenstvo"
+                class="mnd-membership-button"
+            >
+                ПОВЕЌЕ ИНФОРМАЦИИ
+
+                <i class="bx bx-right-arrow-alt"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
 
     <!-- =====================================================
          NEWS
@@ -467,13 +501,7 @@
 
     <div class="mnd-page-container">
 
-        <div class="mnd-section-heading">
-
-            <h2>
-                НОВОСТИ
-            </h2>
-
-        </div>
+       
 
 
         <div class="mnd-home-news-layout">
@@ -485,82 +513,72 @@
 
             <div class="mnd-home-news-list">
 
-
-                <article
-                    v-for="item in homeNews.slice(0, 4)"
-                    :key="item.id"
-                    class="mnd-home-news-item"
-                >
-
-
-                    <!-- IMAGE -->
-
-                    <a
-                        :href="'/novosti/' + item.id"
-                        class="mnd-home-news-image"
+                <h3 class="mnd-home-column-title">
+                    Новости
+                </h3>
+            
+                <div class="mnd-home-news-items">
+            
+                    <article
+                        v-for="item in homeNews"
+                        :key="item.id"
+                        class="mnd-home-news-item"
                     >
-
-                        <img
-                            v-if="item.image"
-                            :src="item.image"
-                            :alt="item.title"
-                        >
-
-
-                        <div
-                            v-else
-                            class="mnd-home-news-image-placeholder"
-                        >
-
-                            <i class="bx bx-news"></i>
-
-                        </div>
-
-                    </a>
-
-
-
-                    <!-- CONTENT -->
-
-                    <div class="mnd-home-news-content">
-
+            
                         <a
                             :href="'/novosti/' + item.id"
-                            class="mnd-home-news-title"
+                            class="mnd-home-news-image"
                         >
-
-                            {{ item.title }}
-
+            
+                            <img
+                                v-if="item.image"
+                                :src="item.image"
+                                :alt="item.title"
+                            >
+            
+                            <div
+                                v-else
+                                class="mnd-home-news-image-placeholder"
+                            >
+                                <i class="bx bx-news"></i>
+                            </div>
+            
                         </a>
-
-
-                        <div class="mnd-home-news-meta">
-
-                            <span>
-                                {{ formatNewsDate(item.createdAt) }}
-                            </span>
-
+            
+            
+                        <div class="mnd-home-news-content">
+            
+                            <a
+                                :href="'/novosti/' + item.id"
+                                class="mnd-home-news-title"
+                            >
+                                {{ item.title }}
+                            </a>
+            
+                            <div class="mnd-home-news-meta">
+            
+                                <span>
+                                    {{ formatNewsDate(item.createdAt) }}
+                                </span>
+            
+                            </div>
+            
                         </div>
-
-                    </div>
-
-
-                </article>
-
-
-
+            
+                    </article>
+            
+                </div>
+            
+            
                 <a
                     href="/novosti"
                     class="mnd-home-news-all"
                 >
-
                     Сите новости
-
+            
                     <i class="bx bx-right-arrow-alt"></i>
-
                 </a>
-
-
+            
             </div>
 
 
@@ -572,7 +590,7 @@
             <aside class="mnd-home-location">
 
 
-                <h3>
+                <h3 class="mnd-home-column-title">
                     Локација
                 </h3>
 

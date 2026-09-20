@@ -1663,7 +1663,7 @@ button {
 
 .mnd-hero-content {
     max-width: 740px;
-    padding-top: 100px;
+    padding-top: 140px;
 }
 
 .mnd-hero-content h1 {
@@ -5712,4 +5712,220 @@ a.mnd-footer-contact-item:hover {
             300px;
     }
 
+}
+
+
+/* =========================================================
+   MEMBERSHIP CTA
+========================================================= */
+
+.mnd-membership-section {
+    position: relative;
+
+    padding:
+        75px
+        0;
+
+    background:
+        #f3efe9;
+}
+
+
+.mnd-membership-content {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap:
+        60px;
+
+    max-width:
+        1250px;
+
+    margin:
+        0 auto;
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.mnd-membership-text {
+    max-width:
+        760px;
+}
+
+
+.mnd-membership-text h2 {
+    margin:
+        0
+        0
+        18px;
+
+    color:
+        var(--mnd-black);
+
+    font-size:
+        clamp(
+            28px,
+            3vw,
+            42px
+        );
+
+    font-weight:
+        700;
+
+    line-height:
+        1.2;
+}
+
+
+.mnd-membership-text p {
+    margin:
+        0;
+
+    color:
+        #676767;
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
+
+    line-height:
+        1.7;
+
+    letter-spacing:
+        0.03em;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.mnd-membership-button {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-shrink:
+        0;
+
+    gap:
+        10px;
+
+    min-width:
+        215px;
+
+    min-height:
+        52px;
+
+    padding:
+        14px
+        25px;
+
+    color:
+        #ffffff;
+
+    border-radius:
+        30px;
+
+    background:
+        #593910;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.mnd-membership-button i {
+    font-size:
+        19px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.mnd-membership-button:hover {
+    background:
+        var(--mnd-gold);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.mnd-membership-button:hover i {
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .mnd-membership-section {
+        padding:
+            60px
+            0;
+    }
+
+
+    .mnd-membership-content {
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+        gap:
+            30px;
+    }
+
+
+    .mnd-membership-button {
+        min-width:
+            0;
+    }
+
+}
+
+.mnd-home-column-title {
+    margin:
+        0
+        0
+        20px;
+
+    color:
+        var(--mnd-black);
+
+    font-size:
+        22px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.2;
 }
