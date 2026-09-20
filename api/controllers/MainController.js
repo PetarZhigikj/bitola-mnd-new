@@ -1389,6 +1389,162 @@ async getHomeNews(req, res) {
 
 },
 
+async centersPage(req, res) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'centar',
+
+                title:
+                    'Центри',
+
+                currentPage:
+                    'centri',
+
+                basePath:
+                    '/centri'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Centers page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async centerDetailPage(req, res) {
+
+    try {
+
+        return await renderContentDetail(
+            req,
+            res,
+            {
+
+                type:
+                    'centar',
+
+                currentPage:
+                    'centri',
+
+                basePath:
+                    '/centri',
+
+                listingTitle:
+                    'Центри'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Center detail error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async awardsPage(req, res) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'nagrada',
+
+                title:
+                    'Награди',
+
+                currentPage:
+                    'nagradi',
+
+                basePath:
+                    '/nagradi'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Awards page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async awardDetailPage(req, res) {
+
+    try {
+
+        return await renderContentDetail(
+            req,
+            res,
+            {
+
+                type:
+                    'nagrada',
+
+                currentPage:
+                    'nagradi',
+
+                basePath:
+                    '/nagradi',
+
+                listingTitle:
+                    'Награди'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Award detail error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
 
 
 };

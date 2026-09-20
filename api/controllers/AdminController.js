@@ -428,7 +428,13 @@ const fs =
                 'oglasi',
 
             'novost':
-                'novosti'
+                'novosti',
+
+            'centar':
+                'centri',
+
+            'nagrada':
+                'nagradi'
     
         };
     
@@ -685,7 +691,9 @@ const fs =
             'drugi-prilozi',
     
             'oglas',
-            'novost'
+            'novost',
+            'centar',
+            'nagrada'
     
         ].includes(type);
     
@@ -2837,6 +2845,58 @@ async newsPage(req, res) {
 
             contentPageTitle:
                 'Новости'
+
+        }
+    );
+
+},
+
+async centersPage(req, res) {
+
+    return res.view(
+        'admin/content-items',
+        {
+
+            layout:
+                'layouts/admin-layout',
+
+            pageTitle:
+                'Центри',
+
+            adminPage:
+                'centri',
+
+            contentType:
+                'centar',
+
+            contentPageTitle:
+                'Центри'
+
+        }
+    );
+
+},
+
+async awardsPage(req, res) {
+
+    return res.view(
+        'admin/content-items',
+        {
+
+            layout:
+                'layouts/admin-layout',
+
+            pageTitle:
+                'Награди',
+
+            adminPage:
+                'nagradi',
+
+            contentType:
+                'nagrada',
+
+            contentPageTitle:
+                'Награди'
 
         }
     );

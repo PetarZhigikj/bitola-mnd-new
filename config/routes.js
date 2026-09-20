@@ -261,5 +261,26 @@ DEPARTMENTS
 'GET /api/home-news':
     'MainController.getHomeNews',
 
+
+
+
+    'GET /admin/centri':
+    'AdminController.centersPage',
+
+'GET /admin/nagradi':
+    'AdminController.awardsPage',
+
+    'GET /centri':
+    'MainController.centersPage',
+
+'GET /centri/:id':
+    'MainController.centerDetailPage',
+
+'GET /nagradi':
+    'MainController.awardsPage',
+
+'GET /nagradi/:id':
+    'MainController.awardDetailPage',
+
 };
 
