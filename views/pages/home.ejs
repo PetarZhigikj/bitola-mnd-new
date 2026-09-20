@@ -649,5 +649,231 @@
 
 </section>
 
+<!-- =====================================================
+     NEWS
+====================================================== -->
+
+<section class="mnd-news-section">
+
+    <div class="mnd-decoration-ring mnd-decoration-ring-news"></div>
+
+
+    <div class="mnd-page-container">
+
+
+        <!-- =================================================
+             NEWS HEADING
+        ================================================== -->
+
+        <div class="mnd-home-news-heading">
+
+            <h2>
+                Новости
+            </h2>
+
+        </div>
+
+
+        <!-- =================================================
+             NEWS GRID
+        ================================================== -->
+
+        <div class="mnd-home-news-grid">
+
+
+            <!-- =============================================
+                 MAIN NEWS
+            ============================================== -->
+
+            <div class="mnd-home-main-news">
+
+                <article
+                    v-for="item in homeNews.slice(0, 2)"
+                    :key="item.id"
+                    class="mnd-home-main-news-card"
+                >
+
+                    <a
+                        :href="'/novosti/' + item.id"
+                        class="mnd-home-main-news-image"
+                    >
+
+                        <img
+                            v-if="item.image"
+                            :src="item.image"
+                            :alt="item.title"
+                        >
+
+                        <div
+                            v-else
+                            class="mnd-home-main-news-placeholder"
+                        >
+                            <i class="bx bx-news"></i>
+                        </div>
+
+                    </a>
+
+
+                    <div class="mnd-home-main-news-content">
+
+                        <div class="mnd-home-news-meta">
+                            {{ formatNewsDate(item.createdAt) }}
+                        </div>
+
+
+                        <a
+                            :href="'/novosti/' + item.id"
+                            class="mnd-home-main-news-title"
+                        >
+
+                            {{ item.title }}
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 SMALL NEWS
+            ============================================== -->
+
+            <div class="mnd-home-small-news">
+
+                <article
+                    v-for="item in homeNews.slice(2, 6)"
+                    :key="item.id"
+                    class="mnd-home-small-news-item"
+                >
+
+                    <a
+                        :href="'/novosti/' + item.id"
+                        class="mnd-home-small-news-image"
+                    >
+
+                        <img
+                            v-if="item.image"
+                            :src="item.image"
+                            :alt="item.title"
+                        >
+
+                        <div
+                            v-else
+                            class="mnd-home-small-news-placeholder"
+                        >
+                            <i class="bx bx-news"></i>
+                        </div>
+
+                    </a>
+
+
+                    <div class="mnd-home-small-news-content">
+
+                        <div class="mnd-home-news-meta">
+                            {{ formatNewsDate(item.createdAt) }}
+                        </div>
+
+
+                        <a
+                            :href="'/novosti/' + item.id"
+                            class="mnd-home-small-news-title"
+                        >
+
+                            {{ item.title }}
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             ALL NEWS
+        ================================================== -->
+
+        <a
+            href="/novosti"
+            class="mnd-home-news-all"
+        >
+
+            Сите новости
+
+            <i class="bx bx-right-arrow-alt"></i>
+
+        </a>
+
+
+
+        <!-- =================================================
+             LOCATION
+        ================================================== -->
+
+        <div class="mnd-home-location-section">
+
+            <h2>
+                Локација
+            </h2>
+
+
+            <div class="mnd-home-location-map">
+
+                <iframe
+                    src="https://www.google.com/maps?q=%D0%9F%D0%B5%D1%86%D0%B5%20%D0%9C%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D0%B2%D1%81%D0%BA%D0%B8%2039%2C%20%D0%91%D0%B8%D1%82%D0%BE%D0%BB%D0%B0&output=embed"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Македонско научно друштво - Битола"
+                ></iframe>
+
+            </div>
+
+
+            <div class="mnd-home-location-details">
+
+                <div class="mnd-home-location-info">
+
+                    <div>
+                        <i class="bx bx-map"></i>
+                    </div>
+
+                    <p>
+                        ул. Пеце Матичевски 39,
+                        Битола 7000
+                    </p>
+
+                </div>
+
+
+                <div class="mnd-home-location-info">
+
+                    <div>
+                        <i class="bx bx-phone"></i>
+                    </div>
+
+                    <a href="tel:+38947222683">
+                        +389 47 222 683
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
 
 </div>

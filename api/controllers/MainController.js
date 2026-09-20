@@ -1353,7 +1353,7 @@ async getHomeNews(req, res) {
             .sort(
                 'createdAt DESC'
             )
-            .limit(4);
+            .limit(6);
 
 
         return res.json({
