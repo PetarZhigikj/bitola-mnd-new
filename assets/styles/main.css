@@ -6555,3 +6555,503 @@ a.mnd-footer-contact-item:hover {
     }
 
 }
+
+/* =========================================================
+   DETAIL PAGE + SIDEBAR
+========================================================= */
+
+.mnd-detail-page-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        310px;
+
+    gap:
+        55px;
+
+    align-items:
+        start;
+}
+
+
+.mnd-detail-page-main {
+    min-width:
+        0;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.mnd-detail-sidebar {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        35px;
+}
+
+
+.mnd-detail-sidebar-widget {
+    padding:
+        24px;
+
+    border:
+        1px solid
+        rgba(89, 57, 16, 0.12);
+
+    border-radius:
+        14px;
+
+    background:
+        #ffffff;
+}
+
+
+.mnd-detail-sidebar-title {
+    margin:
+        0
+        0
+        20px;
+
+    color:
+        #593910;
+
+    font-size:
+        20px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   SIDEBAR NEWS
+========================================================= */
+
+.mnd-detail-sidebar-news {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+.mnd-detail-sidebar-news-item {
+    display:
+        grid;
+
+    grid-template-columns:
+        78px
+        minmax(0, 1fr);
+
+    gap:
+        13px;
+
+    align-items:
+        center;
+
+    padding:
+        14px
+        0;
+
+    border-bottom:
+        1px solid
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.mnd-detail-sidebar-news-item:first-child {
+    padding-top:
+        0;
+}
+
+
+.mnd-detail-sidebar-news-image {
+    display:
+        block;
+
+    width:
+        78px;
+
+    height:
+        62px;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        8px;
+
+    background:
+        #eeeeee;
+}
+
+
+.mnd-detail-sidebar-news-image img {
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+.mnd-detail-sidebar-news-item:hover
+.mnd-detail-sidebar-news-image img {
+    transform:
+        scale(1.05);
+}
+
+
+.mnd-detail-sidebar-news-content {
+    min-width:
+        0;
+}
+
+
+.mnd-detail-sidebar-news-title {
+    display:
+        -webkit-box;
+
+    color:
+        #333333;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.4;
+
+    overflow:
+        hidden;
+
+    -webkit-line-clamp:
+        3;
+
+    -webkit-box-orient:
+        vertical;
+}
+
+
+.mnd-detail-sidebar-news-title:hover {
+    color:
+        #967332;
+}
+
+
+.mnd-detail-sidebar-news-date {
+    display:
+        block;
+
+    margin-top:
+        5px;
+
+    color:
+        #999999;
+
+    font-size:
+        10px;
+}
+
+
+.mnd-detail-sidebar-all {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    margin-top:
+        18px;
+
+    color:
+        #593910;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+}
+
+
+.mnd-detail-sidebar-all i {
+    font-size:
+        17px;
+}
+
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+.mnd-detail-calendar-header {
+    display:
+        grid;
+
+    grid-template-columns:
+        32px
+        1fr
+        32px;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        20px;
+}
+
+
+.mnd-detail-calendar-header h3 {
+    margin:
+        0;
+
+    color:
+        #593910;
+
+    font-size:
+        16px;
+
+    font-weight:
+        700;
+
+    text-align:
+        center;
+}
+
+
+.mnd-detail-calendar-nav {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        32px;
+
+    height:
+        32px;
+
+    color:
+        #593910;
+
+    border-radius:
+        50%;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.mnd-detail-calendar-nav:hover {
+    color:
+        #ffffff;
+
+    background:
+        #593910;
+}
+
+
+.mnd-detail-calendar-nav i {
+    font-size:
+        20px;
+}
+
+
+/* GRID */
+
+.mnd-detail-calendar-grid {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap:
+        4px;
+}
+
+
+.mnd-detail-calendar-weekdays {
+    margin-bottom:
+        7px;
+}
+
+
+.mnd-detail-calendar-weekdays span {
+    color:
+        #999999;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+    text-align:
+        center;
+}
+
+
+.mnd-detail-calendar-day {
+    position:
+        relative;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    aspect-ratio:
+        1;
+
+    color:
+        #555555;
+
+    border-radius:
+        50%;
+
+    font-size:
+        11px;
+}
+
+
+.mnd-detail-calendar-empty {
+    pointer-events:
+        none;
+}
+
+
+/* TODAY */
+
+.mnd-detail-calendar-today {
+    color:
+        #ffffff;
+
+    font-weight:
+        700;
+
+    background:
+        #593910;
+}
+
+
+/* DAY CONTAINING NEWS */
+
+.mnd-detail-calendar-has-news {
+    font-weight:
+        700;
+}
+
+
+.mnd-detail-calendar-dot {
+    position:
+        absolute;
+
+    bottom:
+        3px;
+
+    left:
+        50%;
+
+    width:
+        4px;
+
+    height:
+        4px;
+
+    border-radius:
+        50%;
+
+    background:
+        #967332;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.mnd-detail-calendar-today
+.mnd-detail-calendar-dot {
+    background:
+        #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .mnd-detail-page-layout {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            55px;
+    }
+
+
+    .mnd-detail-sidebar {
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .mnd-detail-sidebar {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .mnd-detail-sidebar-widget {
+        padding:
+            20px;
+    }
+
+}

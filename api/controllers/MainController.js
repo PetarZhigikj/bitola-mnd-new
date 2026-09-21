@@ -124,6 +124,12 @@ async function renderContentDetail(
     }
 
 
+    const sidebar =
+        await getDetailSidebarData(
+            req
+        );
+
+
     return res.view(
         'pages/content-detail',
         {
@@ -147,13 +153,355 @@ async function renderContentDetail(
                 options.basePath,
 
             listingTitle:
-                options.listingTitle
+                options.listingTitle,
+
+            sidebarNews:
+                sidebar.sidebarNews,
+
+            sidebarCalendar:
+                sidebar.sidebarCalendar
 
         }
     );
 
 }
 
+async function getDetailSidebarData(req) {
+
+    /* =====================================================
+       LATEST NEWS
+    ====================================================== */
+
+    const sidebarNews =
+        await ContentItem.find({
+            type:
+                'novost'
+        })
+        .sort(
+            'createdAt DESC'
+        )
+        .limit(5);
+
+
+
+    /* =====================================================
+       CALENDAR MONTH / YEAR
+    ====================================================== */
+
+    const now =
+        new Date();
+
+
+    let month =
+        parseInt(
+            req.query.calendarMonth,
+            10
+        );
+
+
+    let year =
+        parseInt(
+            req.query.calendarYear,
+            10
+        );
+
+
+    if (
+        !month ||
+        month < 1 ||
+        month > 12
+    ) {
+
+        month =
+            now.getMonth() + 1;
+
+    }
+
+
+    if (
+        !year ||
+        year < 2000 ||
+        year > 2100
+    ) {
+
+        year =
+            now.getFullYear();
+
+    }
+
+
+
+    /* =====================================================
+       NEWS IN THIS MONTH
+    ====================================================== */
+
+    const monthStart =
+        new Date(
+            year,
+            month - 1,
+            1
+        );
+
+
+    const monthEnd =
+        new Date(
+            year,
+            month,
+            1
+        );
+
+
+    const monthNews =
+        await ContentItem.find({
+
+            type:
+                'novost',
+
+            createdAt: {
+
+                '>=':
+                    monthStart.getTime(),
+
+                '<':
+                    monthEnd.getTime()
+
+            }
+
+        });
+
+
+
+    /* =====================================================
+       DAYS WHICH HAVE NEWS
+    ====================================================== */
+
+    const newsDays =
+        new Set();
+
+
+    monthNews.forEach(
+        item => {
+
+            const date =
+                new Date(
+                    item.createdAt
+                );
+
+
+            if (
+                !Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                newsDays.add(
+                    date.getDate()
+                );
+
+            }
+
+        }
+    );
+
+
+
+    /* =====================================================
+       CALENDAR CELLS
+    ====================================================== */
+
+    const daysInMonth =
+        new Date(
+            year,
+            month,
+            0
+        )
+        .getDate();
+
+
+    const firstDay =
+        new Date(
+            year,
+            month - 1,
+            1
+        )
+        .getDay();
+
+
+    /*
+     * JS:
+     * Sunday = 0
+     *
+     * We want:
+     * Monday = first column
+     */
+
+    const leadingEmptyDays =
+        (
+            firstDay + 6
+        ) % 7;
+
+
+    const calendarDays =
+        [];
+
+
+    for (
+        let i = 0;
+        i < leadingEmptyDays;
+        i++
+    ) {
+
+        calendarDays.push(
+            null
+        );
+
+    }
+
+
+    for (
+        let day = 1;
+        day <= daysInMonth;
+        day++
+    ) {
+
+        calendarDays.push({
+
+            day,
+
+            hasNews:
+                newsDays.has(day),
+
+            isToday:
+                day === now.getDate() &&
+                month ===
+                    now.getMonth() + 1 &&
+                year ===
+                    now.getFullYear()
+
+        });
+
+    }
+
+
+
+    /* =====================================================
+       MONTH TITLE
+    ====================================================== */
+
+    const monthNames = [
+
+        'Јануари',
+        'Февруари',
+        'Март',
+        'Април',
+        'Мај',
+        'Јуни',
+        'Јули',
+        'Август',
+        'Септември',
+        'Октомври',
+        'Ноември',
+        'Декември'
+
+    ];
+
+
+
+    /* =====================================================
+       PREVIOUS MONTH
+    ====================================================== */
+
+    let previousMonth =
+        month - 1;
+
+    let previousYear =
+        year;
+
+
+    if (
+        previousMonth < 1
+    ) {
+
+        previousMonth =
+            12;
+
+        previousYear--;
+
+    }
+
+
+
+    /* =====================================================
+       NEXT MONTH
+    ====================================================== */
+
+    let nextMonth =
+        month + 1;
+
+    let nextYear =
+        year;
+
+
+    if (
+        nextMonth > 12
+    ) {
+
+        nextMonth =
+            1;
+
+        nextYear++;
+
+    }
+
+
+
+    const currentPath =
+        req.path ||
+        req.url.split('?')[0];
+
+
+    const sidebarCalendar = {
+
+        month,
+
+        year,
+
+        title:
+            monthNames[
+                month - 1
+            ] +
+            ' ' +
+            year,
+
+        days:
+            calendarDays,
+
+        previousUrl:
+            currentPath +
+            '?calendarMonth=' +
+            previousMonth +
+            '&calendarYear=' +
+            previousYear,
+
+        nextUrl:
+            currentPath +
+            '?calendarMonth=' +
+            nextMonth +
+            '&calendarYear=' +
+            nextYear
+
+    };
+
+
+    return {
+
+        sidebarNews,
+
+        sidebarCalendar
+
+    };
+
+}
 
 
 module.exports = {
@@ -398,6 +746,11 @@ async memberPage(req, res) {
 
             });
 
+            const sidebar =
+    await getDetailSidebarData(
+        req
+    );
+
 
         if (!member) {
 
@@ -412,6 +765,8 @@ async memberPage(req, res) {
             MEMBER_DEPARTMENTS[
                 member.department
             ] || '';
+
+            
 
 
         return res.view(
@@ -433,7 +788,13 @@ async memberPage(req, res) {
 
                 member,
 
-                departmentName
+                departmentName,
+
+                sidebarNews:
+                sidebar.sidebarNews,
+
+                 sidebarCalendar:
+                sidebar.sidebarCalendar
 
             }
         );

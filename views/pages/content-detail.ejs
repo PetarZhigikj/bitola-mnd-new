@@ -4,148 +4,166 @@
 
         <div class="mnd-content-detail-container">
 
-
-            <!-- BACK -->
-
-            <a
-                href="<%= basePath %>"
-                class="mnd-content-back"
-            >
-
-                <i class="bx bx-left-arrow-alt"></i>
-
-                <%= listingTitle %>
-
-            </a>
+            <div class="mnd-detail-page-layout">
 
 
+                <!-- =================================================
+                     MAIN CONTENT
+                ================================================== -->
 
-            <!-- TITLE -->
-
-            <div class="mnd-content-detail-heading">
-
-                <h1>
-                    <%= item.title %>
-                </h1>
-
-            </div>
+                <main class="mnd-detail-page-main">
 
 
+                    <!-- BACK -->
 
-            <!-- IMAGE -->
-
-            <% if (item.image) { %>
-
-                <div class="mnd-content-detail-image">
-
-                    <img
-                        src="<%= item.image %>"
-                        alt="<%= item.title %>"
+                    <a
+                        href="<%= basePath %>"
+                        class="mnd-content-back"
                     >
 
-                </div>
+                        <i class="bx bx-left-arrow-alt"></i>
 
-            <% } %>
+                        <%= listingTitle %>
 
-
-
-            <!-- TEXT -->
-
-            <% if (item.content) { %>
-
-                <article class="mnd-rich-content">
-
-                    <%- item.content %>
-
-                </article>
-
-            <% } %>
+                    </a>
 
 
 
-            <!-- ATTACHMENT -->
+                    <!-- TITLE -->
 
-            <% if (item.attachmentUrl) {
+                    <div class="mnd-content-detail-heading">
 
-                const attachmentName =
-                    item.attachmentName ||
-                    item.attachmentUrl;
+                        <h1>
+                            <%= item.title %>
+                        </h1>
 
-                const isPdf =
-                    item.attachmentMimeType ===
-                        'application/pdf' ||
-                    attachmentName
-                        .toLowerCase()
-                        .endsWith('.pdf');
-
-            %>
+                    </div>
 
 
-                <div class="mnd-content-attachment">
 
+                    <!-- IMAGE -->
 
-                    <h2>
-                        Документ
-                    </h2>
+                    <% if (item.image) { %>
 
+                        <div class="mnd-content-detail-image">
 
-                    <% if (isPdf) { %>
+                            <img
+                                src="<%= item.image %>"
+                                alt="<%= item.title %>"
+                            >
 
-
-                        <a
-                            href="<%= item.attachmentUrl %>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="mnd-content-attachment-link"
-                        >
-
-                            <i class="bx bxs-file-pdf"></i>
-
-
-                            <span>
-                                <%= attachmentName %>
-                            </span>
-
-
-                            <strong>
-                                Отвори PDF
-                            </strong>
-
-                        </a>
-
-
-                    <% } else { %>
-
-
-                        <a
-                            href="<%= item.attachmentUrl %>"
-                            download="<%= attachmentName %>"
-                            class="mnd-content-attachment-link"
-                        >
-
-                            <i class="bx bx-download"></i>
-
-
-                            <span>
-                                <%= attachmentName %>
-                            </span>
-
-
-                            <strong>
-                                Преземи
-                            </strong>
-
-                        </a>
-
+                        </div>
 
                     <% } %>
 
 
-                </div>
+
+                    <!-- TEXT -->
+
+                    <% if (item.content) { %>
+
+                        <article class="mnd-rich-content">
+
+                            <%- item.content %>
+
+                        </article>
+
+                    <% } %>
 
 
-            <% } %>
 
+                    <!-- ATTACHMENT -->
+
+                    <% if (item.attachmentUrl) {
+
+                        const attachmentName =
+                            item.attachmentName ||
+                            item.attachmentUrl;
+
+                        const isPdf =
+                            item.attachmentMimeType ===
+                                'application/pdf' ||
+                            attachmentName
+                                .toLowerCase()
+                                .endsWith('.pdf');
+
+                    %>
+
+
+                        <div class="mnd-content-attachment">
+
+                            <h2>
+                                Документ
+                            </h2>
+
+
+                            <% if (isPdf) { %>
+
+                                <a
+                                    href="<%= item.attachmentUrl %>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="mnd-content-attachment-link"
+                                >
+
+                                    <i class="bx bxs-file-pdf"></i>
+
+                                    <span>
+                                        <%= attachmentName %>
+                                    </span>
+
+                                    <strong>
+                                        Отвори PDF
+                                    </strong>
+
+                                </a>
+
+
+                            <% } else { %>
+
+                                <a
+                                    href="<%= item.attachmentUrl %>"
+                                    download="<%= attachmentName %>"
+                                    class="mnd-content-attachment-link"
+                                >
+
+                                    <i class="bx bx-download"></i>
+
+                                    <span>
+                                        <%= attachmentName %>
+                                    </span>
+
+                                    <strong>
+                                        Преземи
+                                    </strong>
+
+                                </a>
+
+                            <% } %>
+
+                        </div>
+
+                    <% } %>
+
+
+                </main>
+
+
+
+                <!-- =================================================
+                     SIDEBAR
+                ================================================== -->
+
+                <%- include(
+                    '../partials/detail-sidebar',
+                    {
+                        sidebarNews,
+                        sidebarCalendar
+                    }
+                ) %>
+
+
+            </div>
 
         </div>
 

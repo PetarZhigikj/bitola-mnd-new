@@ -1,0 +1,192 @@
+<aside class="mnd-detail-sidebar">
+
+
+    <!-- =====================================================
+         LATEST NEWS
+    ====================================================== -->
+
+    <div class="mnd-detail-sidebar-widget">
+
+        <h3 class="mnd-detail-sidebar-title">
+            Новости
+        </h3>
+
+
+        <div class="mnd-detail-sidebar-news">
+
+            <% if (
+                sidebarNews &&
+                sidebarNews.length
+            ) { %>
+
+                <% sidebarNews.forEach(function(newsItem) { %>
+
+                    <article class="mnd-detail-sidebar-news-item">
+
+
+                        <% if (newsItem.image) { %>
+
+                            <a
+                                href="/novosti/<%= newsItem.id %>"
+                                class="mnd-detail-sidebar-news-image"
+                            >
+
+                                <img
+                                    src="<%= newsItem.image %>"
+                                    alt="<%= newsItem.title %>"
+                                >
+
+                            </a>
+
+                        <% } %>
+
+
+                        <div class="mnd-detail-sidebar-news-content">
+
+                            <a
+                                href="/novosti/<%= newsItem.id %>"
+                                class="mnd-detail-sidebar-news-title"
+                            >
+                                <%= newsItem.title %>
+                            </a>
+
+
+                            <span class="mnd-detail-sidebar-news-date">
+
+                                <%= new Date(
+                                    newsItem.createdAt
+                                ).toLocaleDateString(
+                                    'mk-MK',
+                                    {
+                                        day:
+                                            '2-digit',
+
+                                        month:
+                                            '2-digit',
+
+                                        year:
+                                            'numeric'
+                                    }
+                                ) %>
+
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                <% }); %>
+
+            <% } else { %>
+
+                <p class="mnd-detail-sidebar-empty">
+                    Нема новости.
+                </p>
+
+            <% } %>
+
+        </div>
+
+
+        <a
+            href="/novosti"
+            class="mnd-detail-sidebar-all"
+        >
+            Сите новости
+
+            <i class="bx bx-right-arrow-alt"></i>
+        </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CALENDAR
+    ====================================================== -->
+
+    <div class="mnd-detail-sidebar-widget mnd-detail-calendar-widget">
+
+        <div class="mnd-detail-calendar-header">
+
+            <a
+                href="<%= sidebarCalendar.previousUrl %>"
+                class="mnd-detail-calendar-nav"
+                aria-label="Претходен месец"
+            >
+                <i class="bx bx-chevron-left"></i>
+            </a>
+
+
+            <h3>
+                <%= sidebarCalendar.title %>
+            </h3>
+
+
+            <a
+                href="<%= sidebarCalendar.nextUrl %>"
+                class="mnd-detail-calendar-nav"
+                aria-label="Следен месец"
+            >
+                <i class="bx bx-chevron-right"></i>
+            </a>
+
+        </div>
+
+
+        <div class="mnd-detail-calendar-grid mnd-detail-calendar-weekdays">
+
+            <span>П</span>
+            <span>В</span>
+            <span>С</span>
+            <span>Ч</span>
+            <span>П</span>
+            <span>С</span>
+            <span>Н</span>
+
+        </div>
+
+
+        <div class="mnd-detail-calendar-grid">
+
+            <% sidebarCalendar.days.forEach(function(calendarDay) { %>
+
+                <% if (!calendarDay) { %>
+
+                    <span class="mnd-detail-calendar-day mnd-detail-calendar-empty"></span>
+
+                <% } else { %>
+
+                    <span
+                        class="
+                            mnd-detail-calendar-day
+                            <%= calendarDay.isToday
+                                ? 'mnd-detail-calendar-today'
+                                : ''
+                            %>
+                            <%= calendarDay.hasNews
+                                ? 'mnd-detail-calendar-has-news'
+                                : ''
+                            %>
+                        "
+                    >
+
+                        <%= calendarDay.day %>
+
+                        <% if (calendarDay.hasNews) { %>
+
+                            <span class="mnd-detail-calendar-dot"></span>
+
+                        <% } %>
+
+                    </span>
+
+                <% } %>
+
+            <% }); %>
+
+        </div>
+
+    </div>
+
+</aside>
