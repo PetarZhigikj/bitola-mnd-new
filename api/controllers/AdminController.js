@@ -150,6 +150,138 @@ const fs =
         );
     
     }
+
+    async function uploadMemberAttachment(req) {
+
+        const uploadDirectory =
+            path.resolve(
+                sails.config.appPath,
+                'assets/uploads/members/files'
+            );
+    
+    
+        await fs.promises.mkdir(
+            uploadDirectory,
+            {
+                recursive: true
+            }
+        );
+    
+    
+        return new Promise(
+            (resolve, reject) => {
+    
+                req.file('attachment').upload(
+                    {
+    
+                        dirname:
+                            uploadDirectory,
+    
+                        maxBytes:
+                            25 * 1024 * 1024
+    
+                    },
+    
+                    (
+                        error,
+                        uploadedFiles
+                    ) => {
+    
+                        if (error) {
+                            return reject(error);
+                        }
+    
+    
+                        if (
+                            !uploadedFiles ||
+                            !uploadedFiles.length
+                        ) {
+    
+                            return resolve(null);
+    
+                        }
+    
+    
+                        const uploadedFile =
+                            uploadedFiles[0];
+    
+    
+                        const fileName =
+                            path.basename(
+                                uploadedFile.fd
+                            );
+    
+    
+                        return resolve({
+    
+                            url:
+                                '/uploads/members/files/' +
+                                fileName,
+    
+                            name:
+                                uploadedFile.filename ||
+                                fileName,
+    
+                            mimeType:
+                                uploadedFile.type ||
+                                ''
+    
+                        });
+    
+                    }
+                );
+    
+            }
+        );
+    
+    }
+
+    async function deleteMemberAttachment(
+        attachmentUrl
+    ) {
+    
+        if (!attachmentUrl) {
+            return;
+        }
+    
+    
+        const fileName =
+            path.basename(
+                attachmentUrl
+            );
+    
+    
+        const filePath =
+            path.resolve(
+                sails.config.appPath,
+                'assets/uploads/members/files',
+                fileName
+            );
+    
+    
+        try {
+    
+            await fs.promises.unlink(
+                filePath
+            );
+    
+    
+        } catch (error) {
+    
+            if (
+                error.code !== 'ENOENT'
+            ) {
+    
+                sails.log.warn(
+                    'Unable to delete member attachment:',
+                    error
+                );
+    
+            }
+    
+        }
+    
+    }
     
     
     async function uploadMemberImage(req) {
@@ -1117,6 +1249,7 @@ module.exports = {
     async createMember(req, res) {
 
         let uploadedImage = null;
+        let uploadedAttachment = null;
 
 
         try {
@@ -1187,10 +1320,26 @@ module.exports = {
             IMAGE
             -------------------------------------------------- */
 
+            const uploads =
+                await Promise.all([
+
+                    uploadMemberImage(
+                        req
+                    ),
+
+                    uploadMemberAttachment(
+                        req
+                    )
+
+                ]);
+
+
             uploadedImage =
-                await uploadMemberImage(
-                    req
-                );
+                uploads[0];
+
+
+            uploadedAttachment =
+                uploads[1];
 
 
 
@@ -1199,24 +1348,39 @@ module.exports = {
             -------------------------------------------------- */
 
             const member =
-                await Member.create({
+            await Member.create({
 
-                    name,
+                name,
 
-                    department,
+                department,
 
-                    content,
+                content,
 
-                    image:
-                        uploadedImage,
+                image:
+                    uploadedImage,
 
-                    isActive,
+                attachmentUrl:
+                    uploadedAttachment
+                        ? uploadedAttachment.url
+                        : null,
 
-                    createdBy:
-                        req.session.adminUserId
+                attachmentName:
+                    uploadedAttachment
+                        ? uploadedAttachment.name
+                        : null,
 
-                })
-                .fetch();
+                attachmentMimeType:
+                    uploadedAttachment
+                        ? uploadedAttachment.mimeType
+                        : null,
+
+                isActive,
+
+                createdBy:
+                    req.session.adminUserId
+
+            })
+            .fetch();
 
 
             return res.json({
@@ -1244,7 +1408,16 @@ module.exports = {
                 await deleteMemberImage(
                     uploadedImage
                 );
-
+            
+            }
+            
+            
+            if (uploadedAttachment) {
+            
+                await deleteMemberAttachment(
+                    uploadedAttachment.url
+                );
+            
             }
 
 
@@ -1267,7 +1440,11 @@ module.exports = {
 
 async updateMember(req, res) {
 
-    let uploadedImage = null;
+    let uploadedImage =
+        null;
+
+    let uploadedAttachment =
+        null;
 
 
     try {
@@ -1320,6 +1497,17 @@ async updateMember(req, res) {
             ) !== 'false';
 
 
+        const removeAttachment =
+            String(
+                req.body.removeAttachment
+            ) === 'true';
+
+
+
+        /* =========================================================
+           VALIDATION
+        ========================================================= */
+
         if (!name) {
 
             return res.status(400).json({
@@ -1353,16 +1541,113 @@ async updateMember(req, res) {
 
 
 
-        uploadedImage =
-            await uploadMemberImage(
-                req
-            );
+        /* =========================================================
+           UPLOAD IMAGE + DOCUMENT
+           
+           Important:
+           Both multipart streams are consumed together.
+        ========================================================= */
 
+        const uploads =
+            await Promise.all([
+
+                uploadMemberImage(
+                    req
+                ),
+
+                uploadMemberAttachment(
+                    req
+                )
+
+            ]);
+
+
+        uploadedImage =
+            uploads[0];
+
+
+        uploadedAttachment =
+            uploads[1];
+
+
+
+        /* =========================================================
+           IMAGE
+        ========================================================= */
 
         const newImage =
             uploadedImage ||
             existingMember.image;
 
+
+
+        /* =========================================================
+           ATTACHMENT
+        ========================================================= */
+
+        let newAttachmentUrl =
+            existingMember.attachmentUrl ||
+            null;
+
+
+        let newAttachmentName =
+            existingMember.attachmentName ||
+            null;
+
+
+        let newAttachmentMimeType =
+            existingMember.attachmentMimeType ||
+            null;
+
+
+        /*
+         * A newly uploaded document takes priority.
+         */
+
+        if (
+            uploadedAttachment
+        ) {
+
+            newAttachmentUrl =
+                uploadedAttachment.url;
+
+
+            newAttachmentName =
+                uploadedAttachment.name;
+
+
+            newAttachmentMimeType =
+                uploadedAttachment.mimeType;
+
+        }
+
+        /*
+         * If there is no new document and the admin
+         * explicitly removed the existing one.
+         */
+
+        else if (
+            removeAttachment
+        ) {
+
+            newAttachmentUrl =
+                null;
+
+
+            newAttachmentName =
+                null;
+
+
+            newAttachmentMimeType =
+                null;
+
+        }
+
+
+
+        /* =========================================================
+           UPDATE MEMBER
+        ========================================================= */
 
         const updatedMember =
             await Member.updateOne({
@@ -1379,10 +1664,24 @@ async updateMember(req, res) {
                 image:
                     newImage,
 
+                attachmentUrl:
+                    newAttachmentUrl,
+
+                attachmentName:
+                    newAttachmentName,
+
+                attachmentMimeType:
+                    newAttachmentMimeType,
+
                 isActive
 
             });
 
+
+
+        /* =========================================================
+           DELETE OLD IMAGE
+        ========================================================= */
 
         if (
             uploadedImage &&
@@ -1395,6 +1694,35 @@ async updateMember(req, res) {
 
         }
 
+
+
+        /* =========================================================
+           DELETE OLD DOCUMENT
+           
+           Delete it if:
+           - a new one replaced it
+           - admin removed it
+        ========================================================= */
+
+        if (
+            (
+                uploadedAttachment ||
+                removeAttachment
+            ) &&
+            existingMember.attachmentUrl
+        ) {
+
+            await deleteMemberAttachment(
+                existingMember.attachmentUrl
+            );
+
+        }
+
+
+
+        /* =========================================================
+           RESPONSE
+        ========================================================= */
 
         return res.json({
 
@@ -1417,13 +1745,37 @@ async updateMember(req, res) {
         );
 
 
-        if (uploadedImage) {
+
+        /* =========================================================
+           CLEAN UP NEW IMAGE IF UPDATE FAILED
+        ========================================================= */
+
+        if (
+            uploadedImage
+        ) {
 
             await deleteMemberImage(
                 uploadedImage
             );
 
         }
+
+
+
+        /* =========================================================
+           CLEAN UP NEW DOCUMENT IF UPDATE FAILED
+        ========================================================= */
+
+        if (
+            uploadedAttachment
+        ) {
+
+            await deleteMemberAttachment(
+                uploadedAttachment.url
+            );
+
+        }
+
 
 
         return res.status(500).json({

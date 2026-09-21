@@ -115,6 +115,75 @@
 
             <% } %>
 
+            <% if (member.attachmentUrl) {
+
+                const attachmentName =
+                    member.attachmentName ||
+                    member.attachmentUrl;
+            
+                const isPdf =
+                    member.attachmentMimeType ===
+                        'application/pdf' ||
+                    attachmentName
+                        .toLowerCase()
+                        .endsWith('.pdf');
+            
+            %>
+            
+                <div class="mnd-content-attachment">
+            
+                    <h2>
+                        Документ
+                    </h2>
+            
+            
+                    <% if (isPdf) { %>
+            
+                        <a
+                            href="<%= member.attachmentUrl %>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="mnd-content-attachment-link"
+                        >
+            
+                            <i class="bx bxs-file-pdf"></i>
+            
+                            <span>
+                                <%= attachmentName %>
+                            </span>
+            
+                            <strong>
+                                Отвори PDF
+                            </strong>
+            
+                        </a>
+            
+                    <% } else { %>
+            
+                        <a
+                            href="<%= member.attachmentUrl %>"
+                            download="<%= attachmentName %>"
+                            class="mnd-content-attachment-link"
+                        >
+            
+                            <i class="bx bx-download"></i>
+            
+                            <span>
+                                <%= attachmentName %>
+                            </span>
+            
+                            <strong>
+                                Преземи
+                            </strong>
+            
+                        </a>
+            
+                    <% } %>
+            
+                </div>
+            
+            <% } %>
+
 
         </div>
 

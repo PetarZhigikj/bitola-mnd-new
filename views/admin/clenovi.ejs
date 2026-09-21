@@ -334,6 +334,45 @@
 
                 </div>
 
+                <div class="admin-form-group">
+
+                    <label>
+                        Документ
+                    </label>
+                
+                
+                    <input
+                        type="file"
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+                        @change="handleMemberAttachmentChange"
+                    >
+                
+                
+                    <div
+                        v-if="memberAttachmentName"
+                        class="admin-content-attachment-preview"
+                    >
+                
+                        <i class="bx bx-file"></i>
+                
+                
+                        <span>
+                            {{ memberAttachmentName }}
+                        </span>
+                
+                
+                        <button
+                            type="button"
+                            class="admin-btn admin-btn-small admin-btn-danger"
+                            @click="removeMemberAttachment"
+                        >
+                            Отстрани
+                        </button>
+                
+                    </div>
+                
+                </div>
+
 
 
                 <!-- RICH TEXT -->

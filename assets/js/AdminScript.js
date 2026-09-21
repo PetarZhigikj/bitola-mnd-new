@@ -606,6 +606,15 @@ const adminApp = Vue.createApp({
 
             },
 
+            memberAttachmentFile:
+                null,
+
+            memberAttachmentName:
+                '',
+
+            removeCurrentMemberAttachment:
+                false,
+
 
             memberDepartments: [
 
@@ -927,6 +936,15 @@ const adminApp = Vue.createApp({
 
         openCreateMember() {
 
+            this.memberAttachmentFile =
+                null;
+
+            this.memberAttachmentName =
+                '';
+
+            this.removeCurrentMemberAttachment =
+                false;
+
             this.editingMemberId =
                 null;
 
@@ -975,6 +993,15 @@ const adminApp = Vue.createApp({
         ========================================================= */
 
         openEditMember(member) {
+
+            this.memberAttachmentFile =
+                null;
+
+            this.memberAttachmentName =
+                member.attachmentName || '';
+
+            this.removeCurrentMemberAttachment =
+                false;
 
             this.editingMemberId =
                 member.id;
@@ -1044,6 +1071,16 @@ const adminApp = Vue.createApp({
             }
 
 
+            this.memberAttachmentFile =
+                null;
+
+            this.memberAttachmentName =
+                '';
+
+            this.removeCurrentMemberAttachment =
+                false;
+
+
             this.memberPageMode =
                 'list';
 
@@ -1067,6 +1104,66 @@ const adminApp = Vue.createApp({
             memberRichTextEditor =
                 null;
 
+        },
+
+        handleMemberAttachmentChange(event) {
+
+            const file =
+                event.target.files?.[0];
+        
+        
+            if (!file) {
+                return;
+            }
+        
+        
+            if (
+                file.size >
+                25 * 1024 * 1024
+            ) {
+        
+                this.memberFormError =
+                    'Документот не смее да биде поголем од 25 MB.';
+        
+                event.target.value =
+                    '';
+        
+                return;
+        
+            }
+        
+        
+            this.memberAttachmentFile =
+                file;
+        
+        
+            this.memberAttachmentName =
+                file.name;
+        
+        
+            this.removeCurrentMemberAttachment =
+                false;
+        
+        
+            this.memberFormError =
+                '';
+        
+        },
+        
+        
+        removeMemberAttachment() {
+        
+            this.memberAttachmentFile =
+                null;
+        
+        
+            this.memberAttachmentName =
+                '';
+        
+        
+            this.removeCurrentMemberAttachment =
+                true;
+        
         },
 
 
@@ -1248,6 +1345,25 @@ const adminApp = Vue.createApp({
                     );
 
                 }
+
+                if (
+                    this.memberAttachmentFile
+                ) {
+                
+                    formData.append(
+                        'attachment',
+                        this.memberAttachmentFile
+                    );
+                
+                }
+                
+                
+                formData.append(
+                    'removeAttachment',
+                    String(
+                        this.removeCurrentMemberAttachment
+                    )
+                );
 
 
                 if (

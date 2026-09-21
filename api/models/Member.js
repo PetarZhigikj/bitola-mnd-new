@@ -47,6 +47,21 @@ module.exports = {
             model: 'adminuser'
         },
 
+        attachmentUrl: {
+            type: 'string',
+            allowNull: true
+        },
+        
+        attachmentName: {
+            type: 'string',
+            allowNull: true
+        },
+        
+        attachmentMimeType: {
+            type: 'string',
+            allowNull: true
+        },
+
         
 
     }
