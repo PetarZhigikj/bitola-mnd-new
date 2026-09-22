@@ -1,0 +1,237 @@
+<div
+    v-if="mobileMenuOpen"
+    class="mnd-mobile-menu-overlay"
+    @click.self="closeMobileMenu"
+>
+
+    <div class="mnd-mobile-menu-panel">
+
+
+        <!-- HEADER -->
+
+        <div class="mnd-mobile-menu-header">
+
+            <a
+                href="/"
+                class="mnd-mobile-menu-logo"
+                @click="closeMobileMenu"
+            >
+                <img
+                    src="/images/logo.png"
+                    alt="МНД Битола"
+                >
+            </a>
+
+
+            <button
+                type="button"
+                class="mnd-mobile-menu-close"
+                aria-label="Затвори мени"
+                @click="closeMobileMenu"
+            >
+                <i class="bx bx-x"></i>
+            </button>
+
+        </div>
+
+
+
+        <!-- SEARCH -->
+
+        <form
+            class="mnd-mobile-menu-search"
+            @submit.prevent="submitSearch"
+        >
+
+            <i class="bx bx-search"></i>
+
+
+            <input
+                type="text"
+                v-model="searchQuery"
+                placeholder="Пребарај"
+                aria-label="Пребарај"
+            >
+
+        </form>
+
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="mnd-mobile-menu-nav">
+
+
+            <div class="mnd-mobile-menu-group">
+
+                <span class="mnd-mobile-menu-group-title">
+                    ЗА МНД
+                </span>
+
+
+                <a
+                    href="/za-mnd/osnovni-informacii"
+                    @click="closeMobileMenu"
+                >
+                    Основни информации
+                </a>
+
+
+                <a
+                    href="/za-mnd/istorijat"
+                    @click="closeMobileMenu"
+                >
+                    Историјат
+                </a>
+
+
+                <a
+                    href="/za-mnd/lica-za-kontakt"
+                    @click="closeMobileMenu"
+                >
+                    Лица за контакт
+                </a>
+
+
+                <a
+                    href="/za-mnd/rakovodna-struktura"
+                    @click="closeMobileMenu"
+                >
+                    Раководна структура
+                </a>
+
+            </div>
+
+
+
+            <div class="mnd-mobile-menu-group">
+
+                <span class="mnd-mobile-menu-group-title">
+                    ОДДЕЛЕНИЈА
+                </span>
+
+
+                <a
+                    href="/oddelnija/opstestveni-nauki"
+                    @click="closeMobileMenu"
+                >
+                    Општествени науки
+                </a>
+
+
+                <a
+                    href="/oddelnija/pravni-nauki"
+                    @click="closeMobileMenu"
+                >
+                    Правни науки
+                </a>
+
+
+                <a
+                    href="/oddelnija/prirodni-nauki"
+                    @click="closeMobileMenu"
+                >
+                    Природни науки
+                </a>
+
+
+                <a
+                    href="/oddelnija/primeneti-nauki-i-medicina"
+                    @click="closeMobileMenu"
+                >
+                    Применети науки и медицина
+                </a>
+
+
+                <a
+                    href="/oddelnija/tehnicki-nauki"
+                    @click="closeMobileMenu"
+                >
+                    Технички науки
+                </a>
+
+
+                <a
+                    href="/oddelnija/umetnost"
+                    @click="closeMobileMenu"
+                >
+                    Уметност
+                </a>
+
+
+                <a
+                    href="/oddelnija/lingvistika-i-literatura"
+                    @click="closeMobileMenu"
+                >
+                    Лингвистика и литература
+                </a>
+
+
+                <a
+                    href="/oddelnija/istorisko-geografski-nauki"
+                    @click="closeMobileMenu"
+                >
+                    Историско-географски науки
+                </a>
+
+
+                <a
+                    href="/clenovi"
+                    @click="closeMobileMenu"
+                >
+                    Сите членови
+                </a>
+
+            </div>
+
+
+
+            <a
+                href="/publikacii"
+                class="mnd-mobile-menu-main-link"
+                @click="closeMobileMenu"
+            >
+                ПУБЛИКАЦИИ
+            </a>
+
+
+            <a
+                href="/oglasi"
+                class="mnd-mobile-menu-main-link"
+                @click="closeMobileMenu"
+            >
+                ОГЛАСИ
+            </a>
+
+
+            <a
+                href="/centri"
+                class="mnd-mobile-menu-main-link"
+                @click="closeMobileMenu"
+            >
+                ЦЕНТРИ
+            </a>
+
+
+            <a
+                href="/nagradi"
+                class="mnd-mobile-menu-main-link"
+                @click="closeMobileMenu"
+            >
+                НАГРАДИ
+            </a>
+
+
+            <a
+                href="/kontakt"
+                class="mnd-mobile-menu-contact"
+                @click="closeMobileMenu"
+            >
+                КОНТАКТ
+            </a>
+
+        </nav>
+
+    </div>
+
+</div>

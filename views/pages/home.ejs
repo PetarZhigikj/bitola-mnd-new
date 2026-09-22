@@ -213,11 +213,19 @@
                 </nav>
 
                 <button
-                    class="mnd-mobile-menu-btn"
+                    class="mnd-inner-mobile-menu-btn"
                     type="button"
                     aria-label="Отвори мени"
+                    :aria-expanded="mobileMenuOpen ? 'true' : 'false'"
+                    @click="toggleMobileMenu"
                 >
-                    <i class="bx bx-menu"></i>
+                    <i
+                        :class="
+                            mobileMenuOpen
+                                ? 'bx bx-x'
+                                : 'bx bx-menu'
+                        "
+                    ></i>
                 </button>
 
             </div>
