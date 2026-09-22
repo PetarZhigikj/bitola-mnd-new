@@ -26,7 +26,10 @@ const mainApp = Vue.createApp({
 
             searchOpen: false,
 
-            searchQuery: '',
+            searchQuery:
+                new URLSearchParams(
+                    window.location.search
+                ).get('q') || '',
 
 
 

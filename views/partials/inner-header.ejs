@@ -31,19 +31,28 @@
 
             <!-- SEARCH -->
 
-            <div class="mnd-inner-header-search">
+            <form
+                class="mnd-header-search"
+                @submit.prevent="submitSearch"
+            >
 
-                <i class="bx bx-search"></i>
+                <button
+                    type="submit"
+                    class="mnd-header-search-button"
+                    aria-label="Пребарај"
+                >
+                    <i class="bx bx-search"></i>
+                </button>
+
 
                 <input
                     type="text"
                     v-model="searchQuery"
                     placeholder="Пребарај"
                     aria-label="Пребарај"
-                    @keyup.enter="submitSearch"
                 >
 
-            </div>
+            </form>
 
 
 

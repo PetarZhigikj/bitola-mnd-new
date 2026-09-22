@@ -31,15 +31,28 @@
 
             <div class="mnd-header-navigation">
 
-                <div class="mnd-header-search">
-                    <i class="bx bx-search"></i>
+                <form
+                    class="mnd-header-search"
+                    @submit.prevent="submitSearch"
+                >
+
+                    <button
+                        type="submit"
+                        class="mnd-header-search-button"
+                        aria-label="Пребарај"
+                    >
+                        <i class="bx bx-search"></i>
+                    </button>
+
 
                     <input
                         type="text"
+                        v-model="searchQuery"
                         placeholder="Пребарај"
                         aria-label="Пребарај"
                     >
-                </div>
+
+                </form>
 
                 <nav class="mnd-main-nav">
 
@@ -472,7 +485,7 @@
 
 
             <a
-                href="/za-mnd/clenstvo"
+                href="/za-mnd/osnovni-informacii"
                 class="mnd-membership-button"
             >
                 ПОВЕЌЕ ИНФОРМАЦИИ

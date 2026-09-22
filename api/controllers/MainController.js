@@ -572,6 +572,57 @@ async function getDetailSidebarData(req) {
 
 }
 
+function stripHtml(value) {
+
+    return String(
+        value || ''
+    )
+    .replace(
+        /<[^>]*>/g,
+        ' '
+    )
+    .replace(
+        /\s+/g,
+        ' '
+    )
+    .trim();
+
+}
+
+
+function createSearchExcerpt(
+    value,
+    maxLength = 180
+) {
+
+    const text =
+        stripHtml(
+            value
+        );
+
+
+    if (
+        text.length <=
+        maxLength
+    ) {
+
+        return text;
+
+    }
+
+
+    return (
+        text
+            .substring(
+                0,
+                maxLength
+            )
+            .trim() +
+        '…'
+    );
+
+}
+
 
 module.exports = {
 
@@ -1932,6 +1983,460 @@ async awardDetailPage(req, res) {
 
         sails.log.error(
             'Award detail error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async searchPage(req, res) {
+
+    try {
+
+        const query =
+            String(
+                req.query.q || ''
+            )
+            .trim();
+
+
+        const results =
+            [];
+
+
+        /*
+         * If no search term was supplied,
+         * just show the empty search page.
+         */
+
+        if (!query) {
+
+            return res.view(
+                'pages/search',
+                {
+
+                    layout:
+                        'layouts/layout',
+
+                    pageTitle:
+                        'Пребарување',
+
+                    metaDescription:
+                        'Пребарување - Македонско научно друштво Битола',
+
+                    currentPage:
+                        'search',
+
+                    query:
+                        '',
+
+                    results
+
+                }
+            );
+
+        }
+
+
+
+        const normalizedQuery =
+            query.toLocaleLowerCase(
+                'mk-MK'
+            );
+
+
+
+        /* =====================================================
+           LOAD SEARCHABLE DATA
+        ====================================================== */
+
+        const [
+            contentItems,
+            members,
+            aboutPages
+        ] =
+            await Promise.all([
+
+                ContentItem.find()
+                    .sort(
+                        'createdAt DESC'
+                    ),
+
+                Member.find({
+                    isActive:
+                        true
+                })
+                .sort(
+                    'name ASC'
+                ),
+
+                AboutPage.find()
+
+            ]);
+
+
+
+        /* =====================================================
+           CONTENT ITEM TYPE CONFIG
+        ====================================================== */
+
+        const contentTypes = {
+
+            'publikacija': {
+
+                label:
+                    'Публикација',
+
+                basePath:
+                    '/publikacii/publikacii'
+
+            },
+
+
+            'sovremeni-dijalozi': {
+
+                label:
+                    'Современи дијалози',
+
+                basePath:
+                    '/publikacii/sovremeni-dijalozi'
+
+            },
+
+
+            'drugi-prilozi': {
+
+                label:
+                    'Други прилози',
+
+                basePath:
+                    '/publikacii/drugi-prilozi'
+
+            },
+
+
+            'oglas': {
+
+                label:
+                    'Оглас',
+
+                basePath:
+                    '/oglasi'
+
+            },
+
+
+            'novost': {
+
+                label:
+                    'Новост',
+
+                basePath:
+                    '/novosti'
+
+            },
+
+
+            'centar': {
+
+                label:
+                    'Центар',
+
+                basePath:
+                    '/centri'
+
+            },
+
+
+            'nagrada': {
+
+                label:
+                    'Награда',
+
+                basePath:
+                    '/nagradi'
+
+            }
+
+        };
+
+
+
+        /* =====================================================
+           CONTENT ITEMS
+        ====================================================== */
+
+        contentItems.forEach(
+            item => {
+
+                const typeConfig =
+                    contentTypes[
+                        item.type
+                    ];
+
+
+                if (!typeConfig) {
+                    return;
+                }
+
+
+                const plainContent =
+                    stripHtml(
+                        item.content
+                    );
+
+
+                const searchableText =
+                    (
+                        String(
+                            item.title || ''
+                        ) +
+                        ' ' +
+                        plainContent
+                    )
+                    .toLocaleLowerCase(
+                        'mk-MK'
+                    );
+
+
+                if (
+                    !searchableText.includes(
+                        normalizedQuery
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                results.push({
+
+                    type:
+                        item.type,
+
+                    typeLabel:
+                        typeConfig.label,
+
+                    title:
+                        item.title,
+
+                    image:
+                        item.image || null,
+
+                    excerpt:
+                        createSearchExcerpt(
+                            item.content
+                        ),
+
+                    url:
+                        typeConfig.basePath +
+                        '/' +
+                        item.id,
+
+                    createdAt:
+                        item.createdAt
+
+                });
+
+            }
+        );
+
+
+
+        /* =====================================================
+           MEMBERS
+        ====================================================== */
+
+        members.forEach(
+            member => {
+
+                const plainContent =
+                    stripHtml(
+                        member.content
+                    );
+
+
+                const departmentName =
+                    MEMBER_DEPARTMENTS[
+                        member.department
+                    ] || '';
+
+
+                const searchableText =
+                    (
+                        String(
+                            member.name || ''
+                        ) +
+                        ' ' +
+                        departmentName +
+                        ' ' +
+                        plainContent
+                    )
+                    .toLocaleLowerCase(
+                        'mk-MK'
+                    );
+
+
+                if (
+                    !searchableText.includes(
+                        normalizedQuery
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                results.push({
+
+                    type:
+                        'member',
+
+                    typeLabel:
+                        'Член',
+
+                    title:
+                        member.name,
+
+                    image:
+                        member.image || null,
+
+                    excerpt:
+                        createSearchExcerpt(
+                            member.content
+                        ),
+
+                    url:
+                        '/clenovi/' +
+                        member.id,
+
+                    createdAt:
+                        member.createdAt
+
+                });
+
+            }
+        );
+
+
+
+        /* =====================================================
+           ABOUT PAGES
+        ====================================================== */
+
+        aboutPages.forEach(
+            page => {
+
+                const title =
+                    ABOUT_PAGES[
+                        page.slug
+                    ];
+
+
+                if (!title) {
+                    return;
+                }
+
+
+                const plainContent =
+                    stripHtml(
+                        page.content
+                    );
+
+
+                const searchableText =
+                    (
+                        title +
+                        ' ' +
+                        plainContent
+                    )
+                    .toLocaleLowerCase(
+                        'mk-MK'
+                    );
+
+
+                if (
+                    !searchableText.includes(
+                        normalizedQuery
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                results.push({
+
+                    type:
+                        'about',
+
+                    typeLabel:
+                        'За МНД',
+
+                    title,
+
+                    image:
+                        page.image || null,
+
+                    excerpt:
+                        createSearchExcerpt(
+                            page.content
+                        ),
+
+                    url:
+                        '/za-mnd/' +
+                        page.slug,
+
+                    createdAt:
+                        page.updatedAt ||
+                        page.createdAt
+
+                });
+
+            }
+        );
+
+
+
+        /* =====================================================
+           RENDER
+        ====================================================== */
+
+        return res.view(
+            'pages/search',
+            {
+
+                layout:
+                    'layouts/layout',
+
+                pageTitle:
+                    'Пребарување',
+
+                metaDescription:
+                    'Резултати од пребарување - Македонско научно друштво Битола',
+
+                currentPage:
+                    'search',
+
+                query,
+
+                results
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Search page error:',
             error
         );
 

@@ -282,5 +282,8 @@ DEPARTMENTS
 'GET /nagradi/:id':
     'MainController.awardDetailPage',
 
+    'GET /search':
+    'MainController.searchPage',
+
 };
 

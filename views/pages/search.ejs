@@ -1,0 +1,165 @@
+<div class="mnd-search-page">
+
+    <section class="mnd-search-section">
+
+        <div class="mnd-page-container">
+
+
+            <!-- =================================================
+                 HEADING
+            ================================================== -->
+
+            <div class="mnd-search-heading">
+
+                <h1>
+                    Пребарување
+                </h1>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SEARCH FORM
+            ================================================== -->
+
+            <form
+                action="/search"
+                method="GET"
+                class="mnd-search-form"
+            >
+
+                <i class="bx bx-search"></i>
+
+
+                <input
+                    type="text"
+                    name="q"
+                    value="<%= query %>"
+                    placeholder="Пребарај..."
+                    aria-label="Пребарај"
+                >
+
+
+                <button type="submit">
+                    Пребарај
+                </button>
+
+            </form>
+
+
+
+            <!-- =================================================
+                 RESULTS
+            ================================================== -->
+
+            <% if (query) { %>
+
+                <div class="mnd-search-summary">
+
+                    Резултати за:
+
+                    <strong>
+                        „<%= query %>“
+                    </strong>
+
+                    <span>
+                        (<%= results.length %>)
+                    </span>
+
+                </div>
+
+
+                <% if (results.length) { %>
+
+                    <div class="mnd-search-results">
+
+                        <% results.forEach(function(result) { %>
+
+                            <a
+                                href="<%= result.url %>"
+                                class="mnd-search-result"
+                            >
+
+
+                                <% if (result.image) { %>
+
+                                    <div class="mnd-search-result-image">
+
+                                        <img
+                                            src="<%= result.image %>"
+                                            alt="<%= result.title %>"
+                                        >
+
+                                    </div>
+
+                                <% } else { %>
+
+                                    <div class="mnd-search-result-image mnd-search-result-placeholder">
+
+                                        <i class="bx bx-file"></i>
+
+                                    </div>
+
+                                <% } %>
+
+
+
+                                <div class="mnd-search-result-content">
+
+                                    <span class="mnd-search-result-type">
+                                        <%= result.typeLabel %>
+                                    </span>
+
+
+                                    <h2>
+                                        <%= result.title %>
+                                    </h2>
+
+
+                                    <% if (result.excerpt) { %>
+
+                                        <p>
+                                            <%= result.excerpt %>
+                                        </p>
+
+                                    <% } %>
+
+                                </div>
+
+
+                                <i class="bx bx-right-arrow-alt mnd-search-result-arrow"></i>
+
+                            </a>
+
+                        <% }); %>
+
+                    </div>
+
+
+                <% } else { %>
+
+                    <div class="mnd-search-empty">
+
+                        <i class="bx bx-search-alt"></i>
+
+                        <h2>
+                            Нема пронајдени резултати
+                        </h2>
+
+                        <p>
+                            Обидете се со друг збор или поим.
+                        </p>
+
+                    </div>
+
+                <% } %>
+
+            <% } %>
+
+
+        </div>
+
+    </section>
+
+</div>
