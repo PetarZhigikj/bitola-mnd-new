@@ -57,13 +57,82 @@ async function renderContentListing(
     options
 ) {
 
-    const items =
-        await ContentItem.find({
+    let whereCondition;
+
+
+    if (
+        options.types &&
+        Array.isArray(
+            options.types
+        )
+    ) {
+
+        whereCondition = {
+
+            type: {
+                in:
+                    options.types
+            }
+
+        };
+
+    } else {
+
+        whereCondition = {
+
             type:
                 options.type
-        })
+
+        };
+
+    }
+
+
+    let items =
+        await ContentItem.find(
+            whereCondition
+        )
         .sort(
             'createdAt DESC'
+        );
+
+
+
+    /* =========================================================
+       DETAIL URL
+    ========================================================= */
+
+    items =
+        items.map(
+            item => {
+
+                let detailBasePath =
+                    options.basePath;
+
+
+                if (
+                    item.type ===
+                    'sovremeni-dijalozi'
+                ) {
+
+                    detailBasePath =
+                        '/publikacii/sovremeni-dijalozi';
+
+                }
+
+
+                return {
+
+                    ...item,
+
+                    detailUrl:
+                        detailBasePath +
+                        '/' +
+                        item.id
+
+                };
+
+            }
         );
 
 
@@ -975,8 +1044,10 @@ async publicationsListPage(
             res,
             {
 
-                type:
+                types: [
                     'publikacija',
+                    'sovremeni-dijalozi'
+                ],
 
                 title:
                     'Публикации',
@@ -992,6 +1063,12 @@ async publicationsListPage(
 
 
     } catch (error) {
+
+        sails.log.error(
+            'Publications list error:',
+            error
+        );
+
 
         return res.serverError();
 
@@ -1073,47 +1150,6 @@ async otherContributionsPage(
 
 
 
-async contemporaryDialoguesPage(
-    req,
-    res
-) {
-
-    try {
-
-        return await renderContentListing(
-            req,
-            res,
-            {
-
-                type:
-                    'publikacija',
-
-                title:
-                    'Современи дијалози',
-
-                currentPage:
-                    'sovremeni-dijalozi',
-
-                basePath:
-                    '/sovremeni-dijalozi'
-
-            }
-        );
-
-
-    } catch (error) {
-
-        sails.log.error(
-            'Contemporary Dialogues page error:',
-            error
-        );
-
-
-        return res.serverError();
-
-    }
-
-},
 
 async announcementsPage(req, res) {
 
