@@ -16,6 +16,7 @@
 module.exports.models = {
 
 
+migrate: 'safe',
   /***************************************************************************
   *                                                                          *
   * Whether model methods like `.create()` and `.update()` should ignore     *
