@@ -334,7 +334,7 @@ const fs =
                             uploadDirectory,
     
                         maxBytes:
-                            5 * 1024 * 1024
+                            10 * 1024 * 1024
     
                     },
     
@@ -488,7 +488,7 @@ const fs =
                             uploadDirectory,
     
                         maxBytes:
-                            5 * 1024 * 1024
+                            10 * 1024 * 1024
     
                     },
     
@@ -632,7 +632,7 @@ const fs =
                             uploadDirectory,
     
                         maxBytes:
-                            5 * 1024 * 1024
+                            10 * 1024 * 1024
     
                     },
     
@@ -890,7 +890,7 @@ const fs =
                                         uploadDirectory,
     
                                     maxBytes:
-                                        5 * 1024 * 1024
+                                        10 * 1024 * 1024
     
                                 },
     

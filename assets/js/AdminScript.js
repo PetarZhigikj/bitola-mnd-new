@@ -1561,7 +1561,7 @@ const adminApp = Vue.createApp({
 
             if (
                 file.size >
-                5 * 1024 * 1024
+                10 * 1024 * 1024
             ) {
 
                 this.memberFormError =
@@ -2059,7 +2059,7 @@ handleAboutImageChange(event) {
 
     if (
         file.size >
-        5 * 1024 * 1024
+        10 * 1024 * 1024
     ) {
 
         this.aboutFormError =
