@@ -111,28 +111,51 @@ const fs =
     
     
                 allowedStyles: {
-    
+
                     '*': {
-    
+                
                         color: [
-    
+                
                             /^#[0-9a-f]{3,8}$/i,
-    
+                
                             /^rgba?\([\d\s.,%]+\)$/i
-    
+                
                         ],
-    
-    
+                
+                
                         'background-color': [
-    
+                
                             /^#[0-9a-f]{3,8}$/i,
-    
+                
                             /^rgba?\([\d\s.,%]+\)$/i
-    
+                
+                        ],
+                
+                
+                        'text-align': [
+                
+                            /^(left|center|right|justify)$/
+                
+                        ],
+                
+                
+                        'font-size': [
+                
+                            /^(small|medium|large|larger|smaller)$/,
+                
+                            /^\d+(\.\d+)?(px|pt|em|rem|%)$/
+                
+                        ],
+                
+                
+                        'font-family': [
+                
+                            /^[a-zA-Z0-9\s"',-]+$/
+                
                         ]
-    
+                
                     }
-    
+                
                 },
     
     

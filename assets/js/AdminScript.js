@@ -165,103 +165,57 @@ async function uploadAdminEditorImage(
                 }
 
 
-                /* =============================================
-                   INSERT AT CURRENT CURSOR POSITION
+
+               /* =============================================
+                INSERT AT CURRENT CURSOR POSITION
                 ============================================= */
 
-                const selection =
-                    quill.getSelection(
-                        true
-                    );
+                            const selection =
+                            quill.getSelection(
+                                true
+                            );
 
 
-                let index =
-                    selection
-                        ? selection.index
-                        : quill.getLength() - 1;
+                            const index =
+                            selection
+                                ? selection.index
+                                : quill.getLength() - 1;
 
 
-                /*
-                 * Put the image on its own line.
-                 */
+                            /*
+                            * Insert exactly where the cursor is.
+                            *
+                            * Do NOT automatically:
+                            * - create a line before
+                            * - create a line after
+                            * - center the image
+                            *
+                            * This allows multiple images to remain
+                            * beside each other when there is enough room.
+                            */
 
-                if (
-                    index > 0 &&
-                    quill.getText(
-                        index - 1,
-                        1
-                    ) !== '\n'
-                ) {
+                            quill.insertEmbed(
 
-                    quill.insertText(
-                        index,
-                        '\n',
-                        'user'
-                    );
+                            index,
 
+                            'image',
 
-                    index++;
+                            imageUrl,
 
-                }
+                            'user'
 
-
-                quill.insertEmbed(
-
-                    index,
-
-                    'image',
-
-                    imageUrl,
-
-                    'user'
-
-                );
+                            );
 
 
-                /*
-                 * Add a line after it so the user can
-                 * continue typing.
-                 */
+                            quill.setSelection(
 
-                quill.insertText(
+                            index + 1,
 
-                    index + 1,
+                            0,
 
-                    '\n',
+                            'silent'
 
-                    'user'
-
-                );
-
-
-                /*
-                 * Default inserted images to centered.
-                 */
-
-                quill.formatLine(
-
-                    index,
-
-                    1,
-
-                    'align',
-
-                    'center',
-
-                    'user'
-
-                );
-
-
-                quill.setSelection(
-
-                    index + 2,
-
-                    0,
-
-                    'silent'
-
-                );
+                            );
 
 
             } catch (error) {
@@ -280,6 +234,354 @@ async function uploadAdminEditorImage(
             }
 
         };
+
+}
+
+function addAdminQuillTooltips(
+    editor
+) {
+
+    if (!editor) {
+        return;
+    }
+
+
+    const toolbar =
+        editor.getModule(
+            'toolbar'
+        );
+
+
+    if (
+        !toolbar ||
+        !toolbar.container
+    ) {
+        return;
+    }
+
+
+    const container =
+        toolbar.container;
+
+
+
+    /* =====================================================
+       NORMAL BUTTONS
+    ====================================================== */
+
+    const buttonTooltips = [
+
+        {
+            selector:
+                '.ql-bold',
+
+            title:
+                'Задебелен текст (Ctrl+B)'
+        },
+
+        {
+            selector:
+                '.ql-italic',
+
+            title:
+                'Закосен текст (Ctrl+I)'
+        },
+
+        {
+            selector:
+                '.ql-underline',
+
+            title:
+                'Подвлечен текст (Ctrl+U)'
+        },
+
+        {
+            selector:
+                '.ql-strike',
+
+            title:
+                'Прецртан текст'
+        },
+
+        {
+            selector:
+                '.ql-blockquote',
+
+            title:
+                'Цитат'
+        },
+
+        {
+            selector:
+                '.ql-link',
+
+            title:
+                'Додај линк'
+        },
+
+        {
+            selector:
+                '.ql-image',
+
+            title:
+                'Додај фотографија'
+        },
+
+        {
+            selector:
+                '.ql-clean',
+
+            title:
+                'Отстрани форматирање'
+        }
+
+    ];
+
+
+    buttonTooltips.forEach(
+        item => {
+
+            const element =
+                container.querySelector(
+                    item.selector
+                );
+
+
+            if (!element) {
+                return;
+            }
+
+
+            element.setAttribute(
+                'title',
+                item.title
+            );
+
+
+            element.setAttribute(
+                'aria-label',
+                item.title
+            );
+
+        }
+    );
+
+
+
+    /* =====================================================
+       LISTS
+    ====================================================== */
+
+    const orderedList =
+        container.querySelector(
+            '.ql-list[value="ordered"]'
+        );
+
+
+    if (orderedList) {
+
+        orderedList.title =
+            'Нумерирана листа';
+
+        orderedList.setAttribute(
+            'aria-label',
+            'Нумерирана листа'
+        );
+
+    }
+
+
+    const bulletList =
+        container.querySelector(
+            '.ql-list[value="bullet"]'
+        );
+
+
+    if (bulletList) {
+
+        bulletList.title =
+            'Листа со точки';
+
+        bulletList.setAttribute(
+            'aria-label',
+            'Листа со точки'
+        );
+
+    }
+
+
+
+    /* =====================================================
+       INDENT
+    ====================================================== */
+
+    const decreaseIndent =
+        container.querySelector(
+            '.ql-indent[value="-1"]'
+        );
+
+
+    if (decreaseIndent) {
+
+        decreaseIndent.title =
+            'Намали вовлекување';
+
+        decreaseIndent.setAttribute(
+            'aria-label',
+            'Намали вовлекување'
+        );
+
+    }
+
+
+    const increaseIndent =
+        container.querySelector(
+            '.ql-indent[value="+1"]'
+        );
+
+
+    if (increaseIndent) {
+
+        increaseIndent.title =
+            'Зголеми вовлекување';
+
+        increaseIndent.setAttribute(
+            'aria-label',
+            'Зголеми вовлекување'
+        );
+
+    }
+
+
+
+    /* =====================================================
+       SUBSCRIPT / SUPERSCRIPT
+    ====================================================== */
+
+    const subscript =
+        container.querySelector(
+            '.ql-script[value="sub"]'
+        );
+
+
+    if (subscript) {
+
+        subscript.title =
+            'Долен индекс';
+
+        subscript.setAttribute(
+            'aria-label',
+            'Долен индекс'
+        );
+
+    }
+
+
+    const superscript =
+        container.querySelector(
+            '.ql-script[value="super"]'
+        );
+
+
+    if (superscript) {
+
+        superscript.title =
+            'Горен индекс';
+
+        superscript.setAttribute(
+            'aria-label',
+            'Горен индекс'
+        );
+
+    }
+
+
+
+    /* =====================================================
+       DROPDOWNS
+    ====================================================== */
+
+    const pickerTooltips = [
+
+        {
+            selector:
+                '.ql-font',
+
+            title:
+                'Фонт'
+        },
+
+        {
+            selector:
+                '.ql-size',
+
+            title:
+                'Големина на текст'
+        },
+
+        {
+            selector:
+                '.ql-header',
+
+            title:
+                'Наслов / параграф'
+        },
+
+        {
+            selector:
+                '.ql-color',
+
+            title:
+                'Боја на текст'
+        },
+
+        {
+            selector:
+                '.ql-background',
+
+            title:
+                'Боја на позадина'
+        },
+
+        {
+            selector:
+                '.ql-align',
+
+            title:
+                'Порамнување'
+        }
+
+    ];
+
+
+    pickerTooltips.forEach(
+        item => {
+
+            const elements =
+                container.querySelectorAll(
+                    item.selector
+                );
+
+
+            elements.forEach(
+                element => {
+
+                    element.setAttribute(
+                        'title',
+                        item.title
+                    );
+
+
+                    element.setAttribute(
+                        'aria-label',
+                        item.title
+                    );
+
+                }
+            );
+
+        }
+    );
 
 }
 
@@ -453,6 +755,10 @@ function createAdminRichTextEditor(
                 }
 
             }
+        );
+
+        addAdminQuillTooltips(
+            editor
         );
 
 

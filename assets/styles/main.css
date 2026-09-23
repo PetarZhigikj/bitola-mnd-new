@@ -4253,12 +4253,11 @@ a.mnd-footer-contact-item:hover {
     width:
         min(
             calc(100% - 50px),
-            950px
+            1300px
         );
 
     margin:
-        0
-        auto;
+        0 auto;
 }
 
 
@@ -4507,8 +4506,16 @@ a.mnd-footer-contact-item:hover {
 ========================================================= */
 
 .mnd-rich-content img {
+    display: inline-block;
+
     max-width: 100%;
     height: auto;
+
+    margin:
+        4px
+        6px;
+
+    vertical-align: middle;
 }
 
 /* =========================================================
@@ -7815,4 +7822,15 @@ a.mnd-footer-contact-item:hover {
             none !important;
     }
 
+}
+
+.mnd-rich-content.ql-editor {
+    height: auto;
+    min-height: 0;
+
+    padding: 0;
+
+    overflow: visible;
+
+    white-space: normal;
 }
