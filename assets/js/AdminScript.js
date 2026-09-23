@@ -1049,11 +1049,14 @@ const adminApp = Vue.createApp({
                         null,
 
 
-                    contentForm: {
+                        contentForm: {
 
-                        title: ''
-
-                    },
+                            title: '',
+                        
+                            isEvent:
+                                false
+                        
+                        },
 
 
                     contentImageFile:
@@ -1088,6 +1091,19 @@ const adminApp = Vue.createApp({
         otherContributionsImage: ''
     
     },
+
+    publicationLandingPreviews: {
+
+        publications:
+            '',
+    
+        dialogues:
+            '',
+    
+        other:
+            ''
+    
+    },
     
     
     publicationLandingFiles: {
@@ -1101,13 +1117,16 @@ const adminApp = Vue.createApp({
     },
     
     
-    publicationLandingPreviews: {
+    publicationLandingPreviewOpen: {
+
+        publications:
+            false,
     
-        publications: '',
+        dialogues:
+            false,
     
-        dialogues: '',
-    
-        other: ''
+        other:
+            false
     
     },
     
@@ -1162,6 +1181,29 @@ const adminApp = Vue.createApp({
 
 
     methods: {
+
+        togglePublicationLandingPreview(
+            key
+        ) {
+        
+            if (
+                !Object.prototype.hasOwnProperty.call(
+                    this.publicationLandingPreviewOpen,
+                    key
+                )
+            ) {
+                return;
+            }
+        
+        
+            this.publicationLandingPreviewOpen[
+                key
+            ] =
+                !this.publicationLandingPreviewOpen[
+                    key
+                ];
+        
+        },
 
 
         async loadMembers() {
@@ -2231,11 +2273,14 @@ openCreateContentItem() {
         null;
 
 
-    this.contentForm = {
+        this.contentForm = {
 
-        title: ''
-
-    };
+            title: '',
+        
+            isEvent:
+                false
+        
+        };
 
 
     this.contentImageFile =
@@ -2289,12 +2334,15 @@ openEditContentItem(item) {
         item.id;
 
 
-    this.contentForm = {
+        this.contentForm = {
 
-        title:
-            item.title || ''
-
-    };
+            title:
+                item.title || '',
+        
+            isEvent:
+                item.isEvent === true
+        
+        };
 
 
     this.contentImageFile =
@@ -2530,6 +2578,20 @@ async saveContentItem() {
                 this.contentAttachmentFile
             );
 
+        }
+
+        if (
+            this.contentType ===
+            'novost'
+        ) {
+        
+            formData.append(
+                'isEvent',
+                String(
+                    this.contentForm.isEvent
+                )
+            );
+        
         }
 
 

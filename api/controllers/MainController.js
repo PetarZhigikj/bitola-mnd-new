@@ -87,6 +87,20 @@ async function renderContentListing(
 
     }
 
+    if (
+        options.where
+    ) {
+    
+        whereCondition = {
+    
+            ...whereCondition,
+    
+            ...options.where
+    
+        };
+    
+    }
+
 
     let items =
         await ContentItem.find(
@@ -1054,7 +1068,7 @@ async publicationsPage(
                     'layouts/layout',
 
                 pageTitle:
-                    'Публикации',
+                    'Изданија',
 
                 metaDescription:
                     'Публикации - Македонско научно друштво Битола',
@@ -1101,7 +1115,7 @@ async publicationsListPage(
                 ],
 
                 title:
-                    'Публикации',
+                    'Изданија',
 
                 currentPage:
                     'publikacii',
@@ -1263,7 +1277,7 @@ async publicationDetailPage(
                     '/publikacii/publikacii',
 
                 listingTitle:
-                    'Публикации'
+                    'Изданија'
 
             }
         );
@@ -2437,6 +2451,59 @@ async searchPage(req, res) {
 
         sails.log.error(
             'Search page error:',
+            error
+        );
+
+
+        return res.serverError();
+
+    }
+
+},
+
+async eventsPage(
+    req,
+    res
+) {
+
+    try {
+
+        return await renderContentListing(
+            req,
+            res,
+            {
+
+                type:
+                    'novost',
+
+                where: {
+
+                    isEvent:
+                        true
+
+                },
+
+                title:
+                    'Настани',
+
+                currentPage:
+                    'nastani',
+
+                /*
+                 * Event detail remains a normal
+                 * news detail page.
+                 */
+                basePath:
+                    '/novosti'
+
+            }
+        );
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Events page error:',
             error
         );
 

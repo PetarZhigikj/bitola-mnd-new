@@ -2192,7 +2192,7 @@ async publicationsPage(req, res) {
                 'publikacija',
 
             contentPageTitle:
-                'Публикации'
+                'Изданија'
 
         }
     );
@@ -2565,6 +2565,11 @@ async createContentItem(req, res) {
             sanitizeRichTextContent(
                 req.body.content
             );
+            const isEvent =
+                type === 'novost' &&
+                String(
+                    req.body.isEvent
+                ) === 'true';
 
 
         if (!title) {
@@ -2615,6 +2620,8 @@ async createContentItem(req, res) {
                 title,
 
                 content,
+
+                isEvent,
 
                 image:
                     uploadedImage?.url ||
@@ -2740,6 +2747,13 @@ async updateContentItem(req, res) {
                 req.body.content
             );
 
+            const isEvent =
+                existingItem.type ===
+                    'novost' &&
+                String(
+                    req.body.isEvent
+                ) === 'true';
+
 
         const removeImage =
             String(
@@ -2858,6 +2872,8 @@ async updateContentItem(req, res) {
                 attachmentUrl,
 
                 attachmentName,
+
+                isEvent,
 
                 attachmentMimeType,
 

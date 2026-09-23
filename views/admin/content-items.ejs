@@ -6,7 +6,7 @@
 
     <% if (contentType === 'publikacija') { %>
 
-        <div class="admin-form-card admin-publication-landing-settings">
+        <div v-if="contentPageMode === 'list'" class="admin-form-card admin-publication-landing-settings">
     
             <div class="admin-page-header">
     
@@ -27,56 +27,60 @@
     
     
     
-            <div class="admin-form-grid">
+            <div class="admin-publication-landing-grid">
 
-                <% if (contentType !== 'novost') { %>
 
-                    <div class="admin-form-group">
-                
-                        <label>
-                            Прикачен документ
-                        </label>
-                
-                        <input
-                            type="file"
-                            @change="handleContentAttachmentChange"
-                        >
-                
-                
-                        <div
-                            v-if="contentAttachmentName"
-                            class="admin-content-attachment-preview"
-                        >
-                
-                            <i class="bx bx-file"></i>
-                
-                            <span>
-                                {{ contentAttachmentName }}
-                            </span>
-                
-                            <button
-                                type="button"
-                                class="admin-btn admin-btn-small admin-btn-danger"
-                                @click="removeContentAttachment"
-                            >
-                                Отстрани
-                            </button>
-                
+                <!-- =====================================================
+                     ИЗДАНИЈА
+                ====================================================== -->
+            
+                <div class="admin-publication-image-card">
+            
+                    <div class="admin-publication-image-card-header">
+            
+                        <div>
+            
+                            <strong>
+                                Изданија
+                            </strong>
+            
+                            <small>
+                                Фотографија за Изданија
+                            </small>
+            
                         </div>
-                
+            
+            
+                        <button
+                            v-if="publicationLandingPreviews.publications"
+                            type="button"
+                            class="admin-btn admin-btn-small"
+                            @click="
+                                togglePublicationLandingPreview(
+                                    'publications'
+                                )
+                            "
+                        >
+            
+                            <i
+                                :class="
+                                    publicationLandingPreviewOpen.publications
+                                        ? 'bx bx-hide'
+                                        : 'bx bx-show'
+                                "
+                            ></i>
+            
+                            {{
+                                publicationLandingPreviewOpen.publications
+                                    ? 'Сокриј'
+                                    : 'Прикажи'
+                            }}
+            
+                        </button>
+            
                     </div>
-                
-                <% } %>
-    
-    
-                <!-- PUBLICATIONS -->
-    
-                <div class="admin-form-group">
-    
-                    <label>
-                        Публикации
-                    </label>
-    
+            
+            
                     <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
@@ -87,30 +91,81 @@
                             )
                         "
                     >
-    
-    
-                    <img
+            
+            
+                    <div
                         v-if="
-                            publicationLandingPreviews.publications
+                            publicationLandingPreviews.publications &&
+                            publicationLandingPreviewOpen.publications
                         "
-                        :src="
-                            publicationLandingPreviews.publications
-                        "
-                        class="admin-publication-landing-preview"
+                        class="admin-publication-landing-preview-wrapper"
                     >
-    
+            
+                        <img
+                            :src="
+                                publicationLandingPreviews.publications
+                            "
+                            class="admin-publication-landing-preview"
+                            alt="Изданија"
+                        >
+            
+                    </div>
+            
                 </div>
-    
-    
-    
-                <!-- DIALOGUES -->
-    
-                <div class="admin-form-group">
-    
-                    <label>
-                        Современи дијалози
-                    </label>
-    
+            
+            
+            
+                <!-- =====================================================
+                     СОВРЕМЕНИ ДИЈАЛОЗИ
+                ====================================================== -->
+            
+                <div class="admin-publication-image-card">
+            
+                    <div class="admin-publication-image-card-header">
+            
+                        <div>
+            
+                            <strong>
+                                Современи дијалози
+                            </strong>
+            
+                            <small>
+                                Фотографија за Современи дијалози
+                            </small>
+            
+                        </div>
+            
+            
+                        <button
+                            v-if="publicationLandingPreviews.dialogues"
+                            type="button"
+                            class="admin-btn admin-btn-small"
+                            @click="
+                                togglePublicationLandingPreview(
+                                    'dialogues'
+                                )
+                            "
+                        >
+            
+                            <i
+                                :class="
+                                    publicationLandingPreviewOpen.dialogues
+                                        ? 'bx bx-hide'
+                                        : 'bx bx-show'
+                                "
+                            ></i>
+            
+                            {{
+                                publicationLandingPreviewOpen.dialogues
+                                    ? 'Сокриј'
+                                    : 'Прикажи'
+                            }}
+            
+                        </button>
+            
+                    </div>
+            
+            
                     <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
@@ -121,30 +176,81 @@
                             )
                         "
                     >
-    
-    
-                    <img
+            
+            
+                    <div
                         v-if="
-                            publicationLandingPreviews.dialogues
+                            publicationLandingPreviews.dialogues &&
+                            publicationLandingPreviewOpen.dialogues
                         "
-                        :src="
-                            publicationLandingPreviews.dialogues
-                        "
-                        class="admin-publication-landing-preview"
+                        class="admin-publication-landing-preview-wrapper"
                     >
-    
+            
+                        <img
+                            :src="
+                                publicationLandingPreviews.dialogues
+                            "
+                            class="admin-publication-landing-preview"
+                            alt="Современи дијалози"
+                        >
+            
+                    </div>
+            
                 </div>
-    
-    
-    
-                <!-- OTHER -->
-    
-                <div class="admin-form-group">
-    
-                    <label>
-                        Други прилози
-                    </label>
-    
+            
+            
+            
+                <!-- =====================================================
+                     ДРУГИ ПРИЛОЗИ
+                ====================================================== -->
+            
+                <div class="admin-publication-image-card">
+            
+                    <div class="admin-publication-image-card-header">
+            
+                        <div>
+            
+                            <strong>
+                                Други прилози
+                            </strong>
+            
+                            <small>
+                                Фотографија за Други прилози
+                            </small>
+            
+                        </div>
+            
+            
+                        <button
+                            v-if="publicationLandingPreviews.other"
+                            type="button"
+                            class="admin-btn admin-btn-small"
+                            @click="
+                                togglePublicationLandingPreview(
+                                    'other'
+                                )
+                            "
+                        >
+            
+                            <i
+                                :class="
+                                    publicationLandingPreviewOpen.other
+                                        ? 'bx bx-hide'
+                                        : 'bx bx-show'
+                                "
+                            ></i>
+            
+                            {{
+                                publicationLandingPreviewOpen.other
+                                    ? 'Сокриј'
+                                    : 'Прикажи'
+                            }}
+            
+                        </button>
+            
+                    </div>
+            
+            
                     <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
@@ -155,20 +261,29 @@
                             )
                         "
                     >
-    
-    
-                    <img
+            
+            
+                    <div
                         v-if="
-                            publicationLandingPreviews.other
+                            publicationLandingPreviews.other &&
+                            publicationLandingPreviewOpen.other
                         "
-                        :src="
-                            publicationLandingPreviews.other
-                        "
-                        class="admin-publication-landing-preview"
+                        class="admin-publication-landing-preview-wrapper"
                     >
-    
+            
+                        <img
+                            :src="
+                                publicationLandingPreviews.other
+                            "
+                            class="admin-publication-landing-preview"
+                            alt="Други прилози"
+                        >
+            
+                    </div>
+            
                 </div>
-    
+            
+            
             </div>
     
     
@@ -411,6 +526,32 @@
                 >
 
             </div>
+
+            <% if (contentType === 'novost') { %>
+
+                <div class="admin-form-group">
+            
+                    <label class="admin-checkbox-label">
+            
+                        <input
+                            type="checkbox"
+                            v-model="contentForm.isEvent"
+                        >
+            
+                        <span>
+                            Настан
+                        </span>
+            
+                    </label>
+            
+            
+                    <small class="admin-form-help">
+                        Ако е означено, новоста ќе се прикажува и во страницата Настани.
+                    </small>
+            
+                </div>
+            
+            <% } %>
 
 
 

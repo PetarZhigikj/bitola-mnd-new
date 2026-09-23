@@ -254,6 +254,9 @@ DEPARTMENTS
 'GET /novosti':
 'MainController.newsPage',
 
+'GET /novosti/nastani':
+'MainController.eventsPage',
+
 
 'GET /novosti/:id':
 'MainController.newsDetailPage',
