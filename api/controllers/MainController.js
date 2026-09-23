@@ -1111,7 +1111,6 @@ async publicationsListPage(
 
                 types: [
                     'publikacija',
-                    'sovremeni-dijalozi'
                 ],
 
                 title:

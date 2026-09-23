@@ -526,153 +526,140 @@
              NEWS HEADING
         ================================================== -->
 
-        <div class="mnd-home-news-heading">
+        <div class="mnd-home-news-content">
 
-            <h2>
-                Новости
-            </h2>
-
-        </div>
-
-
-        <!-- =================================================
-             NEWS GRID
-        ================================================== -->
-
-        <div class="mnd-home-news-grid">
-
-
-            <!-- =============================================
-                 MAIN NEWS
-            ============================================== -->
-
-            <div class="mnd-home-main-news">
-
-                <article
-                    v-for="item in homeNews.slice(0, 2)"
-                    :key="item.id"
-                    class="mnd-home-main-news-card"
-                >
-
-                    <a
-                        :href="'/novosti/' + item.id"
-                        class="mnd-home-main-news-image"
+            <!-- NEWS HEADING -->
+        
+            <div class="mnd-home-news-heading">
+        
+                <h2>
+                    Новости
+                </h2>
+        
+            </div>
+        
+        
+            <!-- NEWS GRID -->
+        
+            <div class="mnd-home-news-grid">
+        
+        
+                <!-- MAIN NEWS -->
+        
+                <div class="mnd-home-main-news">
+        
+                    <article
+                        v-for="item in homeNews.slice(0, 2)"
+                        :key="item.id"
+                        class="mnd-home-main-news-card"
                     >
-
-                        <img
-                            v-if="item.image"
-                            :src="item.image"
-                            :alt="item.title"
-                        >
-
-                        <div
-                            v-else
-                            class="mnd-home-main-news-placeholder"
-                        >
-                            <i class="bx bx-news"></i>
-                        </div>
-
-                    </a>
-
-
-                    <div class="mnd-home-main-news-content">
-
-                        <div class="mnd-home-news-meta">
-                            {{ formatNewsDate(item.createdAt) }}
-                        </div>
-
-
+        
                         <a
                             :href="'/novosti/' + item.id"
-                            class="mnd-home-main-news-title"
+                            class="mnd-home-main-news-image"
                         >
-
-                            {{ item.title }}
-
+        
+                            <img
+                                v-if="item.image"
+                                :src="item.image"
+                                :alt="item.title"
+                            >
+        
+                            <div
+                                v-else
+                                class="mnd-home-main-news-placeholder"
+                            >
+                                <i class="bx bx-news"></i>
+                            </div>
+        
                         </a>
-
-                    </div>
-
-                </article>
-
-            </div>
-
-
-
-            <!-- =============================================
-                 SMALL NEWS
-            ============================================== -->
-
-            <div class="mnd-home-small-news">
-
-                <article
-                    v-for="item in homeNews.slice(2, 6)"
-                    :key="item.id"
-                    class="mnd-home-small-news-item"
-                >
-
-                    <a
-                        :href="'/novosti/' + item.id"
-                        class="mnd-home-small-news-image"
+        
+        
+                        <div class="mnd-home-main-news-content">
+        
+                            <div class="mnd-home-news-meta">
+                                {{ formatNewsDate(item.createdAt) }}
+                            </div>
+        
+                            <a
+                                :href="'/novosti/' + item.id"
+                                class="mnd-home-main-news-title"
+                            >
+                                {{ item.title }}
+                            </a>
+        
+                        </div>
+        
+                    </article>
+        
+                </div>
+        
+        
+                <!-- SMALL NEWS -->
+        
+                <div class="mnd-home-small-news">
+        
+                    <article
+                        v-for="item in homeNews.slice(2, 6)"
+                        :key="item.id"
+                        class="mnd-home-small-news-item"
                     >
-
-                        <img
-                            v-if="item.image"
-                            :src="item.image"
-                            :alt="item.title"
-                        >
-
-                        <div
-                            v-else
-                            class="mnd-home-small-news-placeholder"
-                        >
-                            <i class="bx bx-news"></i>
-                        </div>
-
-                    </a>
-
-
-                    <div class="mnd-home-small-news-content">
-
-                        <div class="mnd-home-news-meta">
-                            {{ formatNewsDate(item.createdAt) }}
-                        </div>
-
-
+        
                         <a
                             :href="'/novosti/' + item.id"
-                            class="mnd-home-small-news-title"
+                            class="mnd-home-small-news-image"
                         >
-
-                            {{ item.title }}
-
+        
+                            <img
+                                v-if="item.image"
+                                :src="item.image"
+                                :alt="item.title"
+                            >
+        
+                            <div
+                                v-else
+                                class="mnd-home-small-news-placeholder"
+                            >
+                                <i class="bx bx-news"></i>
+                            </div>
+        
                         </a>
-
-                    </div>
-
-                </article>
-
+        
+        
+                        <div class="mnd-home-small-news-content">
+        
+                            <div class="mnd-home-news-meta">
+                                {{ formatNewsDate(item.createdAt) }}
+                            </div>
+        
+                            <a
+                                :href="'/novosti/' + item.id"
+                                class="mnd-home-small-news-title"
+                            >
+                                {{ item.title }}
+                            </a>
+        
+                        </div>
+        
+                    </article>
+        
+                </div>
+        
             </div>
-
-
+        
+        
+            <!-- ALL NEWS -->
+        
+            <a
+                href="/novosti"
+                class="mnd-home-news-all"
+            >
+                Сите новости
+        
+                <i class="bx bx-right-arrow-alt"></i>
+            </a>
+        
         </div>
-
-
-
-        <!-- =================================================
-             ALL NEWS
-        ================================================== -->
-
-        <a
-            href="/novosti"
-            class="mnd-home-news-all"
-        >
-
-            Сите новости
-
-            <i class="bx bx-right-arrow-alt"></i>
-
-        </a>
 
 
 

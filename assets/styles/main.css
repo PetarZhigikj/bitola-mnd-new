@@ -4620,8 +4620,8 @@ a.mnd-footer-contact-item:hover {
     width: 100%;
     height: 100%;
 
-    object-fit:
-        cover;
+    /* object-fit:
+        cover; */
 
     transition:
         transform 0.35s ease;
@@ -7835,4 +7835,27 @@ a.mnd-footer-contact-item:hover {
     overflow: visible;
 
     white-space: normal;
+}
+
+.mnd-home-news-content {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.mnd-content-detail-date {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    margin: 10px 0 24px;
+
+    color: #777;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.mnd-content-detail-date i {
+    font-size: 17px;
+    color: #593910;
 }
