@@ -658,6 +658,47 @@ module.exports = {
                     'createdAt DESC'
                 )
                 .limit(4);
+
+                const memberCount = await Member.count({
+                    isActive: true
+                });
+                
+                
+                const now = new Date();
+                
+                const currentYear =
+                    now.getFullYear();
+                
+                const currentMonth =
+                    now.getMonth();
+                
+                const currentDay =
+                    now.getDate();
+                
+                
+                const foundingYear = 1966;
+                
+                let yearsActive =
+                    currentYear - foundingYear;
+                
+                
+                /*
+                 * The anniversary is 25 April.
+                 *
+                 * JavaScript months are zero-based:
+                 * April = 3
+                 */
+                const anniversaryPassed =
+                    currentMonth > 3 ||
+                    (
+                        currentMonth === 3 &&
+                        currentDay >= 25
+                    );
+                
+                
+                if (!anniversaryPassed) {
+                    yearsActive--;
+                }
     
     
             return res.view(
@@ -677,7 +718,10 @@ module.exports = {
                         'home',
     
                     news:
-                        news
+                        news,
+
+                        memberCount,
+                        yearsActive
     
                 }
             );
