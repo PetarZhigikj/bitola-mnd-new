@@ -1,0 +1,493 @@
+<div class="admin-users-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="admin-users-header">
+
+        <div>
+
+            <h1>
+                Администратори
+            </h1>
+
+            <p>
+                Управување со администраторските сметки.
+            </p>
+
+        </div>
+
+
+        <button
+            v-if="
+                adminUserPageMode ===
+                'list'
+            "
+            type="button"
+            class="
+                admin-category-btn
+                admin-category-btn-save
+            "
+            @click="
+                openCreateAdminUser
+            "
+        >
+
+            <i class="bx bx-plus"></i>
+
+            Додај администратор
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         LIST
+    ====================================================== -->
+
+    <div
+        v-if="
+            adminUserPageMode ===
+            'list'
+        "
+        class="admin-users-card"
+    >
+
+
+        <div
+            v-if="
+                loadingAdminUsers
+            "
+            class="admin-users-empty"
+        >
+
+            Се вчитуваат администраторите...
+
+        </div>
+
+
+        <div
+            v-else-if="
+                !adminUsers.length
+            "
+            class="admin-users-empty"
+        >
+
+            Нема администратори.
+
+        </div>
+
+
+        <div
+            v-else
+            class="admin-users-table-wrapper"
+        >
+
+            <table class="admin-users-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Е-пошта
+                        </th>
+
+                        <th>
+                            Статус
+                        </th>
+
+                        <th>
+                            Последна најава
+                        </th>
+
+                        <th>
+                            Креиран
+                        </th>
+
+                        <th>
+                            Акции
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        v-for="
+                            admin in
+                            adminUsers
+                        "
+                        :key="
+                            admin.id
+                        "
+                    >
+
+                        <td>
+
+                            <div class="admin-users-email">
+
+                                {{ admin.email }}
+
+
+                                <span
+                                    v-if="
+                                        isCurrentAdminUser(
+                                            admin.id
+                                        )
+                                    "
+                                    class="
+                                        admin-users-you
+                                    "
+                                >
+                                    Вие
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="
+                                    admin-users-status
+                                "
+                                :class="{
+                                    'is-active':
+                                        admin.isActive,
+                                    'is-inactive':
+                                        !admin.isActive
+                                }"
+                            >
+
+                                {{
+                                    admin.isActive
+                                        ? 'Активен'
+                                        : 'Неактивен'
+                                }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {{
+                                formatAdminDate(
+                                    admin.lastLoginAt
+                                )
+                            }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{
+                                formatAdminDate(
+                                    admin.createdAt
+                                )
+                            }}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="admin-users-actions">
+
+                                <button
+                                    type="button"
+                                    class="
+                                        admin-users-action-btn
+                                    "
+                                    title="Уреди"
+                                    @click="
+                                        openEditAdminUser(
+                                            admin
+                                        )
+                                    "
+                                >
+
+                                    <i class="bx bx-edit"></i>
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="
+                                        admin-users-action-btn
+                                        admin-users-delete-btn
+                                    "
+                                    title="Избриши"
+                                    :disabled="
+                                        isCurrentAdminUser(
+                                            admin.id
+                                        )
+                                    "
+                                    @click="
+                                        deleteAdminUser(
+                                            admin
+                                        )
+                                    "
+                                >
+
+                                    <i class="bx bx-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CREATE / EDIT FORM
+    ====================================================== -->
+
+    <div
+        v-if="
+            adminUserPageMode ===
+            'form'
+        "
+        class="admin-users-form-card"
+    >
+
+        <div class="admin-users-form-heading">
+
+            <h2>
+
+                {{
+                    editingAdminUserId
+                        ? 'Уреди администратор'
+                        : 'Додај администратор'
+                }}
+
+            </h2>
+
+
+            <p
+                v-if="
+                    editingAdminUserId
+                "
+            >
+
+                Оставете ги полињата за лозинка празни
+                ако не сакате да ја промените лозинката.
+
+            </p>
+
+        </div>
+
+
+        <div
+            v-if="
+                adminUserFormError
+            "
+            class="admin-users-error"
+        >
+
+            {{ adminUserFormError }}
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div class="admin-category-form-group">
+
+            <label class="admin-category-label">
+
+                Е-пошта
+                <span style="color:red;">
+                    *
+                </span>
+
+            </label>
+
+
+            <input
+                type="email"
+                class="admin-category-input"
+                v-model.trim="
+                    adminUserForm.email
+                "
+                placeholder="admin@example.com"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+
+        <!-- PASSWORD -->
+
+        <div class="admin-category-form-group">
+
+            <label class="admin-category-label">
+
+                {{
+                    editingAdminUserId
+                        ? 'Нова лозинка'
+                        : 'Лозинка'
+                }}
+
+                <span
+                    v-if="
+                        !editingAdminUserId
+                    "
+                    style="color:red;"
+                >
+                    *
+                </span>
+
+            </label>
+
+
+            <input
+                type="password"
+                class="admin-category-input"
+                v-model="
+                    adminUserForm.password
+                "
+                placeholder="Најмалку 8 знаци"
+                autocomplete="new-password"
+            >
+
+        </div>
+
+
+
+        <!-- CONFIRM PASSWORD -->
+
+        <div class="admin-category-form-group">
+
+            <label class="admin-category-label">
+
+                Потврди лозинка
+
+            </label>
+
+
+            <input
+                type="password"
+                class="admin-category-input"
+                v-model="
+                    adminUserForm.confirmPassword
+                "
+                autocomplete="new-password"
+            >
+
+        </div>
+
+
+
+        <!-- ACTIVE -->
+
+        <label class="admin-users-active-row">
+
+            <input
+                type="checkbox"
+                v-model="
+                    adminUserForm.isActive
+                "
+                :disabled="
+                    editingAdminUserId &&
+                    isCurrentAdminUser(
+                        editingAdminUserId
+                    )
+                "
+            >
+
+
+            <span>
+                Активен администратор
+            </span>
+
+        </label>
+
+
+        <small
+            v-if="
+                editingAdminUserId &&
+                isCurrentAdminUser(
+                    editingAdminUserId
+                )
+            "
+            class="admin-users-help"
+        >
+
+            Не можете да ја деактивирате
+            сметката со која сте моментално најавени.
+
+        </small>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="admin-users-form-actions">
+
+            <button
+                type="button"
+                class="admin-category-btn"
+                @click="
+                    closeAdminUserForm
+                "
+            >
+
+                Откажи
+
+            </button>
+
+
+            <button
+                type="button"
+                class="
+                    admin-category-btn
+                    admin-category-btn-save
+                "
+                :disabled="
+                    savingAdminUser
+                "
+                @click="
+                    saveAdminUser
+                "
+            >
+
+                {{
+                    savingAdminUser
+                        ? 'Се зачувува...'
+                        : 'Зачувај'
+                }}
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+</div>

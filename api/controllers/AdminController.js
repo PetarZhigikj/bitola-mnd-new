@@ -3294,6 +3294,709 @@ async awardsPage(req, res) {
 
 },
 
+/* =========================================================
+   АДМИНИСТРАТОРИ PAGE
+========================================================= */
+
+async adminUsersPage(req, res) {
+
+    return res.view(
+        'admin/administratori',
+        {
+            layout:
+                'layouts/admin-layout',
+
+            pageTitle:
+                'Администратори',
+
+            adminPage:
+                'administratori'
+        }
+    );
+
+},
+
+
+/* =========================================================
+   GET ADMIN USERS
+========================================================= */
+
+/* =========================================================
+   GET ADMIN USERS
+========================================================= */
+
+async getAdminUsers(req, res) {
+
+    try {
+
+        const adminUsers =
+            await AdminUser
+                .find()
+                .sort(
+                    'createdAt DESC'
+                );
+
+
+        /*
+         * Manually return only the fields we want.
+         * Never send password hashes to the frontend.
+         */
+        const admins =
+            adminUsers.map(
+                admin => ({
+
+                    id:
+                        admin.id,
+
+                    firstName:
+                        admin.firstName || '',
+
+                    lastName:
+                        admin.lastName || '',
+
+                    email:
+                        admin.email,
+
+                    role:
+                        admin.role || 'editor',
+
+                    isActive:
+                        admin.isActive !== false,
+
+                    lastLoginAt:
+                        admin.lastLoginAt || null,
+
+                    createdAt:
+                        admin.createdAt,
+
+                    updatedAt:
+                        admin.updatedAt
+
+                })
+            );
+
+
+        return res.json({
+
+            success: true,
+
+            admins,
+
+            currentAdminUserId:
+                req.session.adminUserId
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Get admin users error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се вчитаат администраторите.'
+
+        });
+
+    }
+
+},
+
+
+/* =========================================================
+   CREATE ADMIN USER
+========================================================= */
+
+async createAdminUser(req, res) {
+
+    try {
+
+        const email =
+            String(
+                req.body.email || ''
+            )
+                .trim()
+                .toLowerCase();
+
+
+        const password =
+            String(
+                req.body.password || ''
+            );
+
+
+        const isActive =
+            req.body.isActive !== false &&
+            String(
+                req.body.isActive
+            ) !== 'false';
+
+
+        /* -------------------------------------------------
+           VALIDATION
+        -------------------------------------------------- */
+
+        if (
+            !email ||
+            !password
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Е-поштата и лозинката се задолжителни.'
+
+            });
+
+        }
+
+
+        if (
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                email
+            )
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Внесете валидна е-пошта.'
+
+            });
+
+        }
+
+
+        if (
+            password.length < 8
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Лозинката мора да содржи најмалку 8 знаци.'
+
+            });
+
+        }
+
+
+        const existingAdmin =
+            await AdminUser.findOne({
+                email
+            });
+
+
+        if (
+            existingAdmin
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Веќе постои администратор со оваа е-пошта.'
+
+            });
+
+        }
+
+
+        /* -------------------------------------------------
+           PASSWORD
+        -------------------------------------------------- */
+
+        const hashedPassword =
+            await bcrypt.hash(
+                password,
+                12
+            );
+
+
+        /* -------------------------------------------------
+           CREATE
+        -------------------------------------------------- */
+
+        const admin =
+            await AdminUser
+                .create({
+
+                    email,
+
+                    password:
+                        hashedPassword,
+
+                    isActive
+
+                })
+                .fetch();
+
+
+        /*
+         * Never return the password hash.
+         */
+        return res.json({
+
+            success: true,
+
+            admin: {
+
+                id:
+                    admin.id,
+
+                email:
+                    admin.email,
+
+                isActive:
+                    admin.isActive,
+
+                lastLoginAt:
+                    admin.lastLoginAt ||
+                    null,
+
+                createdAt:
+                    admin.createdAt,
+
+                updatedAt:
+                    admin.updatedAt
+
+            },
+
+            message:
+                'Администраторот е успешно додаден.'
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Create admin user error:',
+            error
+        );
+
+
+        if (
+            error.code ===
+            'E_UNIQUE'
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Веќе постои администратор со оваа е-пошта.'
+
+            });
+
+        }
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се додаде администраторот.'
+
+        });
+
+    }
+
+},
+
+
+/* =========================================================
+   UPDATE ADMIN USER
+========================================================= */
+
+async updateAdminUser(req, res) {
+
+    try {
+
+        const id =
+            req.params.id;
+
+
+        const existingAdmin =
+            await AdminUser.findOne({
+                id
+            });
+
+
+        if (
+            !existingAdmin
+        ) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    'Администраторот не е пронајден.'
+
+            });
+
+        }
+
+
+        const email =
+            String(
+                req.body.email || ''
+            )
+                .trim()
+                .toLowerCase();
+
+
+        /*
+         * Password is optional during edit.
+         *
+         * Empty password = keep old password.
+         */
+        const password =
+            String(
+                req.body.password || ''
+            );
+
+
+        const isActive =
+            req.body.isActive !== false &&
+            String(
+                req.body.isActive
+            ) !== 'false';
+
+
+        /* -------------------------------------------------
+           VALIDATION
+        -------------------------------------------------- */
+
+        if (
+            !email
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Е-поштата е задолжителна.'
+
+            });
+
+        }
+
+
+        if (
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                email
+            )
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Внесете валидна е-пошта.'
+
+            });
+
+        }
+
+
+        if (
+            password &&
+            password.length < 8
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Лозинката мора да содржи најмалку 8 знаци.'
+
+            });
+
+        }
+
+
+        /* -------------------------------------------------
+           DUPLICATE EMAIL
+        -------------------------------------------------- */
+
+        const duplicateAdmin =
+            await AdminUser.findOne({
+
+                email,
+
+                id: {
+                    '!=': id
+                }
+
+            });
+
+
+        if (
+            duplicateAdmin
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Веќе постои администратор со оваа е-пошта.'
+
+            });
+
+        }
+
+
+        /* -------------------------------------------------
+           DON'T ALLOW SELF-DEACTIVATION
+        -------------------------------------------------- */
+
+        if (
+            String(id) ===
+            String(
+                req.session.adminUserId
+            ) &&
+            !isActive
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Не можете да ја деактивирате сопствената сметка.'
+
+            });
+
+        }
+
+
+        /* -------------------------------------------------
+           UPDATE VALUES
+        -------------------------------------------------- */
+
+        const values = {
+
+            email,
+
+            isActive
+
+        };
+
+
+        /*
+         * Only replace the password when a new
+         * one was actually entered.
+         */
+        if (
+            password
+        ) {
+
+            values.password =
+                await bcrypt.hash(
+                    password,
+                    12
+                );
+
+        }
+
+
+        const updatedAdmin =
+            await AdminUser
+                .updateOne({
+                    id
+                })
+                .set(
+                    values
+                );
+
+
+        return res.json({
+
+            success: true,
+
+            admin: {
+
+                id:
+                    updatedAdmin.id,
+
+                email:
+                    updatedAdmin.email,
+
+                isActive:
+                    updatedAdmin.isActive,
+
+                lastLoginAt:
+                    updatedAdmin.lastLoginAt ||
+                    null,
+
+                createdAt:
+                    updatedAdmin.createdAt,
+
+                updatedAt:
+                    updatedAdmin.updatedAt
+
+            },
+
+            message:
+                'Администраторот е успешно зачуван.'
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Update admin user error:',
+            error
+        );
+
+
+        if (
+            error.code ===
+            'E_UNIQUE'
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Веќе постои администратор со оваа е-пошта.'
+
+            });
+
+        }
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се зачува администраторот.'
+
+        });
+
+    }
+
+},
+
+
+/* =========================================================
+   DELETE ADMIN USER
+========================================================= */
+
+async deleteAdminUser(req, res) {
+
+    try {
+
+        const id =
+            req.params.id;
+
+
+        /* -------------------------------------------------
+           DON'T ALLOW SELF-DELETE
+        -------------------------------------------------- */
+
+        if (
+            String(id) ===
+            String(
+                req.session.adminUserId
+            )
+        ) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message:
+                    'Не можете да ја избришете сопствената администраторска сметка.'
+
+            });
+
+        }
+
+
+        const admin =
+            await AdminUser.findOne({
+                id
+            });
+
+
+        if (
+            !admin
+        ) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                    'Администраторот не е пронајден.'
+
+            });
+
+        }
+
+
+        await AdminUser.destroyOne({
+            id
+        });
+
+
+        return res.json({
+
+            success: true,
+
+            message:
+                'Администраторот е успешно избришан.'
+
+        });
+
+
+    } catch (error) {
+
+        sails.log.error(
+            'Delete admin user error:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                'Не може да се избрише администраторот.'
+
+        });
+
+    }
+
+},
+
 
 
 

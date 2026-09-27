@@ -288,5 +288,21 @@ DEPARTMENTS
     'GET /search':
     'MainController.searchPage',
 
+
+    'GET /admin/administratori':
+    'AdminController.adminUsersPage',
+
+'GET /admin/api/administratori':
+    'AdminController.getAdminUsers',
+
+'POST /admin/api/administratori':
+    'AdminController.createAdminUser',
+
+'PUT /admin/api/administratori/:id':
+    'AdminController.updateAdminUser',
+
+'DELETE /admin/api/administratori/:id':
+    'AdminController.deleteAdminUser',
+
 };
 

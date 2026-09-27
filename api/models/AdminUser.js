@@ -18,12 +18,14 @@ module.exports = {
 
         firstName: {
             type: 'string',
-            required: true
+            allowNull: true
+            
         },
 
         lastName: {
             type: 'string',
-            required: true
+            allowNull: true
+            
         },
 
         role: {
@@ -32,7 +34,7 @@ module.exports = {
                 'admin',
                 'editor'
             ],
-            defaultsTo: 'editor'
+            defaultsTo: 'admin'
         },
 
         isActive: {

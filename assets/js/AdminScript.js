@@ -837,6 +837,43 @@ const adminApp = Vue.createApp({
 
         return {
 
+
+            /* =================================================
+   АДМИНИСТРАТОРИ
+================================================= */
+
+            adminUsers: [],
+
+            currentAdminUserId:
+                null,
+
+            loadingAdminUsers:
+                false,
+
+            savingAdminUser:
+                false,
+
+            adminUserPageMode:
+                'list',
+
+            editingAdminUserId:
+                null,
+
+            adminUserFormError:
+                '',
+
+            adminUserForm: {
+
+                email: '',
+
+                password: '',
+
+                confirmPassword: '',
+
+                isActive: true
+
+            },
+
             /* =================================================
                GENERAL
             ================================================= */
@@ -1181,6 +1218,463 @@ const adminApp = Vue.createApp({
 
 
     methods: {
+
+        /* =========================================================
+   LOAD ADMIN USERS
+========================================================= */
+
+async loadAdminUsers() {
+
+    try {
+
+        this.loadingAdminUsers =
+            true;
+
+
+        const response =
+            await axios.get(
+                '/admin/api/administratori'
+            );
+
+
+        this.adminUsers =
+            response.data?.admins ||
+            [];
+
+
+        this.currentAdminUserId =
+            response.data
+                ?.currentAdminUserId ||
+            null;
+
+
+    } catch (error) {
+
+        console.error(
+            'Load admin users error:',
+            error
+        );
+
+
+    } finally {
+
+        this.loadingAdminUsers =
+            false;
+
+    }
+
+},
+
+
+/* =========================================================
+   CURRENT ADMIN
+========================================================= */
+
+isCurrentAdminUser(id) {
+
+    return (
+        String(id || '') ===
+        String(
+            this.currentAdminUserId ||
+            ''
+        )
+    );
+
+},
+
+
+/* =========================================================
+   CREATE FORM
+========================================================= */
+
+openCreateAdminUser() {
+
+    this.editingAdminUserId =
+        null;
+
+
+    this.adminUserForm = {
+
+        email: '',
+
+        password: '',
+
+        confirmPassword: '',
+
+        isActive: true
+
+    };
+
+
+    this.adminUserFormError =
+        '';
+
+
+    this.adminUserPageMode =
+        'form';
+
+},
+
+
+/* =========================================================
+   EDIT FORM
+========================================================= */
+
+openEditAdminUser(admin) {
+
+    this.editingAdminUserId =
+        admin.id;
+
+
+    this.adminUserForm = {
+
+        email:
+            admin.email ||
+            '',
+
+        /*
+         * Never preload a password/hash.
+         */
+        password: '',
+
+        confirmPassword: '',
+
+        isActive:
+            admin.isActive !== false
+
+    };
+
+
+    this.adminUserFormError =
+        '';
+
+
+    this.adminUserPageMode =
+        'form';
+
+},
+
+
+/* =========================================================
+   CLOSE FORM
+========================================================= */
+
+closeAdminUserForm() {
+
+    this.adminUserPageMode =
+        'list';
+
+
+    this.editingAdminUserId =
+        null;
+
+
+    this.adminUserFormError =
+        '';
+
+
+    this.adminUserForm = {
+
+        email: '',
+
+        password: '',
+
+        confirmPassword: '',
+
+        isActive: true
+
+    };
+
+},
+
+
+/* =========================================================
+   SAVE ADMIN
+========================================================= */
+
+async saveAdminUser() {
+
+    if (
+        this.savingAdminUser
+    ) {
+
+        return;
+
+    }
+
+
+    this.adminUserFormError =
+        '';
+
+
+    const email =
+        String(
+            this.adminUserForm.email ||
+            ''
+        )
+            .trim()
+            .toLowerCase();
+
+
+    const password =
+        String(
+            this.adminUserForm.password ||
+            ''
+        );
+
+
+    const confirmPassword =
+        String(
+            this.adminUserForm
+                .confirmPassword ||
+            ''
+        );
+
+
+    /* -----------------------------------------------------
+       VALIDATION
+    ----------------------------------------------------- */
+
+    if (
+        !email
+    ) {
+
+        this.adminUserFormError =
+            'Е-поштата е задолжителна.';
+
+        return;
+
+    }
+
+
+    if (
+        !this.editingAdminUserId &&
+        !password
+    ) {
+
+        this.adminUserFormError =
+            'Лозинката е задолжителна.';
+
+        return;
+
+    }
+
+
+    if (
+        password &&
+        password.length < 8
+    ) {
+
+        this.adminUserFormError =
+            'Лозинката мора да содржи најмалку 8 знаци.';
+
+        return;
+
+    }
+
+
+    if (
+        password !==
+        confirmPassword
+    ) {
+
+        this.adminUserFormError =
+            'Лозинките не се совпаѓаат.';
+
+        return;
+
+    }
+
+
+    try {
+
+        this.savingAdminUser =
+            true;
+
+
+        const payload = {
+
+            email,
+
+            password,
+
+            isActive:
+                this.adminUserForm
+                    .isActive
+
+        };
+
+
+        if (
+            this.editingAdminUserId
+        ) {
+
+            await axios.put(
+
+                '/admin/api/administratori/' +
+                this.editingAdminUserId,
+
+                payload
+
+            );
+
+
+        } else {
+
+            await axios.post(
+
+                '/admin/api/administratori',
+
+                payload
+
+            );
+
+        }
+
+
+        await this.loadAdminUsers();
+
+
+        this.closeAdminUserForm();
+
+
+    } catch (error) {
+
+        console.error(
+            'Save admin user error:',
+            error
+        );
+
+
+        this.adminUserFormError =
+            error.response
+                ?.data
+                ?.message ||
+            'Не може да се зачува администраторот.';
+
+
+    } finally {
+
+        this.savingAdminUser =
+            false;
+
+    }
+
+},
+
+
+/* =========================================================
+   DELETE ADMIN
+========================================================= */
+
+async deleteAdminUser(admin) {
+
+    if (
+        this.isCurrentAdminUser(
+            admin.id
+        )
+    ) {
+
+        window.alert(
+            'Не можете да ја избришете сопствената администраторска сметка.'
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        window.confirm(
+
+            'Дали сте сигурни дека сакате да го избришете администраторот "' +
+            admin.email +
+            '"?'
+
+        );
+
+
+    if (
+        !confirmed
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await axios.delete(
+
+            '/admin/api/administratori/' +
+            admin.id
+
+        );
+
+
+        await this.loadAdminUsers();
+
+
+    } catch (error) {
+
+        console.error(
+            'Delete admin user error:',
+            error
+        );
+
+
+        window.alert(
+
+            error.response
+                ?.data
+                ?.message ||
+            'Не може да се избрише администраторот.'
+
+        );
+
+    }
+
+},
+
+
+/* =========================================================
+   DATE DISPLAY
+========================================================= */
+
+formatAdminDate(value) {
+
+    if (
+        !value
+    ) {
+
+        return 'Никогаш';
+
+    }
+
+
+    const date =
+        new Date(
+            value
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return '-';
+
+    }
+
+
+    return date.toLocaleString(
+        'mk-MK'
+    );
+
+},
 
         togglePublicationLandingPreview(
             key
@@ -2936,6 +3430,15 @@ async savePublicationLanding() {
         ) {
         
             this.loadPublicationLanding();
+        
+        }
+
+        if (
+            this.currentAdminPage ===
+            'administratori'
+        ) {
+        
+            this.loadAdminUsers();
         
         }
     
