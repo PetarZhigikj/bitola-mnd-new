@@ -1881,3 +1881,7 @@
  .admin-btn-danger {
     margin-left: 10px;
  }
+
+ .ql-snow .ql-tooltip {
+    z-index: 9999;
+}
