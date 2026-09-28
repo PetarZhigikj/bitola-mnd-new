@@ -1892,10 +1892,16 @@
 ========================================================= */
 
 .admin-users-page {
+    width: 100%;
+
     padding:
-        30px;
+        32px;
 }
 
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .admin-users-header {
     display:
@@ -1911,13 +1917,39 @@
         20px;
 
     margin-bottom:
-        25px;
+        28px;
+
+    padding:
+        24px 28px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #ece8e1;
+
+    border-radius:
+        16px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.04);
 }
 
 
 .admin-users-header h1 {
     margin:
-        0 0 6px;
+        0 0 5px;
+
+    color:
+        #252525;
+
+    font-size:
+        25px;
+
+    font-weight:
+        700;
 }
 
 
@@ -1927,29 +1959,135 @@
 
     color:
         #777777;
+
+    font-size:
+        13px;
+
+    line-height:
+        1.5;
 }
 
 
-.admin-users-card,
-.admin-users-form-card {
+/* =========================================================
+   ADD BUTTON
+========================================================= */
+
+.admin-users-add-btn {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        8px;
+
+    min-height:
+        42px;
+
     padding:
-        25px;
+        0 20px;
+
+    border:
+        none;
+
+    border-radius:
+        10px;
+
+    background:
+        var(
+            --mnd-gold-dark,
+            #7a571d
+        );
+
+    color:
+        #ffffff;
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 4px 12px
+        rgba(
+            89,
+            57,
+            16,
+            0.18
+        );
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.admin-users-add-btn i {
+    font-size:
+        19px;
+}
+
+
+.admin-users-add-btn:hover {
+    background:
+        var(
+            --mnd-gold,
+            #a87930
+        );
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 6px 16px
+        rgba(
+            89,
+            57,
+            16,
+            0.24
+        );
+}
+
+
+.admin-users-add-btn:active {
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   LIST CARD
+========================================================= */
+
+.admin-users-card {
+    padding:
+        8px 0 0;
 
     background:
         #ffffff;
 
     border:
         1px solid
-        #e8e8e8;
+        #ece8e1;
 
     border-radius:
-        14px;
-}
+        16px;
 
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.04);
 
-.admin-users-form-card {
-    max-width:
-        750px;
+    overflow:
+        hidden;
 }
 
 
@@ -1971,34 +2109,77 @@
 }
 
 
-.admin-users-table th,
-.admin-users-table td {
+.admin-users-table th {
     padding:
-        15px 14px;
+        15px 18px;
+
+    background:
+        #faf9f7;
+
+    color:
+        #777777;
+
+    border-bottom:
+        1px solid
+        #ece8e1;
 
     text-align:
         left;
 
-    border-bottom:
-        1px solid
-        #eeeeee;
-}
-
-
-.admin-users-table th {
-    color:
-        #666666;
-
     font-size:
-        12px;
+        11px;
 
     font-weight:
         700;
+
+    letter-spacing:
+        0.04em;
 
     text-transform:
         uppercase;
 }
 
+
+.admin-users-table td {
+    padding:
+        17px 18px;
+
+    color:
+        #444444;
+
+    border-bottom:
+        1px solid
+        #f0ede8;
+
+    font-size:
+        13px;
+
+    vertical-align:
+        middle;
+}
+
+
+.admin-users-table tbody tr {
+    transition:
+        background 0.15s ease;
+}
+
+
+.admin-users-table tbody tr:hover {
+    background:
+        #fcfbf9;
+}
+
+
+.admin-users-table tbody tr:last-child td {
+    border-bottom:
+        none;
+}
+
+
+/* =========================================================
+   ADMIN EMAIL / CURRENT USER
+========================================================= */
 
 .admin-users-email {
     display:
@@ -2008,7 +2189,10 @@
         center;
 
     gap:
-        8px;
+        10px;
+
+    color:
+        #252525;
 
     font-weight:
         600;
@@ -2016,29 +2200,54 @@
 
 
 .admin-users-you {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
     padding:
-        3px 7px;
+        3px 8px;
 
     border-radius:
         20px;
 
     background:
-        #f2eee8;
+        #f2ece2;
 
     color:
-        #7a571d;
+        var(
+            --mnd-gold-dark,
+            #7a571d
+        );
 
     font-size:
         10px;
 
     font-weight:
         700;
+
+    line-height:
+        1.4;
 }
 
+
+/* =========================================================
+   STATUS
+========================================================= */
 
 .admin-users-status {
     display:
         inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-width:
+        75px;
 
     padding:
         5px 10px;
@@ -2047,7 +2256,7 @@
         20px;
 
     font-size:
-        12px;
+        11px;
 
     font-weight:
         700;
@@ -2055,29 +2264,36 @@
 
 
 .admin-users-status.is-active {
+    background:
+        #eaf7ee;
+
     color:
         #237a42;
-
-    background:
-        #e9f7ee;
 }
 
 
 .admin-users-status.is-inactive {
+    background:
+        #f0f0f0;
+
     color:
         #777777;
-
-    background:
-        #eeeeee;
 }
 
+
+/* =========================================================
+   TABLE ACTIONS
+========================================================= */
 
 .admin-users-actions {
     display:
         flex;
 
+    align-items:
+        center;
+
     gap:
-        8px;
+        7px;
 }
 
 
@@ -2102,68 +2318,164 @@
 
     border:
         1px solid
-        #dddddd;
+        #e2ded7;
 
     border-radius:
-        8px;
+        9px;
 
     background:
         #ffffff;
 
     color:
-        #333333;
+        #555555;
+
+    font-size:
+        17px;
 
     cursor:
         pointer;
+
+    transition:
+        all 0.18s ease;
 }
 
 
 .admin-users-action-btn:hover {
+    border-color:
+        var(
+            --mnd-gold-dark,
+            #7a571d
+        );
+
+    color:
+        var(
+            --mnd-gold-dark,
+            #7a571d
+        );
+
     background:
-        #f5f5f5;
+        #faf6ef;
 }
 
 
 .admin-users-delete-btn {
     color:
-        #c0392b;
+        #b42318;
+}
+
+
+.admin-users-delete-btn:hover {
+    border-color:
+        #e9b9b5;
+
+    background:
+        #fff4f3;
+
+    color:
+        #b42318;
 }
 
 
 .admin-users-action-btn:disabled {
     opacity:
-        0.4;
+        0.35;
 
     cursor:
         not-allowed;
+
+    transform:
+        none;
 }
 
 
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
 .admin-users-empty {
     padding:
-        35px;
+        60px 25px;
 
     text-align:
         center;
 
     color:
-        #777777;
+        #888888;
+
+    font-size:
+        13px;
 }
 
 
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.admin-users-form-card {
+    width:
+        min(
+            100%,
+            760px
+        );
+
+    margin:
+        0 auto;
+
+    padding:
+        32px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #ece8e1;
+
+    border-radius:
+        16px;
+
+    box-shadow:
+        0 6px 24px
+        rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   FORM HEADING
+========================================================= */
+
 .admin-users-form-heading {
     margin-bottom:
-        25px;
+        28px;
+
+    padding-bottom:
+        20px;
+
+    border-bottom:
+        1px solid
+        #eeeae4;
 }
 
 
 .admin-users-form-heading h2 {
     margin:
         0 0 6px;
+
+    color:
+        #252525;
+
+    font-size:
+        22px;
+
+    font-weight:
+        700;
 }
 
 
 .admin-users-form-heading p {
+    max-width:
+        520px;
+
     margin:
         0;
 
@@ -2171,27 +2483,122 @@
         #777777;
 
     font-size:
-        13px;
+        12px;
+
+    line-height:
+        1.6;
 }
 
 
-.admin-users-error {
+/* =========================================================
+   FORM GROUPS
+========================================================= */
+
+.admin-users-form-card
+.admin-category-form-group {
     margin-bottom:
-        20px;
+        21px;
+}
 
-    padding:
-        12px 15px;
 
-    border-radius:
-        8px;
+.admin-users-form-card
+.admin-category-label {
+    display:
+        block;
 
-    background:
-        #fff0f0;
+    margin-bottom:
+        7px;
 
     color:
-        #b42318;
+        #444444;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
 }
 
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.admin-users-form-card
+.admin-category-input,
+
+.admin-users-form-card
+.admin-category-select {
+    width:
+        100%;
+
+    min-height:
+        44px;
+
+    padding:
+        10px 13px;
+
+    border:
+        1px solid
+        #ddd8d0;
+
+    border-radius:
+        9px;
+
+    background:
+        #ffffff;
+
+    color:
+        #333333;
+
+    font-size:
+        13px;
+
+    outline:
+        none;
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+}
+
+
+.admin-users-form-card
+.admin-category-input:hover,
+
+.admin-users-form-card
+.admin-category-select:hover {
+    border-color:
+        #c9bca7;
+}
+
+
+.admin-users-form-card
+.admin-category-input:focus,
+
+.admin-users-form-card
+.admin-category-select:focus {
+    border-color:
+        var(
+            --mnd-gold-dark,
+            #7a571d
+        );
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            122,
+            87,
+            29,
+            0.09
+        );
+}
+
+
+/* =========================================================
+   ACTIVE CHECKBOX
+========================================================= */
 
 .admin-users-active-row {
     display:
@@ -2201,13 +2608,50 @@
         center;
 
     gap:
-        9px;
+        10px;
 
     margin-top:
-        18px;
+        5px;
+
+    padding:
+        13px 15px;
+
+    border:
+        1px solid
+        #e5e0d8;
+
+    border-radius:
+        9px;
+
+    background:
+        #faf9f7;
+
+    color:
+        #444444;
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
 
     cursor:
         pointer;
+}
+
+
+.admin-users-active-row input {
+    width:
+        16px;
+
+    height:
+        16px;
+
+    accent-color:
+        var(
+            --mnd-gold-dark,
+            #7a571d
+        );
 }
 
 
@@ -2219,13 +2663,58 @@
         7px;
 
     color:
-        #777777;
+        #888888;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.5;
 }
 
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.admin-users-error {
+    margin-bottom:
+        22px;
+
+    padding:
+        12px 15px;
+
+    border:
+        1px solid
+        #f1c7c3;
+
+    border-radius:
+        9px;
+
+    background:
+        #fff5f4;
+
+    color:
+        #b42318;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
 
 .admin-users-form-actions {
     display:
         flex;
+
+    align-items:
+        center;
 
     justify-content:
         flex-end;
@@ -2235,8 +2724,111 @@
 
     margin-top:
         30px;
+
+    padding-top:
+        22px;
+
+    border-top:
+        1px solid
+        #eeeae4;
 }
 
+
+.admin-users-form-actions
+.admin-category-btn {
+    min-height:
+        41px;
+
+    padding:
+        0 18px;
+
+    border:
+        1px solid
+        #ddd8d0;
+
+    border-radius:
+        9px;
+
+    background:
+        #ffffff;
+
+    color:
+        #555555;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        all 0.18s ease;
+}
+
+
+.admin-users-form-actions
+.admin-category-btn:hover {
+    background:
+        #f7f5f2;
+
+    border-color:
+        #c9c1b5;
+}
+
+
+/* SAVE BUTTON */
+
+.admin-users-form-actions
+.admin-category-btn-save {
+    border-color:
+        var(
+            --mnd-gold-dark,
+            #7a571d
+        );
+
+    background:
+        var(
+            --mnd-gold-dark,
+            #7a571d
+        );
+
+    color:
+        #ffffff;
+}
+
+
+.admin-users-form-actions
+.admin-category-btn-save:hover {
+    border-color:
+        var(
+            --mnd-gold,
+            #a87930
+        );
+
+    background:
+        var(
+            --mnd-gold,
+            #a87930
+        );
+}
+
+
+.admin-users-form-actions
+.admin-category-btn:disabled {
+    opacity:
+        0.55;
+
+    cursor:
+        not-allowed;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media (
     max-width: 700px
@@ -2254,6 +2846,34 @@
 
         flex-direction:
             column;
+
+        padding:
+            20px;
+    }
+
+
+    .admin-users-add-btn {
+        width:
+            100%;
+    }
+
+
+    .admin-users-form-card {
+        padding:
+            22px 18px;
+    }
+
+
+    .admin-users-form-actions {
+        flex-direction:
+            column-reverse;
+    }
+
+
+    .admin-users-form-actions
+    .admin-category-btn {
+        width:
+            100%;
     }
 
 }

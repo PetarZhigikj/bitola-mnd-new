@@ -21,25 +21,15 @@
 
 
         <button
-            v-if="
-                adminUserPageMode ===
-                'list'
-            "
-            type="button"
-            class="
-                admin-category-btn
-                admin-category-btn-save
-            "
-            @click="
-                openCreateAdminUser
-            "
-        >
+    v-if="adminUserPageMode === 'list'"
+    type="button"
+    class="admin-users-add-btn"
+    @click="openCreateAdminUser"
+>
+    <i class="bx bx-plus"></i>
 
-            <i class="bx bx-plus"></i>
-
-            Додај администратор
-
-        </button>
+    Додај администратор
+</button>
 
     </div>
 
