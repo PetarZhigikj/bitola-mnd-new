@@ -1348,12 +1348,16 @@ button {
     }
 
     .mnd-hero-content h1 {
-        font-size: 39px;
+        max-width: 320px;
+    
+        font-size: 34px;
+        line-height: 1.12;
         letter-spacing: -1px;
+        margin-top: 10px;
     }
-
+    
     .mnd-hero-content h1 br {
-        display: none;
+        display: block;
     }
 
     .mnd-hero-description {
